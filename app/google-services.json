@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1078387031438",
+    "project_id": "e-class-879b9",
+    "storage_bucket": "e-class-879b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078387031438:android:3dd354c7c885556bf978df",
+        "android_client_info": {
+          "package_name": "com.femi.e_class"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078387031438-9p2fb00ji3mbasg8fcravu2nl7c7mq00.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFn8N5RO1DgB70agcRrD7Td6uTdi8__6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078387031438-9p2fb00ji3mbasg8fcravu2nl7c7mq00.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

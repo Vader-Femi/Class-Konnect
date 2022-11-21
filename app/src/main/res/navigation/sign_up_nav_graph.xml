@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FirstSignUpFragment">
+
+    <fragment
+        android:id="@+id/FirstSignUpFragment"
+        android:name="com.femi.e_class.ui.FirstSignUpFragment"
+        android:label="@string/first_sign_up_fragment_label"
+        tools:layout="@layout/fragment_first_sign_up">
+
+        <action
+            android:id="@+id/action_first_to_second_sign_up"
+            app:destination="@id/SecondSignUpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SecondSignUpFragment"
+        android:name="com.femi.e_class.ui.SecondSignUpFragment"
+        android:label="@string/second_sign_up_fragment_label"
+        tools:layout="@layout/fragment_second_sign_up">
+    </fragment>
+</navigation>
