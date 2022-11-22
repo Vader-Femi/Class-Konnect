@@ -1,29 +1,22 @@
 package com.femi.e_class.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.femi.e_class.KEY_EMAIL
-import com.femi.e_class.R
+import com.femi.e_class.KEY_PASSWORD
 import com.femi.e_class.databinding.FragmentSecondSignUpBinding
-import com.femi.e_class.presentation.SetPasswordFormEvent
 import com.femi.e_class.viewmodels.SignUpViewModel
-import kotlinx.coroutines.launch
 
 class SecondSignUpFragment : Fragment() {
 
     private var _binding: FragmentSecondSignUpBinding? = null
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<SignUpViewModel>()
-    private var email = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,58 +32,23 @@ class SecondSignUpFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (activity != null && context != null) {
-            email = requireArguments().getString(KEY_EMAIL, "")
 
-            binding.etPassword.doOnTextChanged { text, _, _, _ ->
-                viewModel.onEvent(SetPasswordFormEvent.PasswordChanged(text.toString()))
-            }
-            binding.etRetypePassword.doOnTextChanged { text, _, _, _ ->
-                viewModel.onEvent(SetPasswordFormEvent.RepeatedPasswordChanged(text.toString()))
-            }
+            (requireActivity() as SignUpActivity ).supportActionBar?.hide()
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                    viewModel.validationEvents.collect { event ->
-                        when (event) {
-                            SignUpViewModel.ValidationEvent.Success -> {
-                                viewModel.signUpUser(
-                                    email,
-                                    viewModel.setPasswordFormState.password
-                                )
-                            }
-                        }
+            val email = requireArguments().getString(KEY_EMAIL)
+            val password = requireArguments().getString(KEY_PASSWORD)
+
+            binding.btnSignIn.setOnClickListener {
+                if (activity != null) {
+                    Intent(activity, LoginActivity::class.java).also { intent ->
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intent.putExtra(KEY_EMAIL, email)
+                        intent.putExtra(KEY_PASSWORD, password)
+                        startActivity(intent)
+                        requireActivity().finish()
                     }
                 }
-            }
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                    viewModel.registrationEvents.collect { event ->
-                        when (event) {
-                            SignUpViewModel.RegistrationEvent.Success -> {
-
-                                Toast.makeText(requireContext(),
-                                    "Success",
-                                    Toast.LENGTH_SHORT)
-                                    .show()
-
-                            }
-                            SignUpViewModel.RegistrationEvent.Failed -> {
-                                Toast.makeText(requireContext(),
-                                    getString(R.string.register_error_message),
-                                    Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        }
-                    }
-                }
-            }
-
-            binding.btnSignUp.setOnClickListener {
-                viewModel.onEvent(SetPasswordFormEvent.Submit)
-                binding.passwordLayout.helperText = viewModel.setPasswordFormState.passwordError
-                binding.retypePasswordLayout.helperText =
-                    viewModel.setPasswordFormState.repeatedPasswordError
             }
         }
 

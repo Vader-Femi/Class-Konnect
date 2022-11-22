@@ -16,6 +16,7 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            app:title="@string/app_name"
             android:layout_height="?attr/actionBarSize" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -23,7 +24,6 @@
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/appBarLayout"
         android:text="Omooooo\nE choke o"
         android:textSize="18sp"
         android:layout_centerInParent="true"/>

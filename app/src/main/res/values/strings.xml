@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">E-Class</string>
     <string name="first_sign_up_fragment_label">Sign Up Details</string>
-    <string name="second_sign_up_fragment_label">Password</string>
+    <string name="second_sign_up_fragment_label">Congrats</string>
     <string name="first_name">First Name</string>
     <string name="matric">Matric</string>
     <string name="email">Email</string>

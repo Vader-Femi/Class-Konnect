@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -13,7 +14,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.femi.e_class.KEY_EMAIL
+import com.femi.e_class.KEY_PASSWORD
 import com.femi.e_class.R
+import com.femi.e_class.data.User
 import com.femi.e_class.databinding.FragmentFirstSignUpBinding
 import com.femi.e_class.presentation.RegistrationFormEvent
 import com.femi.e_class.viewmodels.SignUpViewModel
@@ -51,16 +54,25 @@ class FirstSignUpFragment : Fragment() {
                 viewModel.onEvent(RegistrationFormEvent.MatricChanged(text.toString()))
             }
 
+            binding.etPassword.doOnTextChanged { text, _, _, _ ->
+                viewModel.onEvent(RegistrationFormEvent.PasswordChanged(text.toString()))
+            }
+            binding.etRetypePassword.doOnTextChanged { text, _, _, _ ->
+                viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(text.toString()))
+            }
+
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     viewModel.validationEvents.collect { event ->
                         when (event) {
-                            SignUpViewModel.ValidationEvent.Success -> {
-                                viewModel.saveUser(
+                            is SignUpViewModel.ValidationEvent.Success -> {
+                                viewModel.signUpUser(User(
                                     firstName = viewModel.registrationFormState.firstName,
                                     lastName = viewModel.registrationFormState.lastName,
                                     email = viewModel.registrationFormState.email,
-                                    matric = viewModel.registrationFormState.matric
+                                    matric = viewModel.registrationFormState.matric,
+                                    password = viewModel.registrationFormState.password
+                                )
                                 )
                             }
                         }
@@ -71,19 +83,25 @@ class FirstSignUpFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     viewModel.registrationEvents.collect { event ->
+                        binding.progressBar.isVisible = event is SignUpViewModel.RegistrationEvent.Loading
                         when (event) {
-                            SignUpViewModel.RegistrationEvent.Success -> {
+                            is SignUpViewModel.RegistrationEvent.Success -> {
                                 findNavController().navigate(R.id.action_first_to_second_sign_up,
                                     Bundle().apply {
                                         putString(KEY_EMAIL,
                                             viewModel.registrationFormState.email)
+                                        putString(KEY_PASSWORD,
+                                            viewModel.registrationFormState.password)
                                     })
                             }
-                            SignUpViewModel.RegistrationEvent.Failed -> {
+                            is SignUpViewModel.RegistrationEvent.Error ->{
                                 Toast.makeText(requireContext(),
-                                    getString(R.string.register_error_message),
+                                    event.exception?.message.toString(),
                                     Toast.LENGTH_SHORT)
                                     .show()
+                            }
+                            is SignUpViewModel.RegistrationEvent.Loading -> {
+//                                binding.progressBar.isVisible = event is SignUpViewModel.RegistrationEvent.Loading
                             }
                         }
                     }
@@ -96,6 +114,8 @@ class FirstSignUpFragment : Fragment() {
                 binding.lastNameLayout.helperText = viewModel.registrationFormState.lastNameError
                 binding.emailLayout.helperText = viewModel.registrationFormState.emailError
                 binding.matricLayout.helperText = viewModel.registrationFormState.matricError
+                binding.passwordLayout.helperText = viewModel.registrationFormState.passwordError
+                binding.retypePasswordLayout.helperText = viewModel.registrationFormState.repeatedPasswordError
             }
         }
 

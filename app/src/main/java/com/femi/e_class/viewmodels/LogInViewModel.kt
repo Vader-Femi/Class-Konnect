@@ -24,7 +24,7 @@ class LogInViewModel(
     private val validationEventChannel = Channel<ValidationEvent>()
     val validationEvents = validationEventChannel.receiveAsFlow()
 
-    private val logInEventChannel = Channel<LogInEvent>()
+    private val logInEventChannel = Channel<LogInEvent<Any?>>()
     val logInEvents = logInEventChannel.receiveAsFlow()
 
     fun onEvent(event: LogInFormEvent) {
@@ -65,6 +65,9 @@ class LogInViewModel(
 
     fun logInUser(email: String, password: String) {
 
+        viewModelScope.launch {
+            logInEventChannel.send(LogInEvent.Loading)
+        }
         repository.getAuthReference()
             .signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { addUserTask ->
@@ -74,7 +77,7 @@ class LogInViewModel(
                     }
                 } else {
                     viewModelScope.launch {
-                        logInEventChannel.send(LogInEvent.Failed)
+                        logInEventChannel.send(LogInEvent.Error(addUserTask.exception))
                     }
                 }
             }
@@ -84,8 +87,9 @@ class LogInViewModel(
         object Success : ValidationEvent()
     }
 
-    sealed class LogInEvent {
-        object Success : LogInEvent()
-        object Failed : LogInEvent()
+    sealed class LogInEvent<out T> {
+        object Success : LogInEvent<Nothing>()
+        data class Error(val exception: java.lang.Exception?): LogInEvent<Nothing>()
+        object Loading : LogInEvent<Nothing>()
     }
 }
