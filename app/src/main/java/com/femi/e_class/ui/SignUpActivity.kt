@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
+import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivitySignUpBinding
 import com.femi.e_class.repositories.SignUpRepository
 import com.femi.e_class.viewmodels.SignUpViewModel
@@ -28,7 +29,8 @@ class SignUpActivity : AppCompatActivity() {
     private fun setupViewModel() {
         val fireStoreReference = FirebaseFirestore.getInstance().collection("Users")
         val firebaseAuth = FirebaseAuth.getInstance()
-        val repository = SignUpRepository(firebaseAuth, fireStoreReference)
+        val dataStore = UserPreferences(this)
+        val repository = SignUpRepository(firebaseAuth, fireStoreReference, dataStore)
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[SignUpViewModel::class.java]
     }

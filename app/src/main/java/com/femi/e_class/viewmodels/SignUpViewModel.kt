@@ -21,7 +21,7 @@ class SignUpViewModel(
     private val validateMatric: ValidateMatric = ValidateMatric(),
     private val validatePassword: ValidatePassword = ValidatePassword(),
     private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword(),
-) : BaseViewModel() {
+) : BaseViewModel(repository) {
 
     var registrationFormState by mutableStateOf(RegistrationFormState())
 

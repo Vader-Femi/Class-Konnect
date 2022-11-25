@@ -13,6 +13,7 @@ class ViewModelFactory(
             modelClass.isAssignableFrom(SignUpViewModel::class.java) -> SignUpViewModel(repository as SignUpRepository) as T
             modelClass.isAssignableFrom(LogInViewModel::class.java) -> LogInViewModel(repository as LogInRepository) as T
             modelClass.isAssignableFrom(HomeActivityViewModel::class.java) -> HomeActivityViewModel(repository as HomeActivityRepository) as T
+            modelClass.isAssignableFrom(VideoActivityViewModel::class.java) -> VideoActivityViewModel(repository as VideoActivityRepository) as T
             else -> throw IllegalArgumentException("ViewModelClass Not Found")
         }
     }

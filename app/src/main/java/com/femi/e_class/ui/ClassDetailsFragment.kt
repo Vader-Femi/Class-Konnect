@@ -1,5 +1,6 @@
 package com.femi.e_class.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +11,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
-import com.femi.e_class.KEY_AVATAR_URL
 import com.femi.e_class.KEY_COURSE_CODE
-import com.femi.e_class.KEY_ROOM_NAME
-import com.femi.e_class.R
+import com.femi.e_class.KEY_PASSWORD
 import com.femi.e_class.databinding.FragmentClassDetailsBinding
 import com.femi.e_class.presentation.RoomFormEvent
 import com.femi.e_class.viewmodels.HomeActivityViewModel
@@ -38,12 +36,16 @@ class ClassDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null && context != null) {
 
-            binding.etRoomName.doOnTextChanged { text, _, _, _ ->
-                viewModel.onEvent(RoomFormEvent.RoomNameChanged(text.toString()))
-            }
+//            binding.etRoomName.doOnTextChanged { text, _, _, _ ->
+//                viewModel.onEvent(RoomFormEvent.RoomNameChanged(text.toString()))
+//            }
             binding.etCourseCode.doOnTextChanged { text, _, _, _ ->
                 viewModel.onEvent(RoomFormEvent.CourseCodeChanged(text.toString()))
             }
+            binding.etPassword.doOnTextChanged { text, _, _, _ ->
+                viewModel.onEvent(RoomFormEvent.PasswordChanged(text.toString()))
+            }
+
 
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -59,22 +61,21 @@ class ClassDetailsFragment : Fragment() {
 
             binding.btnJoin.setOnClickListener {
                 viewModel.onEvent(RoomFormEvent.Submit)
-                binding.roomNameLayout.helperText = viewModel.roomFormState.roomNameError
+//                binding.roomNameLayout.helperText = viewModel.roomFormState.roomNameError
                 binding.courseCodeLayout.helperText = viewModel.roomFormState.courseCodeError
+                binding.passwordLayout.helperText = viewModel.roomFormState.passwordError
             }
         }
     }
 
     private fun moveToCall() {
-        findNavController().navigate(R.id.action_classDetails_to_videoScreen,
-            Bundle().apply {
-                putString(KEY_ROOM_NAME,
-                    binding.etRoomName.text.toString().trim())
-                putString(KEY_COURSE_CODE,
-                    binding.etCourseCode.text.toString().uppercase().trim())
-                putString(KEY_AVATAR_URL,
-                     "")
-            })
+        Intent(activity, VideoActivity::class.java).also { intent ->
+            intent.putExtra(KEY_COURSE_CODE,
+                viewModel.roomFormState.courseCode.uppercase().trim())
+            intent.putExtra(KEY_PASSWORD,
+                viewModel.roomFormState.password.trim())
+            startActivity(intent)
+        }
     }
 
     override fun onDestroyView() {

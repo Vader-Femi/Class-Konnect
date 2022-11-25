@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 
 class MainActivityViewModel(
     private val repository: MainActivityRepository
-) : BaseViewModel() {
+) : BaseViewModel(repository) {
 
 
     private val _isLoading = MutableStateFlow(true)

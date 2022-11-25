@@ -6,19 +6,26 @@
     app:startDestination="@id/classDetailsFragment">
 
     <fragment
+        android:id="@+id/welcomeBackFragment"
+        android:name="com.femi.e_class.ui.WelcomeBackFragment"
+        android:label="@string/welcome_back_fragment_label"
+        tools:layout="@layout/fragment_welcome_back" >
+        <action
+            android:id="@+id/action_welcomeBackFragment_to_updateProfileFragment"
+            app:destination="@id/updateProfileFragment" />
+        <action
+            android:id="@+id/action_welcomeBackFragment_to_classDetailsFragment"
+            app:destination="@id/classDetailsFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/classDetailsFragment"
         android:name="com.femi.e_class.ui.ClassDetailsFragment"
         android:label="@string/class_details_fragment_label"
-        tools:layout="@layout/fragment_class_details" >
-        <action
-            android:id="@+id/action_classDetails_to_videoScreen"
-            app:destination="@id/videoScreenFragment" />
-    </fragment>
-
+        tools:layout="@layout/fragment_class_details" />
     <fragment
-        android:id="@+id/videoScreenFragment"
-        android:name="com.femi.e_class.ui.VideoScreenFragment"
-        android:label="@string/video_screen_fragment_label"
-        tools:layout="@layout/fragment_video_screen" />
+        android:id="@+id/updateProfileFragment"
+        android:name="com.femi.e_class.ui.UpdateProfileFragment"
+        android:label="@string/update_profile_fragment_label"
+        tools:layout="@layout/fragment_update_profile" />
 
 </navigation>

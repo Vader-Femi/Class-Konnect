@@ -1,31 +1,18 @@
 package com.femi.e_class.ui
 
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.facebook.react.modules.core.PermissionListener
 import com.femi.e_class.*
+import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityHomeBinding
 import com.femi.e_class.repositories.HomeActivityRepository
-import com.femi.e_class.repositories.SignUpRepository
 import com.femi.e_class.viewmodels.HomeActivityViewModel
-import com.femi.e_class.viewmodels.SignUpViewModel
 import com.femi.e_class.viewmodels.ViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.dialog.MaterialDialogs
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import org.jitsi.meet.sdk.JitsiMeetActivityDelegate
@@ -35,7 +22,10 @@ class HomeActivity : AppCompatActivity(), JitsiMeetActivityInterface {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: HomeActivityViewModel
-    private var email: String? = null
+    private var email = ""
+    private var matric = 0L
+    private var fName = ""
+    private var lName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -44,54 +34,27 @@ class HomeActivity : AppCompatActivity(), JitsiMeetActivityInterface {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        email = intent.getStringExtra(KEY_EMAIL)
-        if (email != null)
-            getUserDetails()
-        else
-            finish()
+//        lifecycleScope.launch {
+//            val view = layoutInflater.inflate(R.layout.loading, null)
+//            val loadingAlertDialog = loadingDialog(
+//                view = view,
+//                title = "Welcome Back",
+//                message = "Logging In...Please Wait")
+//            loadingAlertDialog.show()
+//            email = viewModel.userEmail()
+//            matric = viewModel.userMatric()
+//            fName = viewModel.userFName()
+//            lName = viewModel.userLName()
+//            loadingAlertDialog.hide()
+//
+//        }
 
-        val loadingAlertDialog: AlertDialog = MaterialAlertDialogBuilder(this)
-            .setTitle("Welcome Back")
-            .setMessage("Logging In...Please Wait")
-            .setCancelable(false)
-            .create()
-
-        lifecycleScope.launch {
-            viewModel.getUserEvent.collect { event ->
-                loadingAlertDialog.showLoadingDialog(event is HomeActivityViewModel.GetUserEvent.Loading)
-                when (event) {
-                    is HomeActivityViewModel.GetUserEvent.Success -> {
-
-                    }
-                    is HomeActivityViewModel.GetUserEvent.Error -> {
-                        MaterialAlertDialogBuilder(this@HomeActivity)
-                            .setTitle("Interesting")
-                            .setMessage(event.exception?.message.toString())
-                            .setPositiveButton("Retry"){ _,_ ->
-                                getUserDetails()
-                            }
-                            .setNegativeButton("Cancel"){ _,_ ->
-                                finish()
-                            }
-                            .setCancelable(false)
-                            .show()
-                        getUserDetails()
-                    }
-                    is HomeActivityViewModel.GetUserEvent.Loading -> {
-                    }
-                }
-            }
-        }
-
-    }
-
-    private fun getUserDetails(){
-        viewModel.getUser(email!!)
     }
 
     private fun setupViewModel() {
         val fireStoreReference = FirebaseFirestore.getInstance().collection("Users")
-        val repository = HomeActivityRepository(fireStoreReference)
+        val dataStore = UserPreferences(this)
+        val repository = HomeActivityRepository(fireStoreReference, dataStore)
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[HomeActivityViewModel::class.java]
     }

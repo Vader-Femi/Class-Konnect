@@ -7,6 +7,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityMainBinding
 import com.femi.e_class.repositories.MainActivityRepository
 import com.femi.e_class.viewmodels.MainActivityViewModel
@@ -47,19 +48,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val repository = MainActivityRepository()
+        val dataStore = UserPreferences(this)
+        val repository = MainActivityRepository(dataStore)
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
     }
 
 
     private suspend fun returningUserCheck() {
-//        Intent(this@MainActivity, LoginActivity::class.java).also {
-//            it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//            it.putExtra(returningUser, returningUser)
-//            startActivity(it)
-//            finish()
-//        }
+        if (viewModel.userEmail().isNotEmpty() &&
+            viewModel.userFName().isNotEmpty() &&
+            viewModel.userLName().isNotEmpty() &&
+            viewModel.userMatric().toString().isNotEmpty()
+        ){
+            Intent(this@MainActivity, HomeActivity::class.java).also {
+                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(it)
+                finish()
+            }
+        }
     }
 
 }

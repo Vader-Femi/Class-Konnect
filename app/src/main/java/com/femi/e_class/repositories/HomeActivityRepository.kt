@@ -1,9 +1,11 @@
 package com.femi.e_class.repositories
 
+import com.femi.e_class.data.UserPreferences
 import com.google.firebase.firestore.CollectionReference
 
 class HomeActivityRepository(
     private val collectionReference: CollectionReference,
-) : BaseRepository() {
+    dataStore: UserPreferences
+) : BaseRepository(dataStore) {
     fun getCollectionReference() = collectionReference
 }

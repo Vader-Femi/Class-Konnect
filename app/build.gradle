@@ -61,6 +61,9 @@ dependencies {
     //State (Jetpack)
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
 
+    //Preferences Datastore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
     // Jitsi Meet
     implementation ('org.jitsi.react:jitsi-meet-sdk:5.1.0') { transitive = true }
 

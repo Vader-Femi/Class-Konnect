@@ -16,8 +16,8 @@ import kotlinx.coroutines.launch
 class LogInViewModel(
     private val repository: LogInRepository,
     private val validateEmail: ValidateEmail = ValidateEmail(),
-    private val validatePassword: ValidatePassword = ValidatePassword()
-) : BaseViewModel() {
+    private val validatePassword: ValidatePassword = ValidatePassword(),
+) : BaseViewModel(repository) {
 
     var logInFormState by mutableStateOf(LogInFormState())
 
@@ -72,7 +72,7 @@ class LogInViewModel(
             .addOnCompleteListener { addUserTask ->
                 if (addUserTask.isSuccessful) {
                     viewModelScope.launch {
-                        logInEventChannel.send(LogInEvent.Success)
+                        saveUser(email)
                     }
                 } else {
                     viewModelScope.launch {
@@ -82,13 +82,38 @@ class LogInViewModel(
             }
     }
 
+    private fun saveUser(email: String) {
+        repository.getCollectionReference()
+            .document(email)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.data != null)
+                    viewModelScope.launch {
+                        saveUserDetails(document.data)
+                        logInEventChannel.send(LogInEvent.Success)
+                    }
+            }.addOnFailureListener { exception ->
+                viewModelScope.launch {
+                    logInEventChannel.send(LogInEvent.Error(exception))
+                }
+            }
+
+    }
+
+    private suspend fun saveUserDetails(data: MutableMap<String, Any>?) {
+        repository.userFName(data?.get("FirstName")?.toString() ?: "")
+        repository.userLName(data?.get("LastName")?.toString() ?: "")
+        repository.userEmail(data?.get("Email")?.toString() ?: "")
+        repository.userMatric(data?.get("Matric")?.toString()?.toLong() ?: 0L)
+    }
+
     sealed class ValidationEvent {
         object Success : ValidationEvent()
     }
 
     sealed class LogInEvent<out T> {
         object Success : LogInEvent<Nothing>()
-        data class Error(val exception: java.lang.Exception?): LogInEvent<Nothing>()
+        data class Error(val exception: java.lang.Exception?) : LogInEvent<Nothing>()
         object Loading : LogInEvent<Nothing>()
     }
 }

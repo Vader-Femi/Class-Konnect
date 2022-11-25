@@ -16,11 +16,13 @@
     <string name="title_activity_home">Home</string>
     <string name="app_logo">App logo</string>
     <string name="class_details_fragment_label">Enter Class Details</string>
+    <string name="welcome_back_fragment_label">Welcome Back</string>
+    <string name="update_profile_fragment_label">Update Profile</string>
     <string name="video_screen_fragment_label">Video Screen</string>
     <string name="class_name">Class Name</string>
     <string name="start_class">Start Class</string>
     <string name="join_class">Join Class</string>
     <string name="room_name">Room Name</string>
     <string name="course_code">Course Code</string>
-
+    <string name="title_activity_video">Video Call</string>
 </resources>

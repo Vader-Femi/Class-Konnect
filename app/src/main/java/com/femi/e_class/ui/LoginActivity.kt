@@ -10,18 +10,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.ui.AppBarConfiguration
 import com.femi.e_class.KEY_EMAIL
 import com.femi.e_class.KEY_PASSWORD
+import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityLoginBinding
 import com.femi.e_class.disable
 import com.femi.e_class.presentation.LogInFormEvent
 import com.femi.e_class.repositories.LogInRepository
 import com.femi.e_class.viewmodels.LogInViewModel
-import com.femi.e_class.viewmodels.SignUpViewModel
 import com.femi.e_class.viewmodels.ViewModelFactory
 import com.femi.e_class.visible
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -73,14 +73,7 @@ class LoginActivity : AppCompatActivity() {
                     binding.btnSignIn.disable(event is LogInViewModel.LogInEvent.Loading)
                     when (event) {
                         is LogInViewModel.LogInEvent.Success -> {
-                            Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
-                                intent.flags =
-                                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                intent.putExtra(KEY_EMAIL, viewModel.logInFormState.email)
-                                startActivity(intent)
-                                finish()
-                            }
-
+                            moveToNextActivity()
                         }
                         is LogInViewModel.LogInEvent.Error -> {
                             Toast.makeText(this@LoginActivity,
@@ -95,19 +88,31 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.btnSignIn.setOnClickListener {
-//            viewModel.onEvent(LogInFormEvent.Submit)
-//            binding.emailLayout.helperText = viewModel.logInFormState.emailError
-//            binding.passwordLayout.helperText = viewModel.logInFormState.passwordError
-            Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
-                intent.putExtra(KEY_EMAIL, "aaa@gmail.com")
-                startActivity(intent)
-            }
+            viewModel.onEvent(LogInFormEvent.Submit)
+            binding.emailLayout.helperText = viewModel.logInFormState.emailError
+            binding.passwordLayout.helperText = viewModel.logInFormState.passwordError
+//            Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
+//                intent.putExtra(KEY_EMAIL, "aaa@gmail.com")
+//                startActivity(intent)
+//            }
+        }
+    }
+
+    private fun moveToNextActivity(){
+        Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
+            intent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.putExtra(KEY_EMAIL, viewModel.logInFormState.email)
+            startActivity(intent)
+            finish()
         }
     }
 
     private fun setupViewModel() {
         val firebaseAuth = FirebaseAuth.getInstance()
-        val repository = LogInRepository(firebaseAuth)
+        val fireStoreReference = FirebaseFirestore.getInstance().collection("Users")
+        val dataStore = UserPreferences(this)
+        val repository = LogInRepository(firebaseAuth, fireStoreReference, dataStore)
         val viewModelFactory = ViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory)[LogInViewModel::class.java]
     }

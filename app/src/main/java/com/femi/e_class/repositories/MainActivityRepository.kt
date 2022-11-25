@@ -1,4 +1,8 @@
 package com.femi.e_class.repositories
 
-class MainActivityRepository() : BaseRepository() {
+import com.femi.e_class.data.UserPreferences
+
+class MainActivityRepository(
+    dataStore: UserPreferences
+) : BaseRepository(dataStore) {
 }
