@@ -94,35 +94,7 @@ class SignUpViewModel(
         }
     }
 
-    private fun saveUser(
-        firstName: String,
-        lastName: String,
-        matric: String,
-        email: String,
-        password: String
-    ) {
-        val userHashMap = hashMapOf<String, String>()
-        userHashMap["FirstName"] = firstName
-        userHashMap["LastName"] = lastName
-        userHashMap["Matric"] = matric
-        userHashMap["Email"] = email
-        userHashMap["Password"] = password
-
-        repository.getCollectionReference()
-            .add(userHashMap)
-            .addOnSuccessListener {
-                viewModelScope.launch {
-                    registrationEventChannel.send(RegistrationEvent.Success)
-                }
-            }.addOnFailureListener {
-                viewModelScope.launch {
-                    registrationEventChannel.send(RegistrationEvent.Error(it))
-                }
-            }
-    }
-
     fun signUpUser(user: User) {
-
         viewModelScope.launch {
             registrationEventChannel.send(RegistrationEvent.Loading)
         }
@@ -146,6 +118,35 @@ class SignUpViewModel(
                 }
             }
     }
+
+    private fun saveUser(
+        firstName: String,
+        lastName: String,
+        matric: String,
+        email: String,
+        password: String
+    ) {
+        val userHashMap = hashMapOf(
+            "FirstName" to firstName,
+            "LastName" to lastName,
+            "Matric" to matric,
+            "Email" to email,
+            "Password" to password)
+
+        repository.getCollectionReference()
+            .document(email)
+            .set(userHashMap)
+            .addOnSuccessListener {
+                viewModelScope.launch {
+                    registrationEventChannel.send(RegistrationEvent.Success)
+                }
+            }.addOnFailureListener {
+                viewModelScope.launch {
+                    registrationEventChannel.send(RegistrationEvent.Error(it))
+                }
+            }
+    }
+
 
     sealed class ValidationEvent {
         object Success : ValidationEvent()

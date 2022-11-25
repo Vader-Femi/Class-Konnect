@@ -13,9 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.femi.e_class.KEY_EMAIL
-import com.femi.e_class.KEY_PASSWORD
-import com.femi.e_class.R
+import com.femi.e_class.*
 import com.femi.e_class.data.User
 import com.femi.e_class.databinding.FragmentFirstSignUpBinding
 import com.femi.e_class.presentation.RegistrationFormEvent
@@ -83,7 +81,8 @@ class FirstSignUpFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     viewModel.registrationEvents.collect { event ->
-                        binding.progressBar.isVisible = event is SignUpViewModel.RegistrationEvent.Loading
+                        binding.progressBar.visible(event is SignUpViewModel.RegistrationEvent.Loading)
+                        binding.btnContinue.disable(event is SignUpViewModel.RegistrationEvent.Loading)
                         when (event) {
                             is SignUpViewModel.RegistrationEvent.Success -> {
                                 findNavController().navigate(R.id.action_first_to_second_sign_up,
@@ -101,7 +100,6 @@ class FirstSignUpFragment : Fragment() {
                                     .show()
                             }
                             is SignUpViewModel.RegistrationEvent.Loading -> {
-//                                binding.progressBar.isVisible = event is SignUpViewModel.RegistrationEvent.Loading
                             }
                         }
                     }

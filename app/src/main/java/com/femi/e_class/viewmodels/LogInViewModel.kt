@@ -64,7 +64,6 @@ class LogInViewModel(
     }
 
     fun logInUser(email: String, password: String) {
-
         viewModelScope.launch {
             logInEventChannel.send(LogInEvent.Loading)
         }

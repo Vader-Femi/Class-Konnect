@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_graph"
+    app:startDestination="@id/classDetailsFragment">
+
+    <fragment
+        android:id="@+id/classDetailsFragment"
+        android:name="com.femi.e_class.ui.ClassDetailsFragment"
+        android:label="@string/class_details_fragment_label"
+        tools:layout="@layout/fragment_class_details" >
+        <action
+            android:id="@+id/action_classDetails_to_videoScreen"
+            app:destination="@id/videoScreenFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/videoScreenFragment"
+        android:name="com.femi.e_class.ui.VideoScreenFragment"
+        android:label="@string/video_screen_fragment_label"
+        tools:layout="@layout/fragment_video_screen" />
+
+</navigation>

@@ -34,6 +34,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    buildToolsVersion '33.0.0'
 }
 
 dependencies {
@@ -48,7 +49,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.4.1'
-    implementation 'com.google.firebase:firebase-auth:21.0.2'
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
     implementation 'com.google.firebase:firebase-database:20.1.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
@@ -57,5 +58,14 @@ dependencies {
     //Splash Screen
     implementation 'androidx.core:core-splashscreen:1.0.0'
 
+    //State (Jetpack)
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+
+    // Jitsi Meet
+    implementation ('org.jitsi.react:jitsi-meet-sdk:5.1.0') { transitive = true }
+
+    //Agora
+//    implementation 'com.github.AgoraIO-Community.Android-UIKit:final:v4.0.1'
+
+//    implementation 'com.github.agorabuilder:native-full-sdk:3.7.0'
 }

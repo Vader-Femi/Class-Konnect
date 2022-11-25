@@ -10,6 +10,17 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
+        }
+        maven { url 'https://www.jitpack.io' }
+        //noinspection JcenterRepositoryObsolete
+        jcenter() {
+            content {
+
+                includeModule("com.yqritc", "android-scalablevideoview")
+            }
+        }
     }
 }
 rootProject.name = "E-Class"

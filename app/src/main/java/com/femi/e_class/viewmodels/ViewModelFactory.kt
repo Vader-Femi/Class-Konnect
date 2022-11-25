@@ -2,10 +2,7 @@ package com.femi.e_class.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.femi.e_class.repositories.BaseRepository
-import com.femi.e_class.repositories.MainActivityRepository
-import com.femi.e_class.repositories.LogInRepository
-import com.femi.e_class.repositories.SignUpRepository
+import com.femi.e_class.repositories.*
 
 class ViewModelFactory(
     private val repository: BaseRepository
@@ -15,6 +12,7 @@ class ViewModelFactory(
             modelClass.isAssignableFrom(MainActivityViewModel::class.java) -> MainActivityViewModel(repository as MainActivityRepository) as T
             modelClass.isAssignableFrom(SignUpViewModel::class.java) -> SignUpViewModel(repository as SignUpRepository) as T
             modelClass.isAssignableFrom(LogInViewModel::class.java) -> LogInViewModel(repository as LogInRepository) as T
+            modelClass.isAssignableFrom(HomeActivityViewModel::class.java) -> HomeActivityViewModel(repository as HomeActivityRepository) as T
             else -> throw IllegalArgumentException("ViewModelClass Not Found")
         }
     }

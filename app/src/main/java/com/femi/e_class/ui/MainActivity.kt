@@ -35,7 +35,14 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        startActivity(Intent(this, SignUpActivity::class.java))
+        binding.btnSignUp.setOnClickListener {
+            startActivity(Intent(this, SignUpActivity::class.java))
+        }
+
+        binding.btnSignIn.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+
 
     }
 
