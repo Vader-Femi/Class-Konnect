@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.femi.e_class.domain.use_case.ValidateCourseCode
+import com.femi.e_class.domain.use_case.ValidatePassword
 import com.femi.e_class.domain.use_case.ValidateRoomName
 import com.femi.e_class.presentation.RoomFormEvent
 import com.femi.e_class.presentation.RoomFormState
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 class HomeActivityViewModel(
     private val repository: HomeActivityRepository,
     private val validateRoomName: ValidateRoomName = ValidateRoomName(),
-    private val validateCourseCode: ValidateCourseCode = ValidateCourseCode()
+    private val validateCourseCode: ValidateCourseCode = ValidateCourseCode(),
+    private val validatePassword: ValidatePassword = ValidatePassword()
 ) : BaseViewModel() {
 
     private var _email = MutableLiveData("")
@@ -57,6 +59,9 @@ class HomeActivityViewModel(
             is RoomFormEvent.CourseCodeChanged -> {
                 roomFormState = roomFormState.copy(courseCode = event.courseCode)
             }
+            is RoomFormEvent.PasswordChanged -> {
+                roomFormState = roomFormState.copy(password = event.password)
+            }
             is RoomFormEvent.Submit -> {
                 submitRoomFormData()
             }
@@ -66,15 +71,18 @@ class HomeActivityViewModel(
     private fun submitRoomFormData() {
         val roomNameResults = validateRoomName.execute(roomFormState.roomName)
         val courseCodeResults = validateCourseCode.execute(roomFormState.courseCode)
+        val passwordResults = validatePassword.execute(roomFormState.password)
 
         val hasError = listOf(
             roomNameResults,
-            courseCodeResults
+            courseCodeResults,
+            passwordResults
         ).any { !it.successful }
 
         roomFormState = roomFormState.copy(
             roomNameError = roomNameResults.errorMessage,
-            courseCodeError = courseCodeResults.errorMessage
+            courseCodeError = courseCodeResults.errorMessage,
+            passwordError = passwordResults.errorMessage
         )
 
         if (hasError)

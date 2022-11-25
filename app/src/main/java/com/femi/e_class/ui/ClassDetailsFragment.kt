@@ -11,10 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.femi.e_class.KEY_AVATAR_URL
-import com.femi.e_class.KEY_COURSE_CODE
-import com.femi.e_class.KEY_ROOM_NAME
-import com.femi.e_class.R
+import com.femi.e_class.*
 import com.femi.e_class.databinding.FragmentClassDetailsBinding
 import com.femi.e_class.presentation.RoomFormEvent
 import com.femi.e_class.viewmodels.HomeActivityViewModel
@@ -44,6 +41,10 @@ class ClassDetailsFragment : Fragment() {
             binding.etCourseCode.doOnTextChanged { text, _, _, _ ->
                 viewModel.onEvent(RoomFormEvent.CourseCodeChanged(text.toString()))
             }
+            binding.etPassword.doOnTextChanged { text, _, _, _ ->
+                viewModel.onEvent(RoomFormEvent.PasswordChanged(text.toString()))
+            }
+
 
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -61,6 +62,7 @@ class ClassDetailsFragment : Fragment() {
                 viewModel.onEvent(RoomFormEvent.Submit)
                 binding.roomNameLayout.helperText = viewModel.roomFormState.roomNameError
                 binding.courseCodeLayout.helperText = viewModel.roomFormState.courseCodeError
+                binding.passwordLayout.helperText = viewModel.roomFormState.passwordError
             }
         }
     }
@@ -69,9 +71,11 @@ class ClassDetailsFragment : Fragment() {
         findNavController().navigate(R.id.action_classDetails_to_videoScreen,
             Bundle().apply {
                 putString(KEY_ROOM_NAME,
-                    binding.etRoomName.text.toString().trim())
+                    viewModel.roomFormState.roomName.trim())
                 putString(KEY_COURSE_CODE,
-                    binding.etCourseCode.text.toString().uppercase().trim())
+                    viewModel.roomFormState.courseCode.uppercase().trim())
+                putString(KEY_PASSWORD,
+                    viewModel.roomFormState.password.trim())
                 putString(KEY_AVATAR_URL,
                      "")
             })

@@ -1,6 +1,7 @@
 package com.femi.e_class.ui
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -52,9 +53,11 @@ class HomeActivity : AppCompatActivity(), JitsiMeetActivityInterface {
 
         val loadingAlertDialog: AlertDialog = MaterialAlertDialogBuilder(this)
             .setTitle("Welcome Back")
+            .setView(layoutInflater.inflate(R.layout.loading, null))
             .setMessage("Logging In...Please Wait")
             .setCancelable(false)
             .create()
+
 
         lifecycleScope.launch {
             viewModel.getUserEvent.collect { event ->
@@ -85,7 +88,7 @@ class HomeActivity : AppCompatActivity(), JitsiMeetActivityInterface {
 
     }
 
-    private fun getUserDetails(){
+    private fun getUserDetails() {
         viewModel.getUser(email!!)
     }
 

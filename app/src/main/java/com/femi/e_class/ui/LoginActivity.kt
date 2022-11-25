@@ -95,13 +95,13 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.btnSignIn.setOnClickListener {
-//            viewModel.onEvent(LogInFormEvent.Submit)
-//            binding.emailLayout.helperText = viewModel.logInFormState.emailError
-//            binding.passwordLayout.helperText = viewModel.logInFormState.passwordError
-            Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
-                intent.putExtra(KEY_EMAIL, "aaa@gmail.com")
-                startActivity(intent)
-            }
+            viewModel.onEvent(LogInFormEvent.Submit)
+            binding.emailLayout.helperText = viewModel.logInFormState.emailError
+            binding.passwordLayout.helperText = viewModel.logInFormState.passwordError
+//            Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
+//                intent.putExtra(KEY_EMAIL, "aaa@gmail.com")
+//                startActivity(intent)
+//            }
         }
     }
 
