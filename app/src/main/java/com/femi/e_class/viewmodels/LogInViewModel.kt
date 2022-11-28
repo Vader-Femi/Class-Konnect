@@ -92,6 +92,11 @@ class LogInViewModel(
                         saveUserDetails(document.data)
                         logInEventChannel.send(LogInEvent.Success)
                     }
+                else{
+                    viewModelScope.launch {
+                        logInEventChannel.send(LogInEvent.Empty("Incorrect email or password"))
+                    }
+                }
             }.addOnFailureListener { exception ->
                 viewModelScope.launch {
                     logInEventChannel.send(LogInEvent.Error(exception))
@@ -114,6 +119,7 @@ class LogInViewModel(
     sealed class LogInEvent<out T> {
         object Success : LogInEvent<Nothing>()
         data class Error(val exception: java.lang.Exception?) : LogInEvent<Nothing>()
+        data class Empty(val message: String) : LogInEvent<Nothing>()
         object Loading : LogInEvent<Nothing>()
     }
 }

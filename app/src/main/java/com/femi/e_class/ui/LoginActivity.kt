@@ -81,7 +81,13 @@ class LoginActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT)
                                 .show()
                         }
-                        LogInViewModel.LogInEvent.Loading -> {}
+                        is LogInViewModel.LogInEvent.Empty -> {
+                            Toast.makeText(this@LoginActivity,
+                                event.message,
+                                Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        is LogInViewModel.LogInEvent.Loading -> {}
                     }
                 }
             }
