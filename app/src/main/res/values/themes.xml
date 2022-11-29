@@ -5,10 +5,13 @@
     </style>
 
     <style name="Theme.EClass" parent="Base.Theme.EClass" />
+
     <style name="Theme.EClass.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="Theme.EClass.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="Theme.EClass.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

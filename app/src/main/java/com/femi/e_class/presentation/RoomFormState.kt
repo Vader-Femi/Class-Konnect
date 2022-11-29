@@ -5,6 +5,6 @@ data class RoomFormState(
 //    val roomNameError: String? = null,
     val courseCode: String = "",
     val courseCodeError: String? = null,
-    val password: String = "",
-    val passwordError: String? = null,
+    val roomPassword: String = "",
+    val roomPasswordError: String? = null,
 )

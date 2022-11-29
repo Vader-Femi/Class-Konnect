@@ -5,6 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.facebook.react.modules.core.PermissionListener
 import com.femi.e_class.*
 import com.femi.e_class.data.UserPreferences
@@ -18,10 +22,11 @@ import kotlinx.coroutines.launch
 import org.jitsi.meet.sdk.JitsiMeetActivityDelegate
 import org.jitsi.meet.sdk.JitsiMeetActivityInterface
 
-class HomeActivity : AppCompatActivity(), JitsiMeetActivityInterface {
+class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: HomeActivityViewModel
+//    private lateinit var appBarConfiguration: AppBarConfiguration
     private var email = ""
     private var matric = 0L
     private var fName = ""
@@ -33,6 +38,12 @@ class HomeActivity : AppCompatActivity(), JitsiMeetActivityInterface {
         setupViewModel()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+//        setSupportActionBar(binding.toolbar)
+//
+//        val navController = findNavController(R.id.nav_host_fragment_content_home)
+//        appBarConfiguration = AppBarConfiguration(navController.graph)
+//        setupActionBarWithNavController(navController, appBarConfiguration)
 
 //        lifecycleScope.launch {
 //            val view = layoutInflater.inflate(R.layout.loading, null)
@@ -59,8 +70,10 @@ class HomeActivity : AppCompatActivity(), JitsiMeetActivityInterface {
         viewModel = ViewModelProvider(this, viewModelFactory)[HomeActivityViewModel::class.java]
     }
 
-    override fun requestPermissions(p0: Array<out String>?, p1: Int, p2: PermissionListener?) {
-        JitsiMeetActivityDelegate.requestPermissions(this, p0, p1, p2)
-    }
+//    override fun onSupportNavigateUp(): Boolean {
+//        val navController = findNavController(R.id.nav_host_fragment_content_home)
+//        return navController.navigateUp(appBarConfiguration)
+//                || super.onSupportNavigateUp()
+//    }
 
 }

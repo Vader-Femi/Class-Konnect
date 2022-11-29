@@ -15,8 +15,7 @@
             android:layout_height="200dp"
             app:expandedTitleTextColor="@android:color/transparent"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            app:title="@string/first_sign_up_fragment_label"
-            >
+            app:title="@string/first_sign_up_fragment_label">
 
             <RelativeLayout
                 android:layout_width="match_parent"

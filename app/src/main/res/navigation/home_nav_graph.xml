@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_nav_graph"
-    app:startDestination="@id/classDetailsFragment">
+    app:startDestination="@id/welcomeBackFragment">
 
     <fragment
         android:id="@+id/welcomeBackFragment"
@@ -11,10 +11,10 @@
         android:label="@string/welcome_back_fragment_label"
         tools:layout="@layout/fragment_welcome_back" >
         <action
-            android:id="@+id/action_welcomeBackFragment_to_updateProfileFragment"
+            android:id="@+id/action_welcomeBack_to_updateProfile"
             app:destination="@id/updateProfileFragment" />
         <action
-            android:id="@+id/action_welcomeBackFragment_to_classDetailsFragment"
+            android:id="@+id/action_welcomeBack_to_classDetails"
             app:destination="@id/classDetailsFragment" />
     </fragment>
     <fragment

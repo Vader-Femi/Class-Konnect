@@ -25,4 +25,7 @@
     <string name="room_name">Room Name</string>
     <string name="course_code">Course Code</string>
     <string name="title_activity_video">Video Call</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="good_day">Good Day</string>
+    <string name="update">Update</string>
 </resources>

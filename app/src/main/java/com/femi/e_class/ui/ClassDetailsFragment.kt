@@ -43,7 +43,7 @@ class ClassDetailsFragment : Fragment() {
                 viewModel.onEvent(RoomFormEvent.CourseCodeChanged(text.toString()))
             }
             binding.etPassword.doOnTextChanged { text, _, _, _ ->
-                viewModel.onEvent(RoomFormEvent.PasswordChanged(text.toString()))
+                viewModel.onEvent(RoomFormEvent.RoomPasswordChanged(text.toString()))
             }
 
 
@@ -63,7 +63,7 @@ class ClassDetailsFragment : Fragment() {
                 viewModel.onEvent(RoomFormEvent.Submit)
 //                binding.roomNameLayout.helperText = viewModel.roomFormState.roomNameError
                 binding.courseCodeLayout.helperText = viewModel.roomFormState.courseCodeError
-                binding.passwordLayout.helperText = viewModel.roomFormState.passwordError
+                binding.passwordLayout.helperText = viewModel.roomFormState.roomPasswordError
             }
         }
     }
@@ -73,7 +73,7 @@ class ClassDetailsFragment : Fragment() {
             intent.putExtra(KEY_COURSE_CODE,
                 viewModel.roomFormState.courseCode.uppercase().trim())
             intent.putExtra(KEY_PASSWORD,
-                viewModel.roomFormState.password.trim())
+                viewModel.roomFormState.roomPassword.trim())
             startActivity(intent)
         }
     }
