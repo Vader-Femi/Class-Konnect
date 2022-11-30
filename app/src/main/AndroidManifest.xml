@@ -18,13 +18,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EClass"
+        android:theme="@style/Base.Theme.EClass"
         tools:targetApi="33">
         <activity
             android:name=".ui.VideoActivity"
             android:exported="false"
             android:label="@string/title_activity_video"
-            android:theme="@style/Theme.EClass.NoActionBar">
+            android:theme="@style/Base.Theme.EClass">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -33,7 +33,7 @@
             android:name=".ui.HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
-            android:theme="@style/Theme.EClass"
+            android:theme="@style/Base.Theme.EClass"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.app.lib_name"
@@ -43,7 +43,7 @@
             android:name=".ui.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.EClass"
+            android:theme="@style/Base.Theme.EClass"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.app.lib_name"
@@ -53,7 +53,7 @@
             android:name=".ui.SignUpActivity"
             android:exported="false"
             android:label="@string/sign_up"
-            android:theme="@style/Theme.EClass"
+            android:theme="@style/Base.Theme.EClass"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.app.lib_name"
@@ -62,7 +62,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.EClass"
+            android:theme="@style/Base.Theme.EClass"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -15,6 +15,7 @@ import com.femi.e_class.viewmodels.HomeActivityViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.math.abs
 
 class WelcomeBackFragment : Fragment() {
 
@@ -44,7 +45,7 @@ class WelcomeBackFragment : Fragment() {
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE),
                     calendar.get(Calendar.SECOND))
-                greeting = when (current.hour){
+                greeting = when (current.hour) {
                     in 6..11 -> "Good Morning "
                     in 12..16 -> "Good Afternoon "
                     in 17..23 -> "Good Night "
@@ -56,6 +57,20 @@ class WelcomeBackFragment : Fragment() {
                 val greetingText = "${getString(R.string.welcome_back)} ${viewModel.userFName()}"
                 binding.toolbarText.text = greetingText
                 binding.toolbarLayout.title = "$greeting${viewModel.userFName()}"
+                binding.appBarLayout.addOnOffsetChangedListener { _, verticalOffSet ->
+                    if (abs(verticalOffSet) == binding.appBarLayout.totalScrollRange) {
+                        //Collapsed
+                        lifecycleScope.launch {
+                            binding.toolbarLayout.title = "$greeting${viewModel.userFName()}"
+                        }
+                    } else {
+                        //Expanded
+                        lifecycleScope.launch {
+                            binding.toolbarLayout.title = greeting
+                        }
+                    }
+                }
+
             }
 
             binding.btnStartOrJoin.setOnClickListener {
