@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         if (viewModel.userEmail().isNotEmpty() &&
             viewModel.userFName().isNotEmpty() &&
             viewModel.userLName().isNotEmpty() &&
-            viewModel.userMatric().toString().isNotEmpty()
+            viewModel.userMatric() != 0L
         ){
             Intent(this@MainActivity, HomeActivity::class.java).also {
                 it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

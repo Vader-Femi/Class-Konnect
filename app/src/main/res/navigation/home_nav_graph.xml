@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_welcomeBack_to_classDetails"
             app:destination="@id/classDetailsFragment" />
+        <action
+            android:id="@+id/action_welcomeBack_to_my_account"
+            app:destination="@id/myAccountFragment" />
     </fragment>
     <fragment
         android:id="@+id/classDetailsFragment"
@@ -27,5 +30,10 @@
         android:name="com.femi.e_class.ui.UpdateProfileFragment"
         android:label="@string/update_profile_fragment_label"
         tools:layout="@layout/fragment_update_profile" />
+    <fragment
+        android:id="@+id/myAccountFragment"
+        android:name="com.femi.e_class.ui.MyAccountFragment"
+        android:label="@string/my_account_fragment_label"
+        tools:layout="@layout/fragment_my_account" />
 
 </navigation>

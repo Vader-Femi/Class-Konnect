@@ -48,7 +48,7 @@ class WelcomeBackFragment : Fragment() {
                 greeting = when (current.hour) {
                     in 6..11 -> "Good Morning "
                     in 12..16 -> "Good Afternoon "
-                    in 17..23 -> "Good Night "
+                    in 17..23 -> "Good Evening "
                     else -> "You should be sleeping "
                 }
             }
@@ -81,6 +81,15 @@ class WelcomeBackFragment : Fragment() {
                 findNavController().navigate(R.id.action_welcomeBack_to_updateProfile)
             }
 
+            binding.btnMyAccount.setOnClickListener {
+                findNavController().navigate(R.id.action_welcomeBack_to_my_account)
+            }
+
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

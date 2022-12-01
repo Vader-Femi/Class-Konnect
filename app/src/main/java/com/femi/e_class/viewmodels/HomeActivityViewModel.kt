@@ -40,6 +40,9 @@ class HomeActivityViewModel(
     private val updateProfileEventChannel = Channel<UpdateProfileEvent<Any?>>()
     val updateProfileEvents = updateProfileEventChannel.receiveAsFlow()
 
+    private val deleteAccountEventChannel = Channel<DeleteAccountEvent<Any?>>()
+    val deleteAccountEvents = deleteAccountEventChannel.receiveAsFlow()
+
     fun onEvent(event: RoomFormEvent) {
         when (event) {
 //            is RoomFormEvent.RoomNameChanged -> {
@@ -184,6 +187,26 @@ class HomeActivityViewModel(
         repository.userMatric(data?.get("Matric")?.toLong() ?: 0L)
     }
 
+    fun deleteAccount(){
+        viewModelScope.launch {
+            val email = repository.userEmail()
+            deleteAccountEventChannel.send(DeleteAccountEvent.Loading)
+            repository.getCollectionReference()
+                .document(email)
+                .delete()
+                .addOnSuccessListener {
+                    viewModelScope.launch {
+                        logOut()
+                        deleteAccountEventChannel.send(DeleteAccountEvent.Success)
+                    }
+                }.addOnFailureListener {
+                    viewModelScope.launch {
+                        deleteAccountEventChannel.send(DeleteAccountEvent.Error(it))
+                    }
+                }
+        }
+    }
+
     sealed class RoomEvent {
         object Success : RoomEvent()
     }
@@ -196,6 +219,12 @@ class HomeActivityViewModel(
         object Success : UpdateProfileEvent<Nothing>()
         data class Error(val exception: java.lang.Exception?) : UpdateProfileEvent<Nothing>()
         object Loading : UpdateProfileEvent<Nothing>()
+    }
+
+    sealed class DeleteAccountEvent<out T> {
+        object Success : DeleteAccountEvent<Nothing>()
+        data class Error(val exception: java.lang.Exception?) : DeleteAccountEvent<Nothing>()
+        object Loading : DeleteAccountEvent<Nothing>()
     }
 
 }
