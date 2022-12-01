@@ -20,7 +20,7 @@ class SignUpViewModel(
     private val validateEmail: ValidateEmail = ValidateEmail(),
     private val validateMatric: ValidateMatric = ValidateMatric(),
     private val validatePassword: ValidatePassword = ValidatePassword(),
-    private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword(),
+//    private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword(),
 ) : BaseViewModel(repository) {
 
     var registrationFormState by mutableStateOf(RegistrationFormState())
@@ -48,10 +48,10 @@ class SignUpViewModel(
             is RegistrationFormEvent.PasswordChanged -> {
                 registrationFormState = registrationFormState.copy(password = event.password)
             }
-            is RegistrationFormEvent.RepeatedPasswordChanged -> {
-                registrationFormState =
-                    registrationFormState.copy(repeatedPassword = event.repeatedPassword)
-            }
+//            is RegistrationFormEvent.RepeatedPasswordChanged -> {
+//                registrationFormState =
+//                    registrationFormState.copy(repeatedPassword = event.repeatedPassword)
+//            }
             is RegistrationFormEvent.Submit -> {
                 submitRegistrationData()
             }
@@ -64,9 +64,9 @@ class SignUpViewModel(
         val emailResult = validateEmail.execute(registrationFormState.email)
         val matricResult = validateMatric.execute(registrationFormState.matric)
         val passwordResult = validatePassword.execute(registrationFormState.password)
-        val repeatedPasswordResult = validateRepeatedPassword.execute(
-            registrationFormState.password,
-            registrationFormState.repeatedPassword)
+//        val repeatedPasswordResult = validateRepeatedPassword.execute(
+//            registrationFormState.password,
+//            registrationFormState.repeatedPassword)
 
         val hasError = listOf(
             firstNameResult,
@@ -74,7 +74,7 @@ class SignUpViewModel(
             emailResult,
             matricResult,
             passwordResult,
-            repeatedPasswordResult
+//            repeatedPasswordResult
         ).any { !it.successful }
 
         registrationFormState = registrationFormState.copy(
@@ -83,7 +83,7 @@ class SignUpViewModel(
             emailError = emailResult.errorMessage,
             matricError = matricResult.errorMessage,
             passwordError = passwordResult.errorMessage,
-            repeatedPasswordError = repeatedPasswordResult.errorMessage
+//            repeatedPasswordError = repeatedPasswordResult.errorMessage
         )
 
         if (hasError)

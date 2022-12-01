@@ -31,5 +31,8 @@
     <string name="update">Update</string>
     <string name="log_out">Log out</string>
     <string name="delete_account">Delete Account</string>
+    <string name="verify_identity">Verify Identity</string>
+    <string name="verify_identity_text">Enter your password, so we can know if it\'s really you</string>
+    <string name="new_password">New Password</string>
 
 </resources>

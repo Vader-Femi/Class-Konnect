@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -55,9 +54,9 @@ class FirstSignUpFragment : Fragment() {
             binding.etPassword.doOnTextChanged { text, _, _, _ ->
                 viewModel.onEvent(RegistrationFormEvent.PasswordChanged(text.toString()))
             }
-            binding.etRetypePassword.doOnTextChanged { text, _, _, _ ->
-                viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(text.toString()))
-            }
+//            binding.etRetypePassword.doOnTextChanged { text, _, _, _ ->
+//                viewModel.onEvent(RegistrationFormEvent.RepeatedPasswordChanged(text.toString()))
+//            }
 
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -113,7 +112,7 @@ class FirstSignUpFragment : Fragment() {
                 binding.emailLayout.helperText = viewModel.registrationFormState.emailError
                 binding.matricLayout.helperText = viewModel.registrationFormState.matricError
                 binding.passwordLayout.helperText = viewModel.registrationFormState.passwordError
-                binding.retypePasswordLayout.helperText = viewModel.registrationFormState.repeatedPasswordError
+//                binding.retypePasswordLayout.helperText = viewModel.registrationFormState.repeatedPasswordError
             }
         }
 

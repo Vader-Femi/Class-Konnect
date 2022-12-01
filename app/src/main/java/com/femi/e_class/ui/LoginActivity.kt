@@ -40,8 +40,6 @@ class LoginActivity : AppCompatActivity() {
 
         val email = intent.getStringExtra(KEY_EMAIL)
         val password = intent.getStringExtra(KEY_PASSWORD)
-        binding.etEmail.setText(email)
-        binding.etPassword.setText(password)
 
         binding.etEmail.doOnTextChanged { text, _, _, _ ->
             viewModel.onEvent(LogInFormEvent.EmailChanged(text.toString()))
@@ -50,6 +48,9 @@ class LoginActivity : AppCompatActivity() {
         binding.etPassword.doOnTextChanged { text, _, _, _ ->
             viewModel.onEvent(LogInFormEvent.PasswordChanged(text.toString()))
         }
+
+        binding.etEmail.setText(email)
+        binding.etPassword.setText(password)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {

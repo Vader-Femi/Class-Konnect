@@ -24,7 +24,7 @@ class HomeActivityViewModel(
     private val validateEmail: ValidateEmail = ValidateEmail(),
     private val validateMatric: ValidateMatric = ValidateMatric(),
     private val validatePassword: ValidatePassword = ValidatePassword(),
-    private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword()
+//    private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword()
 ) : BaseViewModel(repository) {
 
     var roomFormState by mutableStateOf(RoomFormState())
@@ -42,6 +42,9 @@ class HomeActivityViewModel(
 
     private val deleteAccountEventChannel = Channel<DeleteAccountEvent<Any?>>()
     val deleteAccountEvents = deleteAccountEventChannel.receiveAsFlow()
+
+    private val verifyIdentityEventChannel = Channel<VerifyIdentityEvent<Any?>>()
+    val verifyIdentityEvents = verifyIdentityEventChannel.receiveAsFlow()
 
     fun onEvent(event: RoomFormEvent) {
         when (event) {
@@ -63,24 +66,29 @@ class HomeActivityViewModel(
     fun onEvent(event: UpdateProfileFormEvent) {
         when (event) {
             is UpdateProfileFormEvent.FirstNameChanged -> {
-                updateProfileValidationFormState = updateProfileValidationFormState.copy(firstName = event.firstName)
+                updateProfileValidationFormState =
+                    updateProfileValidationFormState.copy(firstName = event.firstName)
             }
             is UpdateProfileFormEvent.LastNameChanged -> {
-                updateProfileValidationFormState = updateProfileValidationFormState.copy(lastName = event.lastName)
+                updateProfileValidationFormState =
+                    updateProfileValidationFormState.copy(lastName = event.lastName)
             }
             is UpdateProfileFormEvent.EmailChanged -> {
-                updateProfileValidationFormState = updateProfileValidationFormState.copy(email = event.email)
+                updateProfileValidationFormState =
+                    updateProfileValidationFormState.copy(email = event.email)
             }
             is UpdateProfileFormEvent.MatricChanged -> {
-                updateProfileValidationFormState = updateProfileValidationFormState.copy(matric = event.matric)
+                updateProfileValidationFormState =
+                    updateProfileValidationFormState.copy(matric = event.matric)
             }
             is UpdateProfileFormEvent.PasswordChanged -> {
-                updateProfileValidationFormState = updateProfileValidationFormState.copy(password = event.password)
-            }
-            is UpdateProfileFormEvent.RepeatedPasswordChanged -> {
                 updateProfileValidationFormState =
-                    updateProfileValidationFormState.copy(repeatedPassword = event.repeatedPassword)
+                    updateProfileValidationFormState.copy(password = event.password)
             }
+//            is UpdateProfileFormEvent.RepeatedPasswordChanged -> {
+//                updateProfileValidationFormState =
+//                    updateProfileValidationFormState.copy(repeatedPassword = event.repeatedPassword)
+//            }
             is UpdateProfileFormEvent.Submit -> {
                 submitRegistrationData()
             }
@@ -118,9 +126,9 @@ class HomeActivityViewModel(
         val emailResult = validateEmail.execute(updateProfileValidationFormState.email)
         val matricResult = validateMatric.execute(updateProfileValidationFormState.matric)
         val passwordResult = validatePassword.execute(updateProfileValidationFormState.password)
-        val repeatedPasswordResult = validateRepeatedPassword.execute(
-            updateProfileValidationFormState.password,
-            updateProfileValidationFormState.repeatedPassword)
+//        val repeatedPasswordResult = validateRepeatedPassword.execute(
+//            updateProfileValidationFormState.password,
+//            updateProfileValidationFormState.repeatedPassword)
 
         val hasError = listOf(
             firstNameResult,
@@ -128,7 +136,7 @@ class HomeActivityViewModel(
             emailResult,
             matricResult,
             passwordResult,
-            repeatedPasswordResult
+//            repeatedPasswordResult
         ).any { !it.successful }
 
         updateProfileValidationFormState = updateProfileValidationFormState.copy(
@@ -137,7 +145,7 @@ class HomeActivityViewModel(
             emailError = emailResult.errorMessage,
             matricError = matricResult.errorMessage,
             passwordError = passwordResult.errorMessage,
-            repeatedPasswordError = repeatedPasswordResult.errorMessage
+//            repeatedPasswordError = repeatedPasswordResult.errorMessage
         )
 
         if (hasError)
@@ -153,7 +161,7 @@ class HomeActivityViewModel(
         lastName: String,
         matric: String,
         email: String,
-        password: String
+        password: String,
     ) {
         val userHashMap = hashMapOf(
             "FirstName" to firstName,
@@ -187,10 +195,27 @@ class HomeActivityViewModel(
         repository.userMatric(data?.get("Matric")?.toLong() ?: 0L)
     }
 
-    fun deleteAccount(){
+    fun deleteAccount() {
+        viewModelScope.launch {
+            deleteAccountEventChannel.send(DeleteAccountEvent.Loading)
+            repository.getAuthReference()
+                .currentUser
+                ?.delete()
+                ?.addOnCompleteListener { addUserTask ->
+                    if (addUserTask.isSuccessful) {
+                        deleteFromDatabase()
+                    } else{
+                        viewModelScope.launch {
+                            deleteAccountEventChannel.send(DeleteAccountEvent.Error(addUserTask.exception))
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun deleteFromDatabase() {
         viewModelScope.launch {
             val email = repository.userEmail()
-            deleteAccountEventChannel.send(DeleteAccountEvent.Loading)
             repository.getCollectionReference()
                 .document(email)
                 .delete()
@@ -202,6 +227,26 @@ class HomeActivityViewModel(
                 }.addOnFailureListener {
                     viewModelScope.launch {
                         deleteAccountEventChannel.send(DeleteAccountEvent.Error(it))
+                    }
+                }
+        }
+    }
+
+    fun verifyIdentity(password: String) {
+        viewModelScope.launch {
+            val email = repository.userEmail()
+            verifyIdentityEventChannel.send(VerifyIdentityEvent.Loading)
+            repository.getAuthReference()
+                .signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { addUserTask ->
+                    if (addUserTask.isSuccessful) {
+                        viewModelScope.launch {
+                            verifyIdentityEventChannel.send(VerifyIdentityEvent.Success)
+                        }
+                    } else {
+                        viewModelScope.launch {
+                            verifyIdentityEventChannel.send(VerifyIdentityEvent.Error(addUserTask.exception))
+                        }
                     }
                 }
         }
@@ -225,6 +270,12 @@ class HomeActivityViewModel(
         object Success : DeleteAccountEvent<Nothing>()
         data class Error(val exception: java.lang.Exception?) : DeleteAccountEvent<Nothing>()
         object Loading : DeleteAccountEvent<Nothing>()
+    }
+
+    sealed class VerifyIdentityEvent<out T> {
+        object Success : VerifyIdentityEvent<Nothing>()
+        data class Error(val exception: java.lang.Exception?) : VerifyIdentityEvent<Nothing>()
+        object Loading : VerifyIdentityEvent<Nothing>()
     }
 
 }

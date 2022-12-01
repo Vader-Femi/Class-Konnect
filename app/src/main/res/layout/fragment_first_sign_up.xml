@@ -149,7 +149,6 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="30dp"
                 app:helperTextTextColor="@color/error"
                 app:passwordToggleEnabled="true">
 
@@ -165,27 +164,27 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/retypePasswordLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                app:helperTextTextColor="@color/error"
-                app:passwordToggleEnabled="true">
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:id="@+id/retypePasswordLayout"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="20dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginEnd="20dp"-->
+<!--                app:helperTextTextColor="@color/error"-->
+<!--                app:passwordToggleEnabled="true">-->
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etRetypePassword"
-                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/retype_password"
-                    android:importantForAutofill="no"
-                    android:inputType="textPassword"
-                    android:textSize="18sp" />
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/etRetypePassword"-->
+<!--                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:hint="@string/retype_password"-->
+<!--                    android:importantForAutofill="no"-->
+<!--                    android:inputType="textPassword"-->
+<!--                    android:textSize="18sp" />-->
 
-            </com.google.android.material.textfield.TextInputLayout>
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/progressBar"

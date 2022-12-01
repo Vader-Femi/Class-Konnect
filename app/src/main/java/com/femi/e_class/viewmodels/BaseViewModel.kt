@@ -31,6 +31,8 @@ open class BaseViewModel(
         repository.userLName(lName)
     }
 
+    suspend fun userLName(): String = repository.userLName()
+
     fun logOut(){
         viewModelScope.launch {
             userFName("")
@@ -39,7 +41,4 @@ open class BaseViewModel(
             userEmail("")
         }
     }
-
-    suspend fun userLName(): String = repository.userLName()
-
 }
