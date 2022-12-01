@@ -49,31 +49,11 @@ class MyAccountFragment : Fragment() {
             verifyIdentity()
 
             binding.btnLogOut.setOnClickListener {
-                MaterialAlertDialogBuilder(requireActivity())
-                    .setTitle("Hey There")
-                    .setMessage("Are you sure you want to log out?")
-                    .setPositiveButton("Yup, I'm sure") { _, _ ->
-                        viewModel.logOut()
-                        Intent(requireActivity(), MainActivity::class.java).also {
-                            it.flags =
-                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            startActivity(it)
-                            requireActivity().finish()
-                        }
-                    }
-                    .setNegativeButton("I don't think so") { _, _ ->}
-                    .show()
+                logOut()
             }
 
             binding.btnDeleteAccount.setOnClickListener {
-                MaterialAlertDialogBuilder(requireActivity())
-                    .setTitle("Hold up")
-                    .setMessage("Your account will be PERMANENTLY deleted")
-                    .setPositiveButton("Yup, proceed") { _, _ ->
-                        viewModel.deleteAccount()
-                    }
-                    .setNegativeButton("No, please cancel") { _, _ ->}
-                    .show()
+                deleteAccount()
             }
 
             viewLifecycleOwner.lifecycleScope.launch {
@@ -92,13 +72,9 @@ class MyAccountFragment : Fragment() {
                                 }
                             }
                             is HomeActivityViewModel.DeleteAccountEvent.Error ->{
-                                Toast.makeText(requireContext(),
-                                    event.exception?.message.toString(),
-                                    Toast.LENGTH_SHORT)
-                                    .show()
+                                handleNetworkExceptions(event.exception, retry = {deleteAccount()})
                             }
-                            is HomeActivityViewModel.DeleteAccountEvent.Loading -> {
-                            }
+                            is HomeActivityViewModel.DeleteAccountEvent.Loading -> {}
                         }
                     }
                 }
@@ -109,15 +85,9 @@ class MyAccountFragment : Fragment() {
                     viewModel.verifyIdentityEvents.collect { event ->
                         loadingDialog.showLoadingDialog(event is HomeActivityViewModel.VerifyIdentityEvent.Loading)
                         when (event) {
-                            is HomeActivityViewModel.VerifyIdentityEvent.Success -> {
-
-                            }
+                            is HomeActivityViewModel.VerifyIdentityEvent.Success -> {}
                             is HomeActivityViewModel.VerifyIdentityEvent.Error -> {
-                                Toast.makeText(requireActivity(),
-                                    event.exception?.message.toString(),
-                                    Toast.LENGTH_SHORT)
-                                    .show()
-                                verifyIdentityDialog.show()
+                                handleNetworkExceptions(event.exception)
                             }
                             is HomeActivityViewModel.VerifyIdentityEvent.Loading -> {
                             }
@@ -127,6 +97,34 @@ class MyAccountFragment : Fragment() {
             }
 
         }
+    }
+
+    private fun logOut(){
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle("Hold up")
+            .setMessage("Are you sure you want to log out?")
+            .setPositiveButton("Yup, I'm sure") { _, _ ->
+                viewModel.logOut()
+                Intent(requireActivity(), MainActivity::class.java).also {
+                    it.flags =
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(it)
+                    requireActivity().finish()
+                }
+            }
+            .setNegativeButton("I don't think so") { _, _ ->}
+            .show()
+    }
+
+    private fun deleteAccount(){
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle("Hold up")
+            .setMessage("Your account will be PERMANENTLY deleted")
+            .setPositiveButton("Yup, proceed") { _, _ ->
+                viewModel.deleteAccount()
+            }
+            .setNegativeButton("No, please cancel") { _, _ ->}
+            .show()
     }
 
     private fun verifyIdentity() {

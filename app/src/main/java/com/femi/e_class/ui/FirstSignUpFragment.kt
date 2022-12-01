@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -93,10 +92,7 @@ class FirstSignUpFragment : Fragment() {
                                     })
                             }
                             is SignUpViewModel.RegistrationEvent.Error ->{
-                                Toast.makeText(requireContext(),
-                                    event.exception?.message.toString(),
-                                    Toast.LENGTH_SHORT)
-                                    .show()
+                                handleNetworkExceptions(event.exception, retry = { attemptSignup() })
                             }
                             is SignUpViewModel.RegistrationEvent.Loading -> {
                             }
@@ -106,16 +102,20 @@ class FirstSignUpFragment : Fragment() {
             }
 
             binding.btnContinue.setOnClickListener {
-                viewModel.onEvent(RegistrationFormEvent.Submit)
-                binding.firstNameLayout.helperText = viewModel.registrationFormState.firstNameError
-                binding.lastNameLayout.helperText = viewModel.registrationFormState.lastNameError
-                binding.emailLayout.helperText = viewModel.registrationFormState.emailError
-                binding.matricLayout.helperText = viewModel.registrationFormState.matricError
-                binding.passwordLayout.helperText = viewModel.registrationFormState.passwordError
-//                binding.retypePasswordLayout.helperText = viewModel.registrationFormState.repeatedPasswordError
+                attemptSignup()
             }
         }
 
+    }
+
+    private fun attemptSignup(){
+        viewModel.onEvent(RegistrationFormEvent.Submit)
+        binding.firstNameLayout.helperText = viewModel.registrationFormState.firstNameError
+        binding.lastNameLayout.helperText = viewModel.registrationFormState.lastNameError
+        binding.emailLayout.helperText = viewModel.registrationFormState.emailError
+        binding.matricLayout.helperText = viewModel.registrationFormState.matricError
+        binding.passwordLayout.helperText = viewModel.registrationFormState.passwordError
+//                binding.retypePasswordLayout.helperText = viewModel.registrationFormState.repeatedPasswordError
     }
 
     override fun onDestroyView() {

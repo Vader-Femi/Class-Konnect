@@ -97,10 +97,7 @@ class UpdateProfileFragment : Fragment() {
                                 findNavController().popBackStack()
                             }
                             is HomeActivityViewModel.UpdateProfileEvent.Error -> {
-                                Toast.makeText(requireContext(),
-                                    event.exception?.message.toString(),
-                                    Toast.LENGTH_SHORT)
-                                    .show()
+                                handleNetworkExceptions(event.exception, retry = {attemptUpdateProfile()})
                             }
                             is HomeActivityViewModel.UpdateProfileEvent.Loading -> {
                             }
@@ -124,30 +121,33 @@ class UpdateProfileFragment : Fragment() {
                                     .show()
                                 verifyIdentityDialog.show()
                             }
-                            is HomeActivityViewModel.VerifyIdentityEvent.Loading -> {
-                            }
+                            is HomeActivityViewModel.VerifyIdentityEvent.Loading -> {}
                         }
                     }
                 }
             }
 
             binding.btnUpdateProfile.setOnClickListener {
-                viewModel.onEvent(UpdateProfileFormEvent.Submit)
-                binding.firstNameLayout.helperText =
-                    viewModel.updateProfileValidationFormState.firstNameError
-                binding.lastNameLayout.helperText =
-                    viewModel.updateProfileValidationFormState.lastNameError
-                binding.emailLayout.helperText =
-                    viewModel.updateProfileValidationFormState.emailError
-                binding.matricLayout.helperText =
-                    viewModel.updateProfileValidationFormState.matricError
-                binding.passwordLayout.helperText =
-                    viewModel.updateProfileValidationFormState.passwordError
-//                binding.retypePasswordLayout.helperText =
-//                    viewModel.updateProfileValidationFormState.repeatedPasswordError
+                attemptUpdateProfile()
             }
 
         }
+    }
+
+    private fun attemptUpdateProfile(){
+        viewModel.onEvent(UpdateProfileFormEvent.Submit)
+        binding.firstNameLayout.helperText =
+            viewModel.updateProfileValidationFormState.firstNameError
+        binding.lastNameLayout.helperText =
+            viewModel.updateProfileValidationFormState.lastNameError
+        binding.emailLayout.helperText =
+            viewModel.updateProfileValidationFormState.emailError
+        binding.matricLayout.helperText =
+            viewModel.updateProfileValidationFormState.matricError
+        binding.passwordLayout.helperText =
+            viewModel.updateProfileValidationFormState.passwordError
+//                binding.retypePasswordLayout.helperText =
+//                    viewModel.updateProfileValidationFormState.repeatedPasswordError
     }
 
     private fun fillProfileFields() {
