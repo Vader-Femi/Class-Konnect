@@ -4,7 +4,7 @@ class ValidateRoomPassword {
 
     fun execute(password: String): ValidationResult {
 
-        if (password.length < 8) {
+        if (password.length < 4) {
             return ValidationResult(
                 false,
                 "Password cannot be less than 4 characters"

@@ -56,6 +56,8 @@ class MyAccountFragment : Fragment() {
                 deleteAccount()
             }
 
+
+
             viewLifecycleOwner.lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     viewModel.deleteAccountEvents.collect { event ->
@@ -71,8 +73,9 @@ class MyAccountFragment : Fragment() {
                                     requireActivity().finish()
                                 }
                             }
-                            is HomeActivityViewModel.DeleteAccountEvent.Error ->{
-                                handleNetworkExceptions(event.exception, retry = {deleteAccount()})
+                            is HomeActivityViewModel.DeleteAccountEvent.Error -> {
+                                handleNetworkExceptions(event.exception,
+                                    retry = { deleteAccount() })
                             }
                             is HomeActivityViewModel.DeleteAccountEvent.Loading -> {}
                         }
@@ -99,7 +102,7 @@ class MyAccountFragment : Fragment() {
         }
     }
 
-    private fun logOut(){
+    private fun logOut() {
         MaterialAlertDialogBuilder(requireActivity())
             .setTitle("Hold up")
             .setMessage("Are you sure you want to log out?")
@@ -112,18 +115,18 @@ class MyAccountFragment : Fragment() {
                     requireActivity().finish()
                 }
             }
-            .setNegativeButton("I don't think so") { _, _ ->}
+            .setNegativeButton("I don't think so") { _, _ -> }
             .show()
     }
 
-    private fun deleteAccount(){
+    private fun deleteAccount() {
         MaterialAlertDialogBuilder(requireActivity())
             .setTitle("Hold up")
             .setMessage("Your account will be PERMANENTLY deleted")
             .setPositiveButton("Yup, proceed") { _, _ ->
                 viewModel.deleteAccount()
             }
-            .setNegativeButton("No, please cancel") { _, _ ->}
+            .setNegativeButton("No, please cancel") { _, _ -> }
             .show()
     }
 
