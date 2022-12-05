@@ -107,8 +107,7 @@ class SignUpViewModel(
                             firstName = user.firstName,
                             lastName = user.lastName,
                             matric = user.matric,
-                            email = user.email,
-                            password = user.password
+                            email = user.email
                         )
                     }
                 } else {
@@ -123,15 +122,13 @@ class SignUpViewModel(
         firstName: String,
         lastName: String,
         matric: String,
-        email: String,
-        password: String
+        email: String
     ) {
         val userHashMap = hashMapOf(
             "FirstName" to firstName,
             "LastName" to lastName,
             "Matric" to matric,
-            "Email" to email,
-            "Password" to password)
+            "Email" to email)
 
         repository.getCollectionReference()
             .document(email)

@@ -5,10 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.femi.e_class.domain.use_case.*
-import com.femi.e_class.presentation.UpdateProfileFormEvent
-import com.femi.e_class.presentation.UpdateProfileFormState
-import com.femi.e_class.presentation.RoomFormEvent
-import com.femi.e_class.presentation.RoomFormState
+import com.femi.e_class.presentation.*
 import com.femi.e_class.repositories.HomeActivityRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -48,9 +45,6 @@ class HomeActivityViewModel(
 
     fun onEvent(event: RoomFormEvent) {
         when (event) {
-//            is RoomFormEvent.RoomNameChanged -> {
-//                roomFormState = roomFormState.copy(roomName = event.roomName)
-//            }
             is RoomFormEvent.CourseCodeChanged -> {
                 roomFormState = roomFormState.copy(courseCode = event.courseCode)
             }
@@ -59,6 +53,26 @@ class HomeActivityViewModel(
             }
             is RoomFormEvent.Submit -> {
                 submitRoomFormData()
+            }
+        }
+    }
+
+    fun onEvent(event: DeleteAccountFormEvent) {
+        when (event) {
+            DeleteAccountFormEvent.Submit -> {
+                viewModelScope.launch {
+                    deleteAccountEventChannel.send(DeleteAccountEvent.Submit)
+                }
+            }
+        }
+    }
+
+    fun onEvent(event: LogOutFormEvent) {
+        when (event) {
+            LogOutFormEvent.Submit -> {
+                viewModelScope.launch {
+
+                }
             }
         }
     }
@@ -81,14 +95,6 @@ class HomeActivityViewModel(
                 updateProfileValidationFormState =
                     updateProfileValidationFormState.copy(matric = event.matric)
             }
-            is UpdateProfileFormEvent.PasswordChanged -> {
-                updateProfileValidationFormState =
-                    updateProfileValidationFormState.copy(password = event.password)
-            }
-//            is UpdateProfileFormEvent.RepeatedPasswordChanged -> {
-//                updateProfileValidationFormState =
-//                    updateProfileValidationFormState.copy(repeatedPassword = event.repeatedPassword)
-//            }
             is UpdateProfileFormEvent.Submit -> {
                 submitRegistrationData()
             }
@@ -96,18 +102,15 @@ class HomeActivityViewModel(
     }
 
     private fun submitRoomFormData() {
-//        val roomNameResults = validateRoomName.execute(roomFormState.roomName)
         val courseCodeResults = validateCourseCode.execute(roomFormState.courseCode)
         val roomPasswordResults = validateRoomPassword.execute(roomFormState.roomPassword)
 
         val hasError = listOf(
-//            roomNameResults,
             courseCodeResults,
             roomPasswordResults
         ).any { !it.successful }
 
         roomFormState = roomFormState.copy(
-//            roomNameError = roomNameResults.errorMessage,
             courseCodeError = courseCodeResults.errorMessage,
             roomPasswordError = roomPasswordResults.errorMessage
         )
@@ -125,27 +128,20 @@ class HomeActivityViewModel(
         val lastNameResult = validateLastName.execute(updateProfileValidationFormState.lastName)
         val emailResult = validateEmail.execute(updateProfileValidationFormState.email)
         val matricResult = validateMatric.execute(updateProfileValidationFormState.matric)
-        val passwordResult = validatePassword.execute(updateProfileValidationFormState.password)
-//        val repeatedPasswordResult = validateRepeatedPassword.execute(
-//            updateProfileValidationFormState.password,
-//            updateProfileValidationFormState.repeatedPassword)
+
 
         val hasError = listOf(
             firstNameResult,
             lastNameResult,
             emailResult,
-            matricResult,
-            passwordResult,
-//            repeatedPasswordResult
+            matricResult
         ).any { !it.successful }
 
         updateProfileValidationFormState = updateProfileValidationFormState.copy(
             firstNameError = firstNameResult.errorMessage,
             lastNameError = lastNameResult.errorMessage,
             emailError = emailResult.errorMessage,
-            matricError = matricResult.errorMessage,
-            passwordError = passwordResult.errorMessage,
-//            repeatedPasswordError = repeatedPasswordResult.errorMessage
+            matricError = matricResult.errorMessage
         )
 
         if (hasError)
@@ -161,14 +157,12 @@ class HomeActivityViewModel(
         lastName: String,
         matric: String,
         email: String,
-        password: String,
     ) {
         val userHashMap = hashMapOf(
             "FirstName" to firstName,
             "LastName" to lastName,
             "Matric" to matric,
-            "Email" to email,
-            "Password" to password)
+            "Email" to email)
 
         viewModelScope.launch {
             updateProfileEventChannel.send(UpdateProfileEvent.Loading)
@@ -270,6 +264,7 @@ class HomeActivityViewModel(
         object Success : DeleteAccountEvent<Nothing>()
         data class Error(val exception: java.lang.Exception?) : DeleteAccountEvent<Nothing>()
         object Loading : DeleteAccountEvent<Nothing>()
+        object Submit : DeleteAccountEvent<Nothing>()
     }
 
     sealed class VerifyIdentityEvent<out T> {

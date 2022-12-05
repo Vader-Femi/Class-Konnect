@@ -1,17 +1,12 @@
 package com.femi.e_class.ui
 
-import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
-import android.telecom.TelecomManager
-import androidx.annotation.RequiresApi
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -29,11 +24,12 @@ import timber.log.Timber
 import java.net.MalformedURLException
 import java.net.URL
 
-
 class VideoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVideoBinding
     private lateinit var viewModel: VideoActivityViewModel
+    private var courseCode = ""
+    private var password = ""
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -41,15 +37,23 @@ class VideoActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupViewModel()
         binding = ActivityVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val courseCode = intent.getStringExtra(KEY_COURSE_CODE) ?: ""
-        val password = intent.getStringExtra(KEY_PASSWORD) ?: ""
+        val uri = intent.data
+        if (uri?.pathSegments?.get(0) != null) {
+            val parameters = uri.pathSegments[0]
+            courseCode = parameters
+        } else if (!intent.getStringExtra(KEY_COURSE_CODE).isNullOrEmpty()) {
+            courseCode = intent.getStringExtra(KEY_COURSE_CODE) ?: ""
+            password = intent.getStringExtra(KEY_PASSWORD) ?: ""
+        } else {
+            Toast.makeText(this, "Invalid course code", Toast.LENGTH_LONG).show()
+            finish()
+        }
 
         lifecycleScope.launch {
             val email = viewModel.userEmail()
@@ -73,7 +77,6 @@ class VideoActivity : AppCompatActivity() {
         email: String,
     ) {
 
-        val roomName = "LASU${courseCode.uppercase()}"
         val serverURL: URL = try {
             // When using JaaS, replace "https://meet.jit.si" with the proper serverURL
             URL("https://meet.jit.si")
@@ -85,7 +88,6 @@ class VideoActivity : AppCompatActivity() {
             .setServerURL(serverURL)
             .setAudioMuted(true)
             .setVideoMuted(true)
-            .setSubject(roomName)
 //                .setToken(password)
 //                .setFeatureFlag("recording.enabled", true)
             .build()
@@ -94,8 +96,8 @@ class VideoActivity : AppCompatActivity() {
         registerForBroadcastMessages()
 
         val options: JitsiMeetConferenceOptions = JitsiMeetConferenceOptions.Builder()
-            .setRoom(roomName)
-            .setSubject(roomName)
+            .setRoom(courseCode)
+            .setSubject(courseCode)
             .setUserInfo(JitsiMeetUserInfo(
                 Bundle().apply {
                     this.putString("displayName", displayName)
@@ -149,10 +151,12 @@ class VideoActivity : AppCompatActivity() {
     // Example for sending actions to JitsiMeetSDK
     private fun hangUp() {
         val hangupBroadcastIntent: Intent = BroadcastIntentHelper.buildHangUpIntent()
-        LocalBroadcastManager.getInstance(this.applicationContext).sendBroadcast(hangupBroadcastIntent)
+        LocalBroadcastManager.getInstance(this.applicationContext)
+            .sendBroadcast(hangupBroadcastIntent)
     }
 
     override fun onDestroy() {
+        hangUp()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         super.onDestroy()
     }

@@ -33,6 +33,10 @@ android {
     }
     buildFeatures {
         viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
     }
     buildToolsVersion '33.0.0'
 }
@@ -55,6 +59,12 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
+    //Compose
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation 'androidx.compose.material3:material3:1.1.0-alpha02'
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+
     //Splash Screen
     implementation 'androidx.core:core-splashscreen:1.0.0'
 
@@ -66,9 +76,4 @@ dependencies {
 
     // Jitsi Meet
     implementation ('org.jitsi.react:jitsi-meet-sdk:5.1.0') { transitive = true }
-
-    //Agora
-//    implementation 'com.github.AgoraIO-Community.Android-UIKit:final:v4.0.1'
-
-//    implementation 'com.github.agorabuilder:native-full-sdk:3.7.0'
 }

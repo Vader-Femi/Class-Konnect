@@ -36,9 +36,6 @@ class ClassDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null && context != null) {
 
-//            binding.etRoomName.doOnTextChanged { text, _, _, _ ->
-//                viewModel.onEvent(RoomFormEvent.RoomNameChanged(text.toString()))
-//            }
             binding.etCourseCode.doOnTextChanged { text, _, _, _ ->
                 viewModel.onEvent(RoomFormEvent.CourseCodeChanged(text.toString()))
             }
@@ -61,7 +58,6 @@ class ClassDetailsFragment : Fragment() {
 
             binding.btnJoin.setOnClickListener {
                 viewModel.onEvent(RoomFormEvent.Submit)
-//                binding.roomNameLayout.helperText = viewModel.roomFormState.roomNameError
                 binding.courseCodeLayout.helperText = viewModel.roomFormState.courseCodeError
                 binding.passwordLayout.helperText = viewModel.roomFormState.roomPasswordError
             }
@@ -71,7 +67,7 @@ class ClassDetailsFragment : Fragment() {
     private fun moveToCall() {
         Intent(activity, VideoActivity::class.java).also { intent ->
             intent.putExtra(KEY_COURSE_CODE,
-                viewModel.roomFormState.courseCode.uppercase().trim())
+                viewModel.roomFormState.courseCode.replace(" ", "").trim())
             intent.putExtra(KEY_PASSWORD,
                 viewModel.roomFormState.roomPassword.trim())
             startActivity(intent)
