@@ -67,16 +67,6 @@ class HomeActivityViewModel(
         }
     }
 
-    fun onEvent(event: LogOutFormEvent) {
-        when (event) {
-            LogOutFormEvent.Submit -> {
-                viewModelScope.launch {
-
-                }
-            }
-        }
-    }
-
     fun onEvent(event: UpdateProfileFormEvent) {
         when (event) {
             is UpdateProfileFormEvent.FirstNameChanged -> {
@@ -152,12 +142,12 @@ class HomeActivityViewModel(
         }
     }
 
-    fun updateUser(
-        firstName: String,
-        lastName: String,
-        matric: String,
-        email: String,
-    ) {
+    fun updateUser() {
+        val firstName = updateProfileValidationFormState.firstName
+        val lastName = updateProfileValidationFormState.lastName
+        val matric = updateProfileValidationFormState.matric
+        val email = updateProfileValidationFormState.email
+
         val userHashMap = hashMapOf(
             "FirstName" to firstName,
             "LastName" to lastName,

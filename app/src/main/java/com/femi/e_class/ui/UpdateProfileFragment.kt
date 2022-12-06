@@ -5,21 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.widget.doOnTextChanged
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.femi.e_class.*
+import com.femi.e_class.compose.E_ClassTheme
 import com.femi.e_class.databinding.FragmentUpdateProfileBinding
 import com.femi.e_class.presentation.UpdateProfileFormEvent
 import com.femi.e_class.viewmodels.HomeActivityViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 
 class UpdateProfileFragment : Fragment() {
@@ -28,98 +33,180 @@ class UpdateProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<HomeActivityViewModel>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            getDefaults()
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentUpdateProfileBinding.inflate(inflater, container, false)
+
+        binding.composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                E_ClassTheme(dynamicColor = true) {
+                    Surface {
+                        val scrollState = rememberScrollState()
+                        val context = LocalContext.current
+                        val state = viewModel.updateProfileValidationFormState
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .verticalScroll(scrollState)
+                                .fillMaxSize()
+                                .padding(8.dp, 0.dp, 8.dp, 0.dp),
+                        ) {
+                            var loading by remember { mutableStateOf(false) }
+                            LaunchedEffect(key1 = context) {
+                                viewModel.updateProfileValidationEvents.collect { event ->
+                                    when (event) {
+                                        is HomeActivityViewModel.UpdateProfileValidationEvent.Success -> {
+                                            viewModel.updateUser()
+                                        }
+                                    }
+                                }
+                            }
+                            LaunchedEffect(key1 = viewModel.updateProfileEvents) {
+                                viewModel.updateProfileEvents.collect { event ->
+                                    loading =
+                                        (event is HomeActivityViewModel.UpdateProfileEvent.Loading)
+                                    when (event) {
+                                        is HomeActivityViewModel.UpdateProfileEvent.Success -> {
+                                            Toast.makeText(requireContext(),
+                                                "Success",
+                                                Toast.LENGTH_SHORT).show()
+                                        }
+                                        is HomeActivityViewModel.UpdateProfileEvent.Error -> {
+                                            handleNetworkExceptions(event.exception,
+                                                retry = {
+                                                    viewModel.onEvent(UpdateProfileFormEvent.Submit)
+                                                })
+                                        }
+                                        is HomeActivityViewModel.UpdateProfileEvent.Loading -> {}
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(80.dp))
+                            OutlinedTextField(
+                                value = state.firstName,
+                                label = { Text(text = "First Name") },
+                                onValueChange = {
+                                    viewModel.onEvent(UpdateProfileFormEvent.FirstNameChanged(it))
+                                },
+                                isError = state.firstNameError != null,
+                                modifier = Modifier.fillMaxWidth(),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Text
+                                ),
+                            )
+                            if (state.firstNameError != null) {
+                                Text(
+                                    text = state.firstNameError,
+                                    color = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.align(Alignment.End)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            OutlinedTextField(
+                                value = state.lastName,
+                                label = { Text(text = "Last Name") },
+                                onValueChange = {
+                                    viewModel.onEvent(UpdateProfileFormEvent.LastNameChanged(it))
+                                },
+                                isError = state.lastNameError != null,
+                                modifier = Modifier.fillMaxWidth(),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Text
+                                )
+                            )
+                            if (state.lastNameError != null) {
+                                Text(
+                                    text = state.lastNameError,
+                                    color = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.align(Alignment.End)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            OutlinedTextField(
+                                value = state.matric,
+                                label = { Text(text = "Matric") },
+                                onValueChange = {
+                                    viewModel.onEvent(UpdateProfileFormEvent.MatricChanged(it))
+                                },
+                                isError = state.matricError != null,
+                                modifier = Modifier.fillMaxWidth(),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.NumberPassword
+                                )
+                            )
+                            if (state.matricError != null) {
+                                Text(
+                                    text = state.matricError,
+                                    color = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.align(Alignment.End)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            OutlinedTextField(
+                                value = state.email,
+                                label = { Text(text = "Email") },
+                                onValueChange = {
+                                    viewModel.onEvent(UpdateProfileFormEvent.EmailChanged(it))
+                                },
+                                isError = state.emailError != null,
+                                modifier = Modifier.fillMaxWidth(),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Email
+                                )
+                            )
+                            if (state.emailError != null) {
+                                Text(
+                                    text = state.emailError,
+                                    color = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.align(Alignment.End)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            if (loading) {
+                                LinearProgressIndicator(
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
+                            Button(
+                                onClick = {
+                                    viewModel.onEvent(UpdateProfileFormEvent.Submit)
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .fillMaxWidth(),
+                                enabled = !loading
+                            ) {
+                                Text(text = "Sign Up")
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if (activity != null && context != null) {
-
-            binding.etFirstName.doOnTextChanged { text, _, _, _ ->
-                viewModel.onEvent(UpdateProfileFormEvent.FirstNameChanged(text.toString()))
-            }
-            binding.etLastName.doOnTextChanged { text, _, _, _ ->
-                viewModel.onEvent(UpdateProfileFormEvent.LastNameChanged(text.toString()))
-            }
-            binding.etEmail.doOnTextChanged { text, _, _, _ ->
-                viewModel.onEvent(UpdateProfileFormEvent.EmailChanged(text.toString()))
-            }
-            binding.etMatric.doOnTextChanged { text, _, _, _ ->
-                viewModel.onEvent(UpdateProfileFormEvent.MatricChanged(text.toString()))
-            }
-            fillProfileFields()
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                    viewModel.updateProfileValidationEvents.collect { event ->
-                        when (event) {
-                            is HomeActivityViewModel.UpdateProfileValidationEvent.Success -> {
-                                viewModel.updateUser(
-                                    firstName = viewModel.updateProfileValidationFormState.firstName,
-                                    lastName = viewModel.updateProfileValidationFormState.lastName,
-                                    email = viewModel.updateProfileValidationFormState.email,
-                                    matric = viewModel.updateProfileValidationFormState.matric
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                    viewModel.updateProfileEvents.collect { event ->
-                        binding.progressBar.visible(event is HomeActivityViewModel.UpdateProfileEvent.Loading)
-                        binding.btnUpdateProfile.disable(event is HomeActivityViewModel.UpdateProfileEvent.Loading)
-                        when (event) {
-                            is HomeActivityViewModel.UpdateProfileEvent.Success -> {
-                                fillProfileFields()
-                                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
-                            }
-                            is HomeActivityViewModel.UpdateProfileEvent.Error -> {
-                                handleNetworkExceptions(event.exception, retry = {attemptUpdateProfile()})
-                            }
-                            is HomeActivityViewModel.UpdateProfileEvent.Loading -> {
-                            }
-                        }
-                    }
-                }
-            }
-
-            binding.btnUpdateProfile.setOnClickListener {
-                attemptUpdateProfile()
-            }
-
-        }
+    private suspend fun getDefaults(){
+        viewModel.onEvent(UpdateProfileFormEvent.FirstNameChanged(viewModel.userFName()))
+        viewModel.onEvent(UpdateProfileFormEvent.LastNameChanged(viewModel.userLName()))
+        viewModel.onEvent(UpdateProfileFormEvent.MatricChanged(viewModel.userMatric().toString()))
+        viewModel.onEvent(UpdateProfileFormEvent.EmailChanged(viewModel.userEmail()))
     }
-
-    private fun attemptUpdateProfile(){
-        viewModel.onEvent(UpdateProfileFormEvent.Submit)
-        binding.firstNameLayout.helperText =
-            viewModel.updateProfileValidationFormState.firstNameError
-        binding.lastNameLayout.helperText =
-            viewModel.updateProfileValidationFormState.lastNameError
-        binding.emailLayout.helperText =
-            viewModel.updateProfileValidationFormState.emailError
-        binding.matricLayout.helperText =
-            viewModel.updateProfileValidationFormState.matricError
-    }
-
-    private fun fillProfileFields() {
-        lifecycleScope.launch {
-            binding.etEmail.setText(viewModel.userEmail())
-            binding.etFirstName.setText(viewModel.userFName())
-            binding.etLastName.setText(viewModel.userLName())
-            binding.etMatric.setText(viewModel.userMatric().toString())
-        }
-
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

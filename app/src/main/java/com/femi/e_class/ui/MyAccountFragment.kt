@@ -51,13 +51,18 @@ class MyAccountFragment : Fragment() {
     ): View {
         _binding = FragmentMyAccountBinding.inflate(inflater, container, false)
 
+        val loadingView = layoutInflater.inflate(R.layout.loading, null)
+        loadingDialog = requireContext().loadingDialog(
+            view = loadingView,
+            title = getString(R.string.verify_identity),
+            message = "Logging In...Please Wait")
+
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 E_ClassTheme(dynamicColor = true) {
                     Surface {
                         val scrollState = rememberScrollState()
-                        val context = LocalContext.current
                         LaunchedEffect(key1 = viewModel.deleteAccountEvents){
                             viewModel.deleteAccountEvents.collect { event ->
                                 when (event) {
@@ -131,11 +136,7 @@ class MyAccountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null && context != null) {
 
-            val loadingView = layoutInflater.inflate(R.layout.loading, null)
-            loadingDialog = requireContext().loadingDialog(
-                view = loadingView,
-                title = getString(R.string.verify_identity),
-                message = "Logging In...Please Wait")
+
 
         }
     }
