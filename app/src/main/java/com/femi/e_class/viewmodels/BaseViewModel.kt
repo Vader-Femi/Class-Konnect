@@ -33,7 +33,7 @@ open class BaseViewModel(
 
     suspend fun userLName(): String = repository.userLName()
 
-    fun logOut(){
+    open fun logOut(){
         viewModelScope.launch {
             userFName("")
             userLName("")

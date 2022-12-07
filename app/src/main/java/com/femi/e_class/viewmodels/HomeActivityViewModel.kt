@@ -91,6 +91,10 @@ class HomeActivityViewModel(
         }
     }
 
+    override fun logOut() {
+        repository.getAuthReference().signOut()
+        super.logOut()
+    }
     private fun submitRoomFormData() {
         val courseCodeResults = validateCourseCode.execute(roomFormState.courseCode)
         val roomPasswordResults = validateRoomPassword.execute(roomFormState.roomPassword)
@@ -157,12 +161,27 @@ class HomeActivityViewModel(
         viewModelScope.launch {
             updateProfileEventChannel.send(UpdateProfileEvent.Loading)
         }
+        repository.getAuthReference().currentUser?.updateEmail(email)
+            ?.addOnCompleteListener { updateEmailTask ->
+                if (updateEmailTask.isSuccessful) {
+                    saveUserDetailsFirebase(email,userHashMap)
+                } else {
+                    viewModelScope.launch {
+                        updateProfileEventChannel.send(UpdateProfileEvent.Error(updateEmailTask.exception))
+                    }
+                }
+            }
+
+
+    }
+
+    private fun saveUserDetailsFirebase(email: String, userHashMap: HashMap<String, String>) {
         repository.getCollectionReference()
             .document(email)
             .set(userHashMap)
             .addOnSuccessListener {
                 viewModelScope.launch {
-                    saveUserDetails(userHashMap)
+                    saveUserDetailsLocally(userHashMap)
                     updateProfileEventChannel.send(UpdateProfileEvent.Success)
                 }
             }.addOnFailureListener {
@@ -172,7 +191,7 @@ class HomeActivityViewModel(
             }
     }
 
-    private suspend fun saveUserDetails(data: HashMap<String, String>?) {
+    private suspend fun saveUserDetailsLocally(data: HashMap<String, String>?) {
         repository.userFName(data?.get("FirstName") ?: "")
         repository.userLName(data?.get("LastName") ?: "")
         repository.userEmail(data?.get("Email") ?: "")

@@ -10,7 +10,6 @@ class MainActivityViewModel(
     private val repository: MainActivityRepository
 ) : BaseViewModel(repository) {
 
-
     private val _isLoading = MutableStateFlow(true)
     val isLoading: Boolean
         get() = _isLoading.value

@@ -132,15 +132,6 @@ class MyAccountFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if (activity != null && context != null) {
-
-
-
-        }
-    }
-
     private fun logOut() {
         MaterialAlertDialogBuilder(requireActivity())
             .setTitle("Hold up")

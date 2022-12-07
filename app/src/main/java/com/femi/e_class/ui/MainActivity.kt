@@ -13,6 +13,7 @@ import com.femi.e_class.databinding.ActivityMainBinding
 import com.femi.e_class.repositories.MainActivityRepository
 import com.femi.e_class.viewmodels.MainActivityViewModel
 import com.femi.e_class.viewmodels.ViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -57,11 +58,15 @@ class MainActivity : AppCompatActivity() {
 
 
     private suspend fun returningUserCheck() {
-        if (viewModel.userEmail().isNotEmpty() &&
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val email = viewModel.userEmail()
+        if (currentUser != null &&
+            email.isNotEmpty() &&
+            currentUser.email == email &&
             viewModel.userFName().isNotEmpty() &&
             viewModel.userLName().isNotEmpty() &&
             viewModel.userMatric() != 0L
-        ){
+        ) {
             Intent(this@MainActivity, HomeActivity::class.java).also {
                 it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(it)
