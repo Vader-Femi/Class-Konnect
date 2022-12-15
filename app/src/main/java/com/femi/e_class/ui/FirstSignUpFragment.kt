@@ -1,22 +1,36 @@
 package com.femi.e_class.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -27,8 +41,6 @@ import com.femi.e_class.data.User
 import com.femi.e_class.databinding.FragmentFirstSignUpBinding
 import com.femi.e_class.presentation.RegistrationFormEvent
 import com.femi.e_class.viewmodels.SignUpViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 
 class FirstSignUpFragment : Fragment() {
 
@@ -50,16 +62,17 @@ class FirstSignUpFragment : Fragment() {
                         val scrollState = rememberScrollState()
                         val context = LocalContext.current
                         val state = viewModel.registrationFormState
+                        var showPassword by remember { mutableStateOf(false) }
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()
-                                .padding(8.dp, 0.dp, 8.dp, 0.dp),
+                                .padding(30.dp, 60.dp, 30.dp, 30.dp),
                         ) {
-                            var loading by remember { mutableStateOf(false)}
-                            LaunchedEffect(key1 = context){
+                            var loading by remember { mutableStateOf(false) }
+                            LaunchedEffect(key1 = context) {
                                 viewModel.validationEvents.collect { event ->
                                     when (event) {
                                         is SignUpViewModel.ValidationEvent.Success -> {
@@ -75,7 +88,7 @@ class FirstSignUpFragment : Fragment() {
                                     }
                                 }
                             }
-                            LaunchedEffect(key1 = viewModel.registrationEvents){
+                            LaunchedEffect(key1 = viewModel.registrationEvents) {
                                 viewModel.registrationEvents.collect { event ->
                                     loading = (event is SignUpViewModel.RegistrationEvent.Loading)
                                     when (event) {
@@ -96,7 +109,24 @@ class FirstSignUpFragment : Fragment() {
                                     }
                                 }
                             }
-                            Spacer(modifier = Modifier.height(80.dp))
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.Start),
+                                text = "Create your account",
+                                fontWeight = FontWeight.ExtraBold,
+                                fontSize = 24.sp,
+                                textAlign = TextAlign.Start
+                            )
+                            Spacer(modifier = Modifier.height(1.dp))
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.Start),
+                                text = "Enter your details to get started",
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Start
+                            )
+                            Spacer(modifier = Modifier.height(30.dp))
                             OutlinedTextField(
                                 value = state.firstName,
                                 label = { Text(text = "First Name") },
@@ -105,9 +135,16 @@ class FirstSignUpFragment : Fragment() {
                                 },
                                 isError = state.firstNameError != null,
                                 modifier = Modifier.fillMaxWidth(),
+                                maxLines = 2,
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Person, "First Name Icon")
+                                },
                                 keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Text
-                                ),
+                                    keyboardType = KeyboardType.Text,
+                                    capitalization = KeyboardCapitalization.Words,
+                                    autoCorrect = false,
+                                    imeAction = ImeAction.Next
+                                )
                             )
                             if (state.firstNameError != null) {
                                 Text(
@@ -116,7 +153,7 @@ class FirstSignUpFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
                             OutlinedTextField(
                                 value = state.lastName,
                                 label = { Text(text = "Last Name") },
@@ -125,8 +162,15 @@ class FirstSignUpFragment : Fragment() {
                                 },
                                 isError = state.lastNameError != null,
                                 modifier = Modifier.fillMaxWidth(),
+                                maxLines = 2,
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Person, "Last Name Icon")
+                                },
                                 keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Text
+                                    keyboardType = KeyboardType.Text,
+                                    capitalization = KeyboardCapitalization.Words,
+                                    autoCorrect = false,
+                                    imeAction = ImeAction.Next
                                 )
                             )
                             if (state.lastNameError != null) {
@@ -136,7 +180,7 @@ class FirstSignUpFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
                             OutlinedTextField(
                                 value = state.matric,
                                 label = { Text(text = "Matric") },
@@ -145,9 +189,16 @@ class FirstSignUpFragment : Fragment() {
                                 },
                                 isError = state.matricError != null,
                                 modifier = Modifier.fillMaxWidth(),
+                                maxLines = 2,
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Settings, "Last Name Icon")
+                                },
                                 keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.NumberPassword
-                                )
+                                    keyboardType = KeyboardType.NumberPassword,
+                                    capitalization = KeyboardCapitalization.None,
+                                    autoCorrect = false,
+                                    imeAction = ImeAction.Next
+                                ),
                             )
                             if (state.matricError != null) {
                                 Text(
@@ -156,7 +207,7 @@ class FirstSignUpFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
                             OutlinedTextField(
                                 value = state.email,
                                 label = { Text(text = "Email") },
@@ -165,9 +216,17 @@ class FirstSignUpFragment : Fragment() {
                                 },
                                 isError = state.emailError != null,
                                 modifier = Modifier.fillMaxWidth(),
+                                maxLines = 2,
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Email, "Email Icon")
+                                },
                                 keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Email
+                                    keyboardType = KeyboardType.Email,
+                                    capitalization = KeyboardCapitalization.None,
+                                    autoCorrect = false,
+                                    imeAction = ImeAction.Next
                                 )
+
                             )
                             if (state.emailError != null) {
                                 Text(
@@ -176,7 +235,7 @@ class FirstSignUpFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
                             OutlinedTextField(
                                 value = state.password,
                                 label = { Text(text = "Password") },
@@ -185,8 +244,37 @@ class FirstSignUpFragment : Fragment() {
                                 },
                                 isError = state.passwordError != null,
                                 modifier = Modifier.fillMaxWidth(),
+                                maxLines = 2,
+                                visualTransformation = if (showPassword) {
+                                    VisualTransformation.None
+                                } else {
+                                    PasswordVisualTransformation()
+                                },
+                                trailingIcon = {
+                                    if (showPassword) {
+                                        IconButton(onClick = { showPassword = false }) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.ic_visibility),
+                                                contentDescription = "Show Password"
+                                            )
+                                        }
+                                    } else {
+                                        IconButton(onClick = { showPassword = true }) {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.ic_visibility_off),
+                                                contentDescription = "Hide Password"
+                                            )
+                                        }
+                                    }
+                                },
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Lock, "Password Icon")
+                                },
                                 keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Password
+                                    keyboardType = KeyboardType.Password,
+                                    capitalization = KeyboardCapitalization.None,
+                                    autoCorrect = false,
+                                    imeAction = ImeAction.Done
                                 )
                             )
                             if (state.passwordError != null) {
@@ -196,17 +284,15 @@ class FirstSignUpFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
                             if (loading) {
-                                LinearProgressIndicator(
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
+                                CircularProgressIndicator( )
+                                Spacer(modifier = Modifier.height(40.dp))
                             }
                             Button(
                                 onClick = {
-                                viewModel.onEvent(RegistrationFormEvent.Submit)
-                            },
+                                    viewModel.onEvent(RegistrationFormEvent.Submit)
+                                },
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
                                     .fillMaxWidth(),
@@ -214,6 +300,46 @@ class FirstSignUpFragment : Fragment() {
                             ) {
                                 Text(text = "Sign Up")
                             }
+                            Spacer(modifier = Modifier.height(40.dp))
+                            val annotatedText = buildAnnotatedString {
+                                pushStringAnnotation(tag = "Sign In Button",
+                                    annotation = "Sign In")
+
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 15.sp,
+                                    ),
+                                ) {
+                                    append("Already have an account? ")
+                                }
+
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 15.sp,
+                                    ),
+                                ) {
+                                    append("Sign In")
+                                }
+
+                                pop()
+                            }
+                            ClickableText(
+                                text = annotatedText,
+                                onClick = { offset ->
+                                    annotatedText.getStringAnnotations(tag = "Sign In Button", start = offset,
+                                        end = offset)
+                                        .firstOrNull()?.let {
+                                            startActivity(Intent(activity,
+                                                LoginActivity::class.java))
+                                            activity?.finish()
+                                        }
+                                }
+
+                            )
                         }
                     }
                 }

@@ -90,10 +90,12 @@ class MainActivity : AppCompatActivity() {
                                 onClickLogin = {
                                     startActivity(Intent(this@MainActivity,
                                         LoginActivity::class.java))
+                                    finish()
                                 },
                                 onClickSignUp = {
                                     startActivity(Intent(this@MainActivity,
                                         SignUpActivity::class.java))
+                                    finish()
                                 })
 
                         }

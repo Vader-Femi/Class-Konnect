@@ -24,6 +24,13 @@ class ClassDetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<HomeActivityViewModel>()
 
+//    TextField(
+//    value = input,
+//    onValueChange = { newText ->
+//        input = newText.trim { it == ' ' }
+//    }
+//    )
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,

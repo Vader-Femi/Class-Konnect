@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.femi.e_class.domain.use_case.ValidateEmail
-import com.femi.e_class.domain.use_case.ValidatePassword
+import com.femi.e_class.domain.use_case.ValidateLogInPassword
 import com.femi.e_class.presentation.LogInFormEvent
 import com.femi.e_class.presentation.LogInFormState
 import com.femi.e_class.repositories.LogInRepository
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 class LogInViewModel(
     private val repository: LogInRepository,
     private val validateEmail: ValidateEmail = ValidateEmail(),
-    private val validatePassword: ValidatePassword = ValidatePassword(),
+    private val validatePassword: ValidateLogInPassword = ValidateLogInPassword(),
 ) : BaseViewModel(repository) {
 
     var logInFormState by mutableStateOf(LogInFormState())
@@ -94,7 +94,7 @@ class LogInViewModel(
                     }
                 else{
                     viewModelScope.launch {
-                        logInEventChannel.send(LogInEvent.Empty("Incorrect email or password"))
+                        logInEventChannel.send(LogInEvent.NoUser("Incorrect email or password"))
                     }
                 }
             }.addOnFailureListener { exception ->
@@ -119,7 +119,7 @@ class LogInViewModel(
     sealed class LogInEvent<out T> {
         object Success : LogInEvent<Nothing>()
         data class Error(val exception: java.lang.Exception?) : LogInEvent<Nothing>()
-        data class Empty(val message: String) : LogInEvent<Nothing>()
+        data class NoUser(val message: String) : LogInEvent<Nothing>()
         object Loading : LogInEvent<Nothing>()
     }
 }
