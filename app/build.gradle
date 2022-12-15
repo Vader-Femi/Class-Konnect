@@ -45,7 +45,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
@@ -72,7 +72,12 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
 
     //Preferences Datastore
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation 'androidx.datastore:datastore-preferences:1.0.0'
+
+    implementation 'com.google.accompanist:accompanist-pager:0.28.0'
+
+    //ViewPager Dot Indicator
+    implementation 'com.tbuonomo:dotsindicator:4.3'
 
     // Jitsi Meet
     implementation ('org.jitsi.react:jitsi-meet-sdk:5.1.0') { transitive = true }

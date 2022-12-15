@@ -9,6 +9,8 @@ open class BaseViewModel(
     private val repository: BaseRepository,
 ) : ViewModel() {
 
+    val useDynamicTheme = false
+
     fun userEmail(email: String) = viewModelScope.launch {
         repository.userEmail(email)
     }

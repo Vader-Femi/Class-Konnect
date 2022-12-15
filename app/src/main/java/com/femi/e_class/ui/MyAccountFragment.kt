@@ -60,7 +60,7 @@ class MyAccountFragment : Fragment() {
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                E_ClassTheme(dynamicColor = true) {
+                E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
                     Surface {
                         val scrollState = rememberScrollState()
                         LaunchedEffect(key1 = viewModel.deleteAccountEvents){
