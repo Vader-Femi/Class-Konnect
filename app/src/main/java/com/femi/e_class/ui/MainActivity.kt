@@ -134,9 +134,7 @@ class MainActivity : AppCompatActivity() {
                                 ) {
                                     Text(text = "Sign Up")
                                 }
-
                             }
-
                         }
                     }
                 }
@@ -191,7 +189,6 @@ class MainActivity : AppCompatActivity() {
                             fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center
                         )
-
                     }
                 }
             }

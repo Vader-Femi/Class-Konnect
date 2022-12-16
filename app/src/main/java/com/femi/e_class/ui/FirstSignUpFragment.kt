@@ -67,6 +67,7 @@ class FirstSignUpFragment : Fragment() {
                         val state = viewModel.registrationFormState
                         var showPassword by remember { mutableStateOf(false) }
                         var accountCreated by remember { mutableStateOf(false) }
+                        var loading by remember { mutableStateOf(false) }
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
@@ -75,7 +76,6 @@ class FirstSignUpFragment : Fragment() {
                                 .fillMaxSize()
                                 .padding(30.dp, 60.dp, 30.dp, 30.dp),
                         ) {
-                            var loading by remember { mutableStateOf(false) }
                             LaunchedEffect(key1 = context) {
                                 viewModel.validationEvents.collect { event ->
                                     when (event) {
@@ -98,7 +98,6 @@ class FirstSignUpFragment : Fragment() {
                                     when (event) {
                                         is SignUpViewModel.RegistrationEvent.Success -> {
                                             accountCreated = true
-                                            proceedToLogin()
                                         }
                                         is SignUpViewModel.RegistrationEvent.Error -> {
                                             handleNetworkExceptions(event.exception,
@@ -338,7 +337,6 @@ class FirstSignUpFragment : Fragment() {
                                             activity?.finish()
                                         }
                                 }
-
                             )
                             if (accountCreated) {
                                 AlertDialog(
@@ -388,7 +386,7 @@ class FirstSignUpFragment : Fragment() {
                                 LaunchedEffect(key1 = accountCreated) {
                                     if (accountCreated) {
                                         coroutineScope.launch {
-                                            delay(5.seconds)
+                                            delay(7.seconds)
                                             proceedToLogin()
                                         }
                                     }

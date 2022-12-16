@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<!--    <uses-permission android:name="android.permission.INTERNET" />-->
-<!--    <uses-permission android:name="android.permission.RECORD_AUDIO" />-->
-<!--    <uses-permission android:name="android.permission.CAMERA" />-->
-<!--    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />-->
-<!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
-<!--    <uses-permission android:name="android.permission.BLUETOOTH" />-->
-
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
+    <!-- <uses-permission android:name="android.permission.RECORD_AUDIO" /> -->
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+    <!-- <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> -->
+    <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
+    <!-- <uses-permission android:name="android.permission.BLUETOOTH" /> -->
     <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -20,33 +19,57 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.EClass"
-        tools:targetApi="33">
+        tools:targetApi="33" >
+        <activity
+            android:name=".ui.ResetPasswordActivity"
+            android:exported="false" >
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".ui.VideoActivity"
             android:exported="true"
             android:label="@string/title_activity_video"
             android:theme="@style/Base.Theme.EClass"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden" >
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter android:autoVerify="true">
+            <intent-filter android:autoVerify="true" >
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:host="alpha.jitsi.net" android:scheme="https" />
-                <data android:host="beta.meet.jit.si" android:scheme="https" />
-                <data android:host="meet.jit.si" android:scheme="https" />
-                <data android:host="alpha.jitsi.net" android:scheme="http" />
-                <data android:host="beta.meet.jit.si" android:scheme="http" />
-                <data android:host="meet.jit.si" android:scheme="http" />
+
+                <data
+                    android:host="alpha.jitsi.net"
+                    android:scheme="https" />
+                <data
+                    android:host="beta.meet.jit.si"
+                    android:scheme="https" />
+                <data
+                    android:host="meet.jit.si"
+                    android:scheme="https" />
+                <data
+                    android:host="alpha.jitsi.net"
+                    android:scheme="http" />
+                <data
+                    android:host="beta.meet.jit.si"
+                    android:scheme="http" />
+                <data
+                    android:host="meet.jit.si"
+                    android:scheme="http" />
             </intent-filter>
-            <intent-filter android:autoVerify="true">
+            <intent-filter android:autoVerify="true" >
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="org.jitsi.meet" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -56,7 +79,7 @@
             android:exported="false"
             android:label="@string/title_activity_login"
             android:theme="@style/Base.Theme.EClass"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -66,7 +89,7 @@
             android:exported="false"
             android:label="@string/sign_up"
             android:theme="@style/Base.Theme.EClass"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -75,7 +98,7 @@
             android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Base.Theme.EClass"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -91,7 +114,7 @@
             android:exported="true"
             android:label="@string/title_activity_home"
             android:theme="@style/Base.Theme.EClass"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

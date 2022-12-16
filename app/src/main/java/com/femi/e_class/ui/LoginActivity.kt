@@ -64,6 +64,7 @@ class LoginActivity : AppCompatActivity() {
                         val context = LocalContext.current
                         val state = viewModel.logInFormState
                         var showPassword by remember { mutableStateOf(false) }
+                        var loading by remember { mutableStateOf(false) }
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Top,
@@ -72,7 +73,6 @@ class LoginActivity : AppCompatActivity() {
                                 .fillMaxSize()
                                 .padding(30.dp, 60.dp, 30.dp, 30.dp),
                         ) {
-                            var loading by remember { mutableStateOf(false) }
                             LaunchedEffect(key1 = context) {
                                 viewModel.validationEvents.collect { event ->
                                     when (event) {
@@ -198,10 +198,20 @@ class LoginActivity : AppCompatActivity() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(40.dp))
+                            TextButton(
+                                onClick = {
+                                    startActivity(Intent(this@LoginActivity,
+                                        ResetPasswordActivity::class.java))
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.End)
+                            ) {
+                                Text(text = "Forgot Password?")
+                            }
                             if (loading) {
+                                Spacer(modifier = Modifier.height(20.dp))
                                 CircularProgressIndicator()
-                                Spacer(modifier = Modifier.height(40.dp))
+                                Spacer(modifier = Modifier.height(20.dp))
                             }
                             Button(
                                 onClick = {
