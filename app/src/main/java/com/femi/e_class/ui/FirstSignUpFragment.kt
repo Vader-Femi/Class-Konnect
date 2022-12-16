@@ -196,7 +196,7 @@ class FirstSignUpFragment : Fragment() {
                                     capitalization = KeyboardCapitalization.None,
                                     autoCorrect = false,
                                     imeAction = ImeAction.Next
-                                ),
+                                )
                             )
                             if (state.matricError != null) {
                                 Text(
@@ -224,7 +224,6 @@ class FirstSignUpFragment : Fragment() {
                                     autoCorrect = false,
                                     imeAction = ImeAction.Next
                                 )
-
                             )
                             if (state.emailError != null) {
                                 Text(

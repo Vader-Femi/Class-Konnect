@@ -181,7 +181,7 @@ class ResetPasswordActivity : AppCompatActivity() {
                                                     .fillMaxWidth()
                                             )
                                             Text(
-                                                text = "A link has just been sent to your email. Please check your inbox and use it to reset your password",
+                                                text = "A link has just been sent to your email. Please check your inbox and use it to reset your password. Do not forget to check your spam folder",
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Normal,
                                                 textAlign = TextAlign.Center,

@@ -52,8 +52,10 @@ class LoginActivity : AppCompatActivity() {
         setupViewModel()
         binding = ActivityLoginBinding.inflate(layoutInflater)
 
-        val createdEmail = intent.getStringExtra(KEY_EMAIL)
-        val createdPassword = intent.getStringExtra(KEY_PASSWORD)
+        getDefaults(
+            email = intent.getStringExtra(KEY_EMAIL),
+            password = intent.getStringExtra(KEY_PASSWORD)
+        )
 
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -123,7 +125,7 @@ class LoginActivity : AppCompatActivity() {
                             )
                             Spacer(modifier = Modifier.height(30.dp))
                             OutlinedTextField(
-                                value = createdEmail ?: state.email,
+                                value = state.email,
                                 label = { Text(text = "Email") },
                                 onValueChange = {
                                     viewModel.onEvent(LogInFormEvent.EmailChanged(it))
@@ -151,7 +153,7 @@ class LoginActivity : AppCompatActivity() {
                             }
                             Spacer(modifier = Modifier.height(40.dp))
                             OutlinedTextField(
-                                value = createdPassword ?: state.password,
+                                value = state.password,
                                 label = { Text(text = "Password") },
                                 onValueChange = {
                                     viewModel.onEvent(LogInFormEvent.PasswordChanged(it))
@@ -215,12 +217,6 @@ class LoginActivity : AppCompatActivity() {
                             }
                             Button(
                                 onClick = {
-                                    if (!createdEmail.isNullOrEmpty() &&
-                                        !createdPassword.isNullOrEmpty()
-                                    ) {
-                                        viewModel.onEvent(LogInFormEvent.EmailChanged(createdEmail))
-                                        viewModel.onEvent(LogInFormEvent.PasswordChanged(createdPassword))
-                                    }
                                     viewModel.onEvent(LogInFormEvent.Submit)
                                 },
                                 modifier = Modifier
@@ -280,7 +276,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-
     private fun moveToDashboard() {
         Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
             intent.flags =
@@ -288,6 +283,15 @@ class LoginActivity : AppCompatActivity() {
             intent.putExtra(KEY_EMAIL, viewModel.logInFormState.email)
             startActivity(intent)
             finish()
+        }
+    }
+
+    private fun getDefaults(email: String?, password: String?) {
+        email?.let {
+            viewModel.onEvent(LogInFormEvent.EmailChanged(it))
+        }
+        password?.let {
+            viewModel.onEvent(LogInFormEvent.PasswordChanged(it))
         }
     }
 

@@ -9,14 +9,23 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -58,11 +67,11 @@ class UpdateProfileFragment : Fragment() {
                         val state = viewModel.updateProfileValidationFormState
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
+                            verticalArrangement = Arrangement.Top,
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()
-                                .padding(8.dp, 0.dp, 8.dp, 0.dp),
+                                .padding(30.dp, 60.dp, 30.dp, 30.dp),
                         ) {
                             var loading by remember { mutableStateOf(false) }
                             LaunchedEffect(key1 = context) {
@@ -76,13 +85,12 @@ class UpdateProfileFragment : Fragment() {
                             }
                             LaunchedEffect(key1 = viewModel.updateProfileEvents) {
                                 viewModel.updateProfileEvents.collect { event ->
-                                    loading =
-                                        (event is HomeActivityViewModel.UpdateProfileEvent.Loading)
+                                    loading = (event is HomeActivityViewModel.UpdateProfileEvent.Loading)
                                     when (event) {
                                         is HomeActivityViewModel.UpdateProfileEvent.Success -> {
                                             Toast.makeText(requireContext(),
-                                                "Success",
-                                                Toast.LENGTH_SHORT).show()
+                                                "Profile updated successfully",
+                                                Toast.LENGTH_LONG).show()
                                         }
                                         is HomeActivityViewModel.UpdateProfileEvent.Error -> {
                                             handleNetworkExceptions(event.exception,
@@ -94,7 +102,24 @@ class UpdateProfileFragment : Fragment() {
                                     }
                                 }
                             }
-                            Spacer(modifier = Modifier.height(80.dp))
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.Start),
+                                text = "Update Profile",
+                                fontWeight = FontWeight.ExtraBold,
+                                fontSize = 24.sp,
+                                textAlign = TextAlign.Start
+                            )
+                            Spacer(modifier = Modifier.height(1.dp))
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.Start),
+                                text = "Enter your details to update",
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Start
+                            )
+                            Spacer(modifier = Modifier.height(30.dp))
                             OutlinedTextField(
                                 value = state.firstName,
                                 label = { Text(text = "First Name") },
@@ -103,9 +128,16 @@ class UpdateProfileFragment : Fragment() {
                                 },
                                 isError = state.firstNameError != null,
                                 modifier = Modifier.fillMaxWidth(),
+                                maxLines = 2,
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Person, "First Name Icon")
+                                },
                                 keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Text
-                                ),
+                                    keyboardType = KeyboardType.Text,
+                                    capitalization = KeyboardCapitalization.Words,
+                                    autoCorrect = false,
+                                    imeAction = ImeAction.Next
+                                )
                             )
                             if (state.firstNameError != null) {
                                 Text(
@@ -114,7 +146,7 @@ class UpdateProfileFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
                             OutlinedTextField(
                                 value = state.lastName,
                                 label = { Text(text = "Last Name") },
@@ -123,8 +155,15 @@ class UpdateProfileFragment : Fragment() {
                                 },
                                 isError = state.lastNameError != null,
                                 modifier = Modifier.fillMaxWidth(),
+                                maxLines = 2,
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Person, "Last Name Icon")
+                                },
                                 keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Text
+                                    keyboardType = KeyboardType.Text,
+                                    capitalization = KeyboardCapitalization.Words,
+                                    autoCorrect = false,
+                                    imeAction = ImeAction.Next
                                 )
                             )
                             if (state.lastNameError != null) {
@@ -134,7 +173,7 @@ class UpdateProfileFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
                             OutlinedTextField(
                                 value = state.matric,
                                 label = { Text(text = "Matric") },
@@ -143,8 +182,15 @@ class UpdateProfileFragment : Fragment() {
                                 },
                                 isError = state.matricError != null,
                                 modifier = Modifier.fillMaxWidth(),
+                                maxLines = 2,
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Settings, "Last Name Icon")
+                                },
                                 keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.NumberPassword
+                                    keyboardType = KeyboardType.NumberPassword,
+                                    capitalization = KeyboardCapitalization.None,
+                                    autoCorrect = false,
+                                    imeAction = ImeAction.Next
                                 )
                             )
                             if (state.matricError != null) {
@@ -154,7 +200,7 @@ class UpdateProfileFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
                             OutlinedTextField(
                                 value = state.email,
                                 label = { Text(text = "Email") },
@@ -163,8 +209,15 @@ class UpdateProfileFragment : Fragment() {
                                 },
                                 isError = state.emailError != null,
                                 modifier = Modifier.fillMaxWidth(),
+                                maxLines = 2,
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Email, "Email Icon")
+                                },
                                 keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Email
+                                    keyboardType = KeyboardType.Email,
+                                    capitalization = KeyboardCapitalization.None,
+                                    autoCorrect = false,
+                                    imeAction = ImeAction.Next
                                 )
                             )
                             if (state.emailError != null) {
@@ -174,12 +227,10 @@ class UpdateProfileFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.End)
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(40.dp))
                             if (loading) {
-                                LinearProgressIndicator(
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
+                                CircularProgressIndicator()
+                                Spacer(modifier = Modifier.height(40.dp))
                             }
                             Button(
                                 onClick = {
@@ -190,7 +241,7 @@ class UpdateProfileFragment : Fragment() {
                                     .fillMaxWidth(),
                                 enabled = !loading
                             ) {
-                                Text(text = "Sign Up")
+                                Text(text = "Update Profile")
                             }
 
                         }
@@ -207,6 +258,7 @@ class UpdateProfileFragment : Fragment() {
         viewModel.onEvent(UpdateProfileFormEvent.MatricChanged(viewModel.userMatric().toString()))
         viewModel.onEvent(UpdateProfileFormEvent.EmailChanged(viewModel.userEmail()))
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
