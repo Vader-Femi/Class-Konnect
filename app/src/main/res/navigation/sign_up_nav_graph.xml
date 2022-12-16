@@ -10,15 +10,5 @@
         android:name="com.femi.e_class.ui.FirstSignUpFragment"
         android:label="@string/first_sign_up_fragment_label"
         tools:layout="@layout/fragment_first_sign_up">
-
-        <action
-            android:id="@+id/action_first_to_second_sign_up"
-            app:destination="@id/SecondSignUpFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/SecondSignUpFragment"
-        android:name="com.femi.e_class.ui.SecondSignUpFragment"
-        android:label="@string/second_sign_up_fragment_label"
-        tools:layout="@layout/fragment_second_sign_up">
     </fragment>
 </navigation>

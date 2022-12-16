@@ -9,7 +9,6 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
@@ -52,6 +51,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setupViewModel()
         binding = ActivityLoginBinding.inflate(layoutInflater)
+
+        val createdEmail = intent.getStringExtra(KEY_EMAIL)
+        val createdPassword = intent.getStringExtra(KEY_PASSWORD)
+
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -120,7 +123,7 @@ class LoginActivity : AppCompatActivity() {
                             )
                             Spacer(modifier = Modifier.height(30.dp))
                             OutlinedTextField(
-                                value = state.email,
+                                value = createdEmail ?: state.email,
                                 label = { Text(text = "Email") },
                                 onValueChange = {
                                     viewModel.onEvent(LogInFormEvent.EmailChanged(it))
@@ -148,7 +151,7 @@ class LoginActivity : AppCompatActivity() {
                             }
                             Spacer(modifier = Modifier.height(40.dp))
                             OutlinedTextField(
-                                value = state.password,
+                                value = createdPassword ?: state.password,
                                 label = { Text(text = "Password") },
                                 onValueChange = {
                                     viewModel.onEvent(LogInFormEvent.PasswordChanged(it))
@@ -202,6 +205,12 @@ class LoginActivity : AppCompatActivity() {
                             }
                             Button(
                                 onClick = {
+                                    if (!createdEmail.isNullOrEmpty() &&
+                                        !createdPassword.isNullOrEmpty()
+                                    ) {
+                                        viewModel.onEvent(LogInFormEvent.EmailChanged(createdEmail))
+                                        viewModel.onEvent(LogInFormEvent.PasswordChanged(createdPassword))
+                                    }
                                     viewModel.onEvent(LogInFormEvent.Submit)
                                 },
                                 modifier = Modifier
@@ -258,71 +267,9 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         setContentView(binding.root)
-/*
-        setSupportActionBar(binding.toolbar)
-
-        val email = intent.getStringExtra(KEY_EMAIL)
-        val password = intent.getStringExtra(KEY_PASSWORD)
-
-        binding.etEmail.doOnTextChanged { text, _, _, _ ->
-            viewModel.onEvent(LogInFormEvent.EmailChanged(text.toString()))
-        }
-
-        binding.etPassword.doOnTextChanged { text, _, _, _ ->
-            viewModel.onEvent(LogInFormEvent.PasswordChanged(text.toString()))
-        }
-
-        binding.etEmail.setText(email)
-        binding.etPassword.setText(password)
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.validationEvents.collect { event ->
-                    when (event) {
-                        is LogInViewModel.ValidationEvent.Success -> {
-                            viewModel.logInUser(
-                                email = viewModel.logInFormState.email,
-                                password = viewModel.logInFormState.password
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.logInEvents.collect { event ->
-                    binding.progressBar.visible(event is LogInViewModel.LogInEvent.Loading)
-                    binding.btnSignIn.disable(event is LogInViewModel.LogInEvent.Loading)
-                    when (event) {
-                        is LogInViewModel.LogInEvent.Success -> {
-                            moveToNextActivity()
-                        }
-                        is LogInViewModel.LogInEvent.Error -> {
-                            binding.parentLayout.handleNetworkExceptions(exception = event.exception, retry = {attemptSignIn()})
-                        }
-                        is LogInViewModel.LogInEvent.Empty -> {
-                            binding.parentLayout.handleNetworkExceptions(message = event.message, retry = {attemptSignIn()})
-                        }
-                        is LogInViewModel.LogInEvent.Loading -> {}
-                    }
-                }
-            }
-        }
-
-        binding.btnSignIn.setOnClickListener {
-            attemptSignIn()
-        }
-
- */
     }
 
-//    private fun attemptSignIn(){
-//        viewModel.onEvent(LogInFormEvent.Submit)
-//        binding.emailLayout.helperText = viewModel.logInFormState.emailError
-//        binding.passwordLayout.helperText = viewModel.logInFormState.passwordError
-//    }
+
 
     private fun moveToDashboard() {
         Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->

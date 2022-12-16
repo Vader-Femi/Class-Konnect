@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.femi.e_class.*
 import com.femi.e_class.R
 import com.femi.e_class.compose.E_ClassTheme
@@ -41,6 +40,9 @@ import com.femi.e_class.data.User
 import com.femi.e_class.databinding.FragmentFirstSignUpBinding
 import com.femi.e_class.presentation.RegistrationFormEvent
 import com.femi.e_class.viewmodels.SignUpViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 class FirstSignUpFragment : Fragment() {
 
@@ -60,9 +62,11 @@ class FirstSignUpFragment : Fragment() {
                 E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
                     Surface {
                         val scrollState = rememberScrollState()
+                        val coroutineScope = rememberCoroutineScope()
                         val context = LocalContext.current
                         val state = viewModel.registrationFormState
                         var showPassword by remember { mutableStateOf(false) }
+                        var accountCreated by remember { mutableStateOf(false) }
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
@@ -93,13 +97,8 @@ class FirstSignUpFragment : Fragment() {
                                     loading = (event is SignUpViewModel.RegistrationEvent.Loading)
                                     when (event) {
                                         is SignUpViewModel.RegistrationEvent.Success -> {
-                                            findNavController().navigate(R.id.action_first_to_second_sign_up,
-                                                Bundle().apply {
-                                                    putString(KEY_EMAIL,
-                                                        viewModel.registrationFormState.email)
-                                                    putString(KEY_PASSWORD,
-                                                        viewModel.registrationFormState.password)
-                                                })
+                                            accountCreated = true
+                                            proceedToLogin()
                                         }
                                         is SignUpViewModel.RegistrationEvent.Error -> {
                                             handleNetworkExceptions(event.exception,
@@ -286,7 +285,7 @@ class FirstSignUpFragment : Fragment() {
                             }
                             Spacer(modifier = Modifier.height(40.dp))
                             if (loading) {
-                                CircularProgressIndicator( )
+                                CircularProgressIndicator()
                                 Spacer(modifier = Modifier.height(40.dp))
                             }
                             Button(
@@ -330,7 +329,8 @@ class FirstSignUpFragment : Fragment() {
                             ClickableText(
                                 text = annotatedText,
                                 onClick = { offset ->
-                                    annotatedText.getStringAnnotations(tag = "Sign In Button", start = offset,
+                                    annotatedText.getStringAnnotations(tag = "Sign In Button",
+                                        start = offset,
                                         end = offset)
                                         .firstOrNull()?.let {
                                             startActivity(Intent(activity,
@@ -340,12 +340,76 @@ class FirstSignUpFragment : Fragment() {
                                 }
 
                             )
+                            if (accountCreated) {
+                                AlertDialog(
+                                    confirmButton = {
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth(0.9f)
+                                        .padding(0.dp, 30.dp, 0.dp, 0.dp)
+                                        .align(Alignment.CenterHorizontally),
+                                    text = {
+                                        Column(
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Image(modifier = Modifier
+                                                .fillMaxWidth()
+                                                .fillMaxHeight(0.4f),
+                                                painter = painterResource(id = R.drawable.leader_pana),
+                                                contentDescription = "Account Created Icon"
+                                            )
+                                            Text(
+                                                text = "Successful!",
+                                                fontSize = 16.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                textAlign = TextAlign.Center,
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                            )
+                                            Text(
+                                                text = "Your account is ready to use. You will be redirected to log page in a few seconds",
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Normal,
+                                                textAlign = TextAlign.Center,
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(0.dp, 20.dp, 0.dp, 30.dp),
+                                            )
+                                            CircularProgressIndicator()
+                                        }
+                                    },
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    tonalElevation = 20.dp,
+                                    onDismissRequest = {
+                                        proceedToLogin()
+                                    }
+                                )
+                                LaunchedEffect(key1 = accountCreated) {
+                                    if (accountCreated) {
+                                        coroutineScope.launch {
+                                            delay(5.seconds)
+                                            proceedToLogin()
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
         return binding.root
+    }
+
+    private fun proceedToLogin() {
+        Intent(activity, LoginActivity::class.java).also { intent ->
+            intent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.putExtra(KEY_EMAIL, viewModel.registrationFormState.email)
+            intent.putExtra(KEY_PASSWORD, viewModel.registrationFormState.password)
+            startActivity(intent)
+        }
     }
 
     override fun onDestroyView() {

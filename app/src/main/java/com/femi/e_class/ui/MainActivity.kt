@@ -2,16 +2,20 @@ package com.femi.e_class.ui
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.FloatRange
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -33,6 +37,7 @@ import com.femi.e_class.viewmodels.MainActivityViewModel
 import com.femi.e_class.viewmodels.ViewModelFactory
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -41,7 +46,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainActivityViewModel
-    private lateinit var viewPagerAdapter: OnBoardingViewPagerAdapter
 
     @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,39 +68,74 @@ class MainActivity : AppCompatActivity() {
                 E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
                     Surface {
                         val context = LocalContext.current
+                        val scrollState = rememberScrollState()
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                             modifier = Modifier
+                                .verticalScroll(scrollState)
                                 .fillMaxSize()
                                 .padding(8.dp, 0.dp, 8.dp, 0.dp),
                         ) {
-
-                            val onBoardingData = arrayListOf<OnBoardingData>()
-                            onBoardingData.add(OnBoardingData(R.drawable.telecommuting_bro,
-                                "Join a Class",
-                                "Join a class from the comfort of your home"))
-                            onBoardingData.add(OnBoardingData(R.drawable.telecommuting_pana,
-                                "Join a Class2",
-                                "Join a class from the comfort of your home"))
-                            onBoardingData.add(OnBoardingData(R.drawable.telecommuting_rafiki,
-                                "Join a Class3",
-                                "Join a class from the comfort of your home"))
+                            val onBoardingData: MutableState<List<OnBoardingData>> = remember {
+                                mutableStateOf(
+                                    listOf(
+                                        OnBoardingData(R.drawable.telecommuting_bro,
+                                            "Join a Class",
+                                            "Join a class from the comfort of your home"),
+                                        OnBoardingData(R.drawable.telecommuting_pana,
+                                            "Random Title 2",
+                                            "One random long-ish string of inspirational text 2"),
+                                        OnBoardingData(R.drawable.telecommuting_rafiki,
+                                            "Random Title 3",
+                                            "One random long-ish string of inspirational text 3")
+                                    )
+                                )
+                            }
 
                             val pagerState = rememberPageState()
                             OnBoardingViewPager(
-                                item = onBoardingData,
+                                item = onBoardingData.value,
+                                pagerState = pagerState
+                            )
+                            HorizontalPagerIndicator(
+                                modifier = Modifier
+                                    .padding(0.dp, 20.dp, 0.dp, 20.dp)
+                                    .align(Alignment.CenterHorizontally),
                                 pagerState = pagerState,
-                                onClickLogin = {
-                                    startActivity(Intent(this@MainActivity,
+                                inactiveColor = MaterialTheme.colorScheme.primaryContainer,
+                                activeColor = MaterialTheme.colorScheme.primary
+                            )
+                            AnimatedVisibility(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(40.dp, 40.dp, 40.dp, 0.dp),
+                                visible = pagerState.currentPage == 2
+                            ) {
+                                Button(
+                                    onClick = {startActivity(Intent(this@MainActivity,
                                         LoginActivity::class.java))
-                                    finish()
-                                },
-                                onClickSignUp = {
-                                    startActivity(Intent(this@MainActivity,
+                                        finish()}
+                                ) {
+                                    Text(text = "Log In")
+                                }
+
+                            }
+                            AnimatedVisibility(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(40.dp, 20.dp, 40.dp, 0.dp),
+                                visible = pagerState.currentPage == 2,
+                            ) {
+                                OutlinedButton(
+                                    onClick = {startActivity(Intent(this@MainActivity,
                                         SignUpActivity::class.java))
-                                    finish()
-                                })
+                                        finish()}
+                                ) {
+                                    Text(text = "Sign Up")
+                                }
+
+                            }
 
                         }
                     }
@@ -106,19 +145,6 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-//        setSupportActionBar(binding.toolbar)
-//
-//        setupViewPager()
-//
-//        binding.btnSignUp.setOnClickListener {
-//            startActivity(Intent(this, SignUpActivity::class.java))
-//        }
-//
-//        binding.btnSignIn.setOnClickListener {
-//            startActivity(Intent(this, LoginActivity::class.java))
-//        }
-
-
     }
 
 
@@ -127,12 +153,12 @@ class MainActivity : AppCompatActivity() {
     private fun OnBoardingViewPager(
         item: List<OnBoardingData>,
         pagerState: PagerState,
-        modifier: Modifier = Modifier,
-        onClickLogin: () -> Unit,
-        onClickSignUp: () -> Unit,
+        modifier: Modifier = Modifier
     ) {
         Box(modifier = modifier) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 HorizontalPager(
                     state = pagerState,
                     count = item.count()
@@ -147,7 +173,8 @@ class MainActivity : AppCompatActivity() {
                             .fillMaxWidth()
                             .fillMaxHeight(0.4f),
                             painter = painterResource(id = item[page].image),
-                            contentDescription = item[page].title)
+                            contentDescription = item[page].title
+                        )
                         Text(modifier = Modifier
                             .fillMaxWidth(),
                             text = item[page].title,
@@ -164,35 +191,8 @@ class MainActivity : AppCompatActivity() {
                             fontWeight = FontWeight.Normal,
                             textAlign = TextAlign.Center
                         )
-                        AnimatedVisibility(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(40.dp, 40.dp, 40.dp, 0.dp),
-                            visible = pagerState.currentPage == 2
-                        ) {
-                            Button(
-                                onClick = onClickLogin
-                            ) {
-                                Text(text = "Log In")
-                            }
 
-                        }
-                        AnimatedVisibility(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(40.dp, 20.dp, 40.dp, 0.dp),
-                            visible = pagerState.currentPage == 2,
-                        ) {
-                            OutlinedButton(
-                                onClick = onClickSignUp
-                            ) {
-                                Text(text = "Sign Up")
-                            }
-
-                        }
                     }
-
-
                 }
             }
         }
@@ -208,43 +208,6 @@ class MainActivity : AppCompatActivity() {
             currentPage = initialPage,
         )
     }
-/*
-    private fun setupViewPager() {
-        viewPagerAdapter = OnBoardingViewPagerAdapter(this)
-        binding.viewPager.adapter = viewPagerAdapter
-        binding.dotIndicator.attachTo(binding.viewPager)
-
-
-        binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int,
-            ) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 -> {
-                        binding.tvOnBoarding.text = "Start your Online Class Anywhere and more shalaye text sha... blah blah"
-                    }
-                    1 -> {
-                        binding.tvOnBoarding.text = "Start your Online Class Anywhere and more shalaye text sha... blah blah"
-                    }
-                    2 -> {
-                        binding.tvOnBoarding.text = "Start your Online Class Anywhere and more shalaye text sha... blah blah"
-                    }
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-
-        })
-    }
-    */
 
     private fun setupViewModel() {
         val dataStore = UserPreferences(this)
