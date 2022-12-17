@@ -10,6 +10,7 @@ class ValidateRoomPassword {
                 "Password cannot be less than 4 characters"
             )
         }
+
         if (!password.any{it.isLetter()}) {
             return ValidationResult(
                 false,

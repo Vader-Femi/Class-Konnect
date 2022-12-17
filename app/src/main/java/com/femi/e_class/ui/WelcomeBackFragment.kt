@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -33,8 +34,11 @@ import androidx.navigation.fragment.findNavController
 import com.femi.e_class.R
 import com.femi.e_class.compose.E_ClassTheme
 import com.femi.e_class.databinding.FragmentWelcomeBackBinding
+import com.femi.e_class.viewmodels.BaseViewModel
 import com.femi.e_class.viewmodels.HomeActivityViewModel
 import kotlinx.coroutines.launch
+import org.jitsi.meet.sdk.JitsiMeet
+import org.jitsi.meet.sdk.JitsiMeetActivity
 import java.time.LocalDateTime
 import java.util.*
 
@@ -56,16 +60,17 @@ class WelcomeBackFragment : Fragment() {
                     Surface {
                         val scrollState = rememberScrollState()
                         var greetingText by remember { mutableStateOf("") }
+                        var isInClass by remember { mutableStateOf(false) }
+                        val context = LocalContext.current
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()
-                                .padding(20.dp, 60.dp, 20.dp, 30.dp),
+                                .padding(0.dp, 60.dp, 0.dp, 30.dp)
                         ) {
                             LaunchedEffect(key1 = Unit) {
-                                lifecycleScope.launch {
                                     var greeting = "Good Day"
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                         val calendar = Calendar.getInstance()
@@ -84,17 +89,41 @@ class WelcomeBackFragment : Fragment() {
                                         }
                                     }
                                     greetingText = "$greeting ${viewModel.userFName()}"
+                            }
+                            LaunchedEffect(key1 = viewModel.classStatus) {
+                                viewModel.classStatus.collect { event ->
+                                    isInClass = when (event) {
+                                        is BaseViewModel.ClassStatus.Started -> {
+                                            true
+                                        }
+                                        is BaseViewModel.ClassStatus.Ended -> {
+                                            false
+                                        }
+                                    }
                                 }
                             }
                             Text(
                                 modifier = Modifier
-                                    .align(Alignment.CenterHorizontally),
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(20.dp, 0.dp, 20.dp, 0.dp),
                                 text = greetingText,
                                 fontWeight = FontWeight.ExtraBold,
                                 fontSize = 24.sp,
                                 textAlign = TextAlign.Start
                             )
-                            Spacer(modifier = Modifier.height(40.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
+                            if (isInClass) {
+                                OnGoingClassCard(
+                                    painter = painterResource(id = R.drawable.status_update_amico),
+                                    contentDescription = "Return To Class card",
+                                    title = "Click To Return To OnGoing Class Screen",
+                                    onClick = {
+                                        JitsiMeetActivity.launch(context,
+                                            JitsiMeet.getCurrentConference())
+                                    }
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(20.dp))
                             ImageCard(
                                 painter = painterResource(id = R.drawable.status_update_amico),
                                 contentDescription = "Update profile card",
@@ -103,7 +132,7 @@ class WelcomeBackFragment : Fragment() {
                                     findNavController().navigate(R.id.action_welcomeBack_to_updateProfile)
                                 }
                             )
-                            Spacer(modifier = Modifier.height(40.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
                             ImageCard(
                                 painter = painterResource(id = R.drawable.online_learning_rafiki),
                                 contentDescription = "Start or join a class card",
@@ -112,7 +141,7 @@ class WelcomeBackFragment : Fragment() {
                                     findNavController().navigate(R.id.action_welcomeBack_to_classDetails)
                                 }
                             )
-                            Spacer(modifier = Modifier.height(40.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
                             ImageCard(
                                 painter = painterResource(id = R.drawable.personal_data_amico),
                                 contentDescription = "Account settings card",
@@ -140,18 +169,21 @@ class WelcomeBackFragment : Fragment() {
     ) {
         Card(
             modifier = modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(20.dp, 0.dp, 20.dp, 0.dp),
             shape = AbsoluteCutCornerShape(15.dp),
             onClick = onClick
         ) {
             Box(modifier = Modifier
-                .height(250.dp)
+                .height(150.dp)
                 .fillMaxWidth()
             ) {
                 Image(
                     painter = painter,
                     contentDescription = contentDescription,
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(top = 20.dp, bottom = 60.dp),
                     contentScale = ContentScale.FillHeight
                 )
                 Box(modifier = Modifier
@@ -161,7 +193,7 @@ class WelcomeBackFragment : Fragment() {
                             Color.Transparent,
                             MaterialTheme.colorScheme.primaryContainer
                         ),
-                        startY = 300f
+                        startY = 0f
                     ))) {
                 }
                 Box(
@@ -181,48 +213,59 @@ class WelcomeBackFragment : Fragment() {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if (activity != null && context != null) {
-
-
-            /*
-
-            lifecycleScope.launch {
-                val greetingText = "${getString(R.string.welcome_back)} ${viewModel.userFName()}"
-                binding.toolbarText.text = greetingText
-                binding.toolbarLayout.title = "$greeting${viewModel.userFName()}"
-                binding.appBarLayout.addOnOffsetChangedListener { _, verticalOffSet ->
-                    if (abs(verticalOffSet) == binding.appBarLayout.totalScrollRange) {
-                        //Collapsed
-                        lifecycleScope.launch {
-                            binding.toolbarLayout.title = "$greeting${viewModel.userFName()}"
-                        }
-                    } else {
-                        //Expanded
-                        lifecycleScope.launch {
-                            binding.toolbarLayout.title = greeting
-                        }
-                    }
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun OnGoingClassCard(
+        painter: Painter,
+        contentDescription: String,
+        title: String,
+        modifier: Modifier = Modifier,
+        onClick: () -> Unit,
+    ) {
+        Card(
+            modifier = modifier
+                .fillMaxWidth(),
+            shape = AbsoluteCutCornerShape(0.dp),
+            onClick = onClick
+        ) {
+            Box(modifier = Modifier
+                .height(100.dp)
+                .fillMaxWidth()
+            ) {
+                Image(
+                    painter = painter,
+                    contentDescription = contentDescription,
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    contentScale = ContentScale.FillHeight
+                )
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            MaterialTheme.colorScheme.primaryContainer
+                        ),
+                        startX = 300f
+                    ))) {
                 }
-
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            start = 20.dp,
+                            end = 150.dp
+                        ),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        text = title,
+                        style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Start
+                    )
+                }
             }
-
-
-            binding.btnStartOrJoin.setOnClickListener {
-                findNavController().navigate(R.id.action_welcomeBack_to_classDetails)
-            }
-
-            binding.btnUpdateProfile.setOnClickListener {
-                findNavController().navigate(R.id.action_welcomeBack_to_updateProfile)
-            }
-
-            binding.btnMyAccount.setOnClickListener {
-                findNavController().navigate(R.id.action_welcomeBack_to_my_account)
-            }
-
-
-             */
         }
     }
 

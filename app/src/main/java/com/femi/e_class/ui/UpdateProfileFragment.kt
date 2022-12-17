@@ -67,7 +67,7 @@ class UpdateProfileFragment : Fragment() {
                         val state = viewModel.updateProfileValidationFormState
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Top,
+                            verticalArrangement = Arrangement.Center,
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()

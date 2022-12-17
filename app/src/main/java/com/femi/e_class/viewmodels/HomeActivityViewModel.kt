@@ -13,15 +13,12 @@ import kotlinx.coroutines.launch
 
 class HomeActivityViewModel(
     private val repository: HomeActivityRepository,
-//    private val validateRoomName: ValidateRoomName = ValidateRoomName(),
     private val validateCourseCode: ValidateCourseCode = ValidateCourseCode(),
-    private val validateRoomPassword: ValidateRoomPassword = ValidateRoomPassword(),
+//    private val validateRoomPassword: ValidateRoomPassword = ValidateRoomPassword(),
     private val validateFirstName: ValidateName = ValidateName(),
     private val validateLastName: ValidateName = ValidateName(),
     private val validateEmail: ValidateEmail = ValidateEmail(),
     private val validateMatric: ValidateMatric = ValidateMatric(),
-    private val validatePassword: ValidatePassword = ValidatePassword(),
-//    private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword()
 ) : BaseViewModel(repository) {
 
     var roomFormState by mutableStateOf(RoomFormState())
@@ -97,16 +94,16 @@ class HomeActivityViewModel(
     }
     private fun submitRoomFormData() {
         val courseCodeResults = validateCourseCode.execute(roomFormState.courseCode)
-        val roomPasswordResults = validateRoomPassword.execute(roomFormState.roomPassword)
+//        val roomPasswordResults = validateRoomPassword.execute(roomFormState.roomPassword)
 
         val hasError = listOf(
             courseCodeResults,
-            roomPasswordResults
+//            roomPasswordResults
         ).any { !it.successful }
 
         roomFormState = roomFormState.copy(
             courseCodeError = courseCodeResults.errorMessage,
-            roomPasswordError = roomPasswordResults.errorMessage
+//            roomPasswordError = roomPasswordResults.errorMessage
         )
 
         if (hasError)

@@ -3,6 +3,8 @@ package com.femi.e_class.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.femi.e_class.repositories.BaseRepository
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 open class BaseViewModel(
@@ -42,5 +44,25 @@ open class BaseViewModel(
             userMatric(0L)
             userEmail("")
         }
+    }
+
+    private val classStatusChannel = Channel<ClassStatus<Any?>>()
+    val classStatus = classStatusChannel.receiveAsFlow()
+
+    fun classStarted(){
+        viewModelScope.launch {
+            classStatusChannel.send(ClassStatus.Started)
+        }
+    }
+
+    fun classEnded(){
+        viewModelScope.launch {
+            classStatusChannel.send(ClassStatus.Ended)
+        }
+    }
+
+    sealed class ClassStatus<out T> {
+        object Started : ClassStatus<Nothing>()
+        object Ended : ClassStatus<Nothing>()
     }
 }
