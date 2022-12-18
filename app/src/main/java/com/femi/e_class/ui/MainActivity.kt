@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
                     Surface {
                         val context = LocalContext.current
                         val scrollState = rememberScrollState()
+                        val coroutineScope = rememberCoroutineScope()
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
@@ -106,34 +107,58 @@ class MainActivity : AppCompatActivity() {
                                 inactiveColor = MaterialTheme.colorScheme.primaryContainer,
                                 activeColor = MaterialTheme.colorScheme.primary
                             )
+                            Spacer(modifier = Modifier.height(40.dp))
                             AnimatedVisibility(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(40.dp, 40.dp, 40.dp, 0.dp),
+                                    .padding(40.dp, 0.dp, 40.dp, 0.dp),
                                 visible = pagerState.currentPage == 2
                             ) {
                                 Button(
-                                    onClick = {startActivity(Intent(this@MainActivity,
-                                        LoginActivity::class.java))
-                                        finish()}
+                                    onClick = {
+                                        startActivity(Intent(this@MainActivity,
+                                            LoginActivity::class.java))
+                                    }
                                 ) {
                                     Text(text = "Log In")
                                 }
 
                             }
+                            Spacer(modifier = Modifier.height(20.dp))
                             AnimatedVisibility(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(40.dp, 20.dp, 40.dp, 0.dp),
+                                    .padding(40.dp, 0.dp, 40.dp, 0.dp),
                                 visible = pagerState.currentPage == 2,
                             ) {
                                 OutlinedButton(
-                                    onClick = {startActivity(Intent(this@MainActivity,
-                                        SignUpActivity::class.java))
-                                        finish()}
+                                    onClick = {
+                                        startActivity(Intent(this@MainActivity,
+                                            SignUpActivity::class.java))
+                                    }
                                 ) {
                                     Text(text = "Sign Up")
                                 }
+                            }
+                            Spacer(modifier = Modifier.height(40.dp))
+                            AnimatedVisibility(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(40.dp, 0.dp, 40.dp, 0.dp),
+                                visible = pagerState.currentPage != 2
+                            ) {
+                                Button(
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            pagerState.animateScrollToPage(
+                                                page = pagerState.currentPage + 1
+                                            )
+                                        }
+                                    }
+                                ) {
+                                    Text(text = "Next")
+                                }
+
                             }
                         }
                     }
@@ -151,7 +176,7 @@ class MainActivity : AppCompatActivity() {
     private fun OnBoardingViewPager(
         item: List<OnBoardingData>,
         pagerState: PagerState,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
     ) {
         Box(modifier = modifier) {
             Column(

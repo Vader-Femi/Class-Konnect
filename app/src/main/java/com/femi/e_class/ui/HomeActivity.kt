@@ -1,13 +1,18 @@
 package com.femi.e_class.ui
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.performance.DevicePerformance
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
@@ -30,6 +35,7 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: HomeActivityViewModel
+    private var hasNotificationPermission = false
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -44,6 +50,22 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+
+        if (!hasNotificationPermission) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                requestNotificationPermission()
+            }
+        }
+
+
         val uri = intent.data
         if (uri?.pathSegments?.get(0) != null) {
             lifecycleScope.launch {
@@ -51,6 +73,20 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationPermission() {
+        val permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            hasNotificationPermission = isGranted
+            if (!isGranted) {
+//                    shouldShowRequestPermissionRationale()
+            }
+        }
+        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
 
     private fun setupViewModel() {
         val firebaseAuth = FirebaseAuth.getInstance()
@@ -92,10 +128,10 @@ class HomeActivity : AppCompatActivity() {
             .setFeatureFlag("call-integration.enabled", false)
             .setFeatureFlag("calendar.enabled", false)
             .setFeatureFlag("recording.enabled", true)
-            .setFeatureFlag("add-people.enabled", false)
+            .setFeatureFlag("add-people.enabled", true)
             .setFeatureFlag("close-captions.enabled", true)
             .setFeatureFlag("chat.enabled", true)
-            .setFeatureFlag("invite.enabled", false)
+            .setFeatureFlag("invite.enabled", true)
             .setFeatureFlag("resolution", resolution)
             .setFeatureFlag("live-streaming.enabled", false)
             .setFeatureFlag("meeting-name.enabled", true)
@@ -142,8 +178,20 @@ class HomeActivity : AppCompatActivity() {
                 BroadcastEvent.Type.PARTICIPANT_JOINED -> {
                     Toast.makeText(this, "${event.data["name"]} Joined", Toast.LENGTH_SHORT).show()
                 }
+                BroadcastEvent.Type.ENDPOINT_TEXT_MESSAGE_RECEIVED -> {
+
+                }
                 BroadcastEvent.Type.CONFERENCE_TERMINATED -> {
                     viewModel.classEnded()
+                }
+                BroadcastEvent.Type.SCREEN_SHARE_TOGGLED -> {
+                    val sharingMessage = if (event.data["sharing"] == true)
+                        "started sharing their screen"
+                    else
+                        "stopped sharing their screen"
+                    Toast.makeText(this,
+                        "${event.data["participant"]} $sharingMessage  ",
+                        Toast.LENGTH_SHORT).show()
                 }
                 else -> Timber.i("Received event: %s", event.type)
             }

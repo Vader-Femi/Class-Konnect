@@ -10,6 +10,7 @@
     <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> -->
     <!-- <uses-permission android:name="android.permission.BLUETOOTH" /> -->
 <!--    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="true"
@@ -20,7 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.EClass"
-        tools:targetApi="33" >
+        tools:targetApi="33">
         <activity
             android:name=".ui.ResetPasswordActivity"
             android:exported="false"
