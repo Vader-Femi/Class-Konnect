@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/welcomeBackFragment"
         android:name="com.femi.e_class.ui.WelcomeBackFragment"
-        android:label="@string/welcome_back_fragment_label"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_welcome_back" >
         <action
             android:id="@+id/action_welcomeBack_to_updateProfile"

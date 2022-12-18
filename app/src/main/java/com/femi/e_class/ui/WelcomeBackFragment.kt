@@ -68,7 +68,7 @@ class WelcomeBackFragment : Fragment() {
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()
-                                .padding(0.dp, 60.dp, 0.dp, 30.dp)
+                                .padding(0.dp, 0.dp, 0.dp, 30.dp)
                         ) {
                             LaunchedEffect(key1 = Unit) {
                                     var greeting = "Good Day"
@@ -136,7 +136,7 @@ class WelcomeBackFragment : Fragment() {
                             ImageCard(
                                 painter = painterResource(id = R.drawable.online_learning_rafiki),
                                 contentDescription = "Start or join a class card",
-                                title = "Start of join a class",
+                                title = "Start or join a class",
                                 onClick = {
                                     findNavController().navigate(R.id.action_welcomeBack_to_classDetails)
                                 }

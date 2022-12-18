@@ -108,7 +108,8 @@ class MyAccountFragment : Fragment() {
                             verticalArrangement = Arrangement.Center,
                             modifier = Modifier
                                 .verticalScroll(scrollState)
-                                .fillMaxSize(),
+                                .fillMaxSize()
+                                .padding(0.dp, 0.dp, 0.dp, 30.dp),
                         ) {
                             Button(onClick = {
                                 logOut()

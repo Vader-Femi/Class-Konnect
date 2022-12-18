@@ -71,7 +71,7 @@ class UpdateProfileFragment : Fragment() {
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()
-                                .padding(30.dp, 60.dp, 30.dp, 30.dp),
+                                .padding(30.dp, 0.dp, 30.dp, 30.dp),
                         ) {
                             var loading by remember { mutableStateOf(false) }
                             LaunchedEffect(key1 = context) {
@@ -217,7 +217,7 @@ class UpdateProfileFragment : Fragment() {
                                     keyboardType = KeyboardType.Email,
                                     capitalization = KeyboardCapitalization.None,
                                     autoCorrect = false,
-                                    imeAction = ImeAction.Next
+                                    imeAction = ImeAction.Done
                                 )
                             )
                             if (state.emailError != null) {

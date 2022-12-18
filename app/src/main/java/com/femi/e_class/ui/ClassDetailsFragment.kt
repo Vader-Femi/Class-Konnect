@@ -1,6 +1,7 @@
 package com.femi.e_class.ui
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -62,7 +63,7 @@ class ClassDetailsFragment : Fragment() {
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()
-                                .padding(30.dp, 60.dp, 30.dp, 30.dp),
+                                .padding(30.dp, 0.dp, 30.dp, 30.dp),
                         ) {
                             LaunchedEffect(key1 = context) {
                                 viewModel.roomEvents.collect { event ->
@@ -206,15 +207,6 @@ class ClassDetailsFragment : Fragment() {
         (activity as HomeActivity).startMeeting(
             courseCode = viewModel.roomFormState.courseCode.prependIndent(preIndentedString)
         )
-
-
-//        Intent(activity, VideoActivity::class.java).also { intent ->
-//            intent.putExtra(KEY_COURSE_CODE,
-//                viewModel.roomFormState.courseCode.prependIndent(preIndentedString))
-////            intent.putExtra(KEY_PASSWORD,
-////                viewModel.roomFormState.roomPassword)
-//            startActivity(intent)
-//        }
     }
 
     override fun onDestroyView() {

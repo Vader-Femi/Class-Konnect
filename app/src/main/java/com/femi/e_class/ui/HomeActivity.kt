@@ -6,18 +6,30 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.core.performance.DevicePerformance
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.femi.e_class.R
+import com.femi.e_class.compose.E_ClassTheme
 import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityHomeBinding
 import com.femi.e_class.repositories.HomeActivityRepository
@@ -35,6 +47,7 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: HomeActivityViewModel
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private var hasNotificationPermission = false
 
     private val broadcastReceiver = object : BroadcastReceiver() {
@@ -49,7 +62,23 @@ class HomeActivity : AppCompatActivity() {
         setupViewModel()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
+        checkNotificationPermission()
+
+        val uri = intent.data
+        if (uri?.pathSegments?.get(0) != null) {
+            lifecycleScope.launch {
+                startMeeting(uri.pathSegments[0])
+            }
+        }
+
+        val navController = findNavController(R.id.nav_host_fragment_content_home)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+    }
+
+    private fun checkNotificationPermission() {
         hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ContextCompat.checkSelfPermission(
                 this,
@@ -61,30 +90,21 @@ class HomeActivity : AppCompatActivity() {
 
         if (!hasNotificationPermission) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                requestNotificationPermission()
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
 
-
-        val uri = intent.data
-        if (uri?.pathSegments?.get(0) != null) {
-            lifecycleScope.launch {
-                startMeeting(uri.pathSegments[0])
-            }
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun requestNotificationPermission() {
-        val permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted ->
-            hasNotificationPermission = isGranted
-            if (!isGranted) {
-//                    shouldShowRequestPermissionRationale()
-            }
+    val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        hasNotificationPermission = isGranted
+        if (!isGranted) {
+            shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+
         }
-        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
 
@@ -207,6 +227,12 @@ class HomeActivity : AppCompatActivity() {
     override fun onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         super.onDestroy()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_home)
+        return navController.navigateUp(appBarConfiguration)
+                || super.onSupportNavigateUp()
     }
 
 }
