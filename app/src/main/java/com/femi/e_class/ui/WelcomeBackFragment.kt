@@ -211,7 +211,7 @@ class WelcomeBackFragment : Fragment() {
                     .background(brush = Brush.verticalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            MaterialTheme.colorScheme.primaryContainer
+                            MaterialTheme.colorScheme.secondaryContainer
                         ),
                         startY = 0f
                     ))) {
@@ -224,7 +224,7 @@ class WelcomeBackFragment : Fragment() {
                 ) {
                     Text(
                         text = title,
-                        style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
+                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -286,7 +286,7 @@ class WelcomeBackFragment : Fragment() {
                             withStyle(
                                 style = SpanStyle(
                                     fontSize = 18.sp,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             ) {
                                 append(reference)

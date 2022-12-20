@@ -140,7 +140,7 @@ class SettingsFragment : Fragment() {
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Start,
                                 style = TextStyle(
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = MaterialTheme.colorScheme.secondary
                                 )
                             )
                             Spacer(modifier = Modifier.height(10.dp))
@@ -150,7 +150,7 @@ class SettingsFragment : Fragment() {
                                     .padding(0.dp, 0.dp, 0.dp, 0.dp),
                                 shape = RoundedCornerShape(15.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
                                 )
                             ) {
                                 Row(
@@ -165,7 +165,7 @@ class SettingsFragment : Fragment() {
                                         fontWeight = FontWeight.Medium,
                                         textAlign = TextAlign.Start,
                                         modifier = Modifier.align(Alignment.CenterVertically),
-                                        style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
+                                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
                                     )
                                     Switch(
                                         checked = is720Checked,
@@ -190,7 +190,7 @@ class SettingsFragment : Fragment() {
                                     .padding(0.dp, 0.dp, 0.dp, 0.dp),
                                 shape = RoundedCornerShape(15.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
                                 )
                             ) {
                                 Row(
@@ -205,7 +205,7 @@ class SettingsFragment : Fragment() {
                                         fontWeight = FontWeight.Medium,
                                         textAlign = TextAlign.Start,
                                         modifier = Modifier.align(Alignment.CenterVertically),
-                                        style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
+                                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
                                     )
                                     Switch(
                                         checked = is1080Checked,
