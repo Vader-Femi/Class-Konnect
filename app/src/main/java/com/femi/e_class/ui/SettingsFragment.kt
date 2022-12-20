@@ -32,19 +32,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.femi.e_class.R
 import com.femi.e_class.compose.E_ClassTheme
-import com.femi.e_class.databinding.FragmentMyAccountBinding
+import com.femi.e_class.databinding.FragmentSettingsBinding
 import com.femi.e_class.presentation.VerifyIdentityFormEvent
-import com.femi.e_class.showLoadingDialog
 import com.femi.e_class.viewmodels.HomeActivityViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.seconds
 
-class MyAccountFragment : Fragment() {
+class SettingsFragment : Fragment() {
 
-    private var _binding: FragmentMyAccountBinding? = null
+    private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val viewModel by activityViewModels<HomeActivityViewModel>()
     var userResolution = 720
@@ -61,8 +56,7 @@ class MyAccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentMyAccountBinding.inflate(inflater, container, false)
-
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -155,12 +149,15 @@ class MyAccountFragment : Fragment() {
                                     .fillMaxWidth()
                                     .padding(0.dp, 0.dp, 0.dp, 0.dp),
                                 shape = RoundedCornerShape(15.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                )
                             ) {
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier
-                                    .padding(20.dp)
-                                    .fillMaxWidth()
+                                        .padding(20.dp)
+                                        .fillMaxWidth()
                                 ) {
                                     Text(
                                         text = "Lower Video Quality (720P)",
@@ -168,6 +165,7 @@ class MyAccountFragment : Fragment() {
                                         fontWeight = FontWeight.Medium,
                                         textAlign = TextAlign.Start,
                                         modifier = Modifier.align(Alignment.CenterVertically),
+                                        style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
                                     )
                                     Switch(
                                         checked = is720Checked,
@@ -191,12 +189,15 @@ class MyAccountFragment : Fragment() {
                                     .fillMaxWidth()
                                     .padding(0.dp, 0.dp, 0.dp, 0.dp),
                                 shape = RoundedCornerShape(15.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                )
                             ) {
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     modifier = Modifier
-                                    .padding(20.dp)
-                                    .fillMaxWidth()
+                                        .padding(20.dp)
+                                        .fillMaxWidth()
                                 ) {
                                     Text(
                                         text = "High Video Quality (1080P)",
@@ -204,6 +205,7 @@ class MyAccountFragment : Fragment() {
                                         fontWeight = FontWeight.Medium,
                                         textAlign = TextAlign.Start,
                                         modifier = Modifier.align(Alignment.CenterVertically),
+                                        style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
                                     )
                                     Switch(
                                         checked = is1080Checked,

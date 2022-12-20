@@ -28,22 +28,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.femi.e_class.R
 import com.femi.e_class.compose.E_ClassTheme
 import com.femi.e_class.databinding.FragmentWelcomeBackBinding
 import com.femi.e_class.viewmodels.BaseViewModel
 import com.femi.e_class.viewmodels.HomeActivityViewModel
-import kotlinx.coroutines.launch
-import org.jitsi.meet.sdk.JitsiMeet
-import org.jitsi.meet.sdk.JitsiMeetActivity
 import java.time.LocalDateTime
 import java.util.*
 
@@ -172,7 +167,7 @@ class WelcomeBackFragment : Fragment() {
                                 contentDescription = "Settings card",
                                 title = "Settings",
                                 onClick = {
-                                    findNavController().navigate(R.id.action_welcomeBack_to_my_account)
+                                    findNavController().navigate(R.id.action_welcomeBack_to_settings)
                                 }
                             )
                         }
@@ -216,7 +211,7 @@ class WelcomeBackFragment : Fragment() {
                     .background(brush = Brush.verticalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            MaterialTheme.colorScheme.secondaryContainer
+                            MaterialTheme.colorScheme.primaryContainer
                         ),
                         startY = 0f
                     ))) {
@@ -297,7 +292,7 @@ class WelcomeBackFragment : Fragment() {
                                 append(reference)
                             }
                         },
-                        style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
+                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Start
@@ -342,7 +337,7 @@ class WelcomeBackFragment : Fragment() {
                 ) {
                     Text(
                         text = title,
-                        style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
+                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center

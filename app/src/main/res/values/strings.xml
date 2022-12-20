@@ -19,7 +19,7 @@
     <string name="welcome_back_fragment_label">Welcome Back</string>
     <string name="update_profile_fragment_label">My Profile</string>
     <string name="video_screen_fragment_label">Video Screen</string>
-    <string name="my_account_fragment_label">Settings</string>
+    <string name="settings_fragment_label">Settings</string>
     <string name="class_name">Class Name</string>
     <string name="start_class">Start Class</string>
     <string name="join_class">Join Class</string>
