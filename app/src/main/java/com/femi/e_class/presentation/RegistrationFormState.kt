@@ -10,7 +10,5 @@ data class RegistrationFormState(
     val matric: String = "",
     val matricError: String? = null,
     val password: String = "",
-    val passwordError: String? = null,
-//    val repeatedPassword: String = "",
-//    val repeatedPasswordError: String? = null,
+    val passwordError: String? = null
 )

@@ -1,7 +1,5 @@
 package com.femi.e_class.ui
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
@@ -26,8 +23,6 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.femi.e_class.KEY_COURSE_CODE
-import com.femi.e_class.KEY_PASSWORD
 import com.femi.e_class.R
 import com.femi.e_class.compose.E_ClassTheme
 import com.femi.e_class.databinding.FragmentClassDetailsBinding
@@ -74,22 +69,25 @@ class ClassDetailsFragment : Fragment() {
                                     }
                                 }
                             }
-                            Text(
-                                modifier = Modifier
-                                    .align(Alignment.Start),
-                                text = "Start or join a class",
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 24.sp
-                            )
-                            Spacer(modifier = Modifier.height(1.dp))
+//                            Text(
+//                                modifier = Modifier
+//                                    .align(Alignment.Start),
+//                                text = "Start or join a class",
+//                                fontWeight = FontWeight.ExtraBold,
+//                                fontSize = 24.sp
+//                            )
+//                            Spacer(modifier = Modifier.height(1.dp))
                             Text(
                                 modifier = Modifier
                                     .align(Alignment.Start),
                                 text = "Enter the class details",
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 14.sp
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                style = TextStyle(
+                                    color = MaterialTheme.colorScheme.primary
+                                )
                             )
-                            Spacer(modifier = Modifier.height(30.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
                             OutlinedTextField(
                                 value = state.courseCode,
                                 label = { Text(text = "Course Code (No spaces)") },
@@ -192,7 +190,7 @@ class ClassDetailsFragment : Fragment() {
                                     .fillMaxWidth()
                                     .align(Alignment.CenterHorizontally)
                             ) {
-                                Text(text = "Start/Join Meeting")
+                                Text(text = "Start/Join Class")
                             }
                         }
                     }

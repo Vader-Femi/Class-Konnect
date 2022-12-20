@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class HomeActivityViewModel(
     private val repository: HomeActivityRepository,
     private val validateCourseCode: ValidateCourseCode = ValidateCourseCode(),
-//    private val validateRoomPassword: ValidateRoomPassword = ValidateRoomPassword(),
+    private val validateLoginPassword: ValidateLogInPassword = ValidateLogInPassword(),
     private val validateFirstName: ValidateName = ValidateName(),
     private val validateLastName: ValidateName = ValidateName(),
     private val validateEmail: ValidateEmail = ValidateEmail(),
@@ -24,6 +24,8 @@ class HomeActivityViewModel(
     var roomFormState by mutableStateOf(RoomFormState())
 
     var updateProfileValidationFormState by mutableStateOf(UpdateProfileFormState())
+
+    var verifyIdentityFormState by mutableStateOf(VerifyIdentityFormState())
 
     private val roomEventChannel = Channel<RoomEvent>()
     val roomEvents = roomEventChannel.receiveAsFlow()
@@ -54,12 +56,13 @@ class HomeActivityViewModel(
         }
     }
 
-    fun onEvent(event: DeleteAccountFormEvent) {
+    fun onEvent(event: VerifyIdentityFormEvent) {
         when (event) {
-            DeleteAccountFormEvent.Submit -> {
-                viewModelScope.launch {
-                    deleteAccountEventChannel.send(DeleteAccountEvent.Submit)
-                }
+            is VerifyIdentityFormEvent.PasswordChanged -> {
+                verifyIdentityFormState = verifyIdentityFormState.copy(password = event.password)
+            }
+            is VerifyIdentityFormEvent.Submit -> {
+                verifyIdentity()
             }
         }
     }
@@ -92,6 +95,7 @@ class HomeActivityViewModel(
         repository.getAuthReference().signOut()
         super.logOut()
     }
+
     private fun submitRoomFormData() {
         val courseCodeResults = validateCourseCode.execute(roomFormState.courseCode)
 //        val roomPasswordResults = validateRoomPassword.execute(roomFormState.roomPassword)
@@ -232,12 +236,28 @@ class HomeActivityViewModel(
         }
     }
 
-    fun verifyIdentity(password: String) {
+    private fun verifyIdentity() {
+
+        val passwordResult = validateLoginPassword.execute(verifyIdentityFormState.password)
+
+
+        val hasError = listOf(
+            passwordResult
+        ).any { !it.successful }
+
+        verifyIdentityFormState = verifyIdentityFormState.copy(
+            passwordError = passwordResult.errorMessage
+        )
+
+        if (hasError)
+            return
+
+
         viewModelScope.launch {
             val email = repository.userEmail()
             verifyIdentityEventChannel.send(VerifyIdentityEvent.Loading)
             repository.getAuthReference()
-                .signInWithEmailAndPassword(email, password)
+                .signInWithEmailAndPassword(email, verifyIdentityFormState.password)
                 .addOnCompleteListener { addUserTask ->
                     if (addUserTask.isSuccessful) {
                         viewModelScope.launch {

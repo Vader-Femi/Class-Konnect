@@ -11,7 +11,7 @@ open class BaseViewModel(
     private val repository: BaseRepository,
 ) : ViewModel() {
 
-    val useDynamicTheme = true
+    val useDynamicTheme = false
 
     fun userEmail(email: String) = viewModelScope.launch {
         repository.userEmail(email)
@@ -36,6 +36,12 @@ open class BaseViewModel(
     }
 
     suspend fun userLName(): String = repository.userLName()
+
+    fun videoResolution(resolution: Int) = viewModelScope.launch {
+        repository.videoResolution(resolution)
+    }
+
+    suspend fun videoResolution(): Int = repository.videoResolution()
 
     open fun logOut(){
         viewModelScope.launch {

@@ -2,6 +2,7 @@ package com.femi.e_class.data
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -17,6 +18,7 @@ class UserPreferences(val context: Context) {
         val KEY_USER_MATRIC = longPreferencesKey("KEY_USER_MATRIC")
         val KEY_USER_FNAME = stringPreferencesKey("KEY_USER_FNAME")
         val KEY_USER_LNAME = stringPreferencesKey("KEY_USER_LNAME")
+        val KEY_VIDEO_RESOLUTION = intPreferencesKey("KEY_VIDEO_RESOLUTION")
     }
 
     val userEmail: Flow<String>
@@ -60,6 +62,17 @@ class UserPreferences(val context: Context) {
     suspend fun userLName(lName: String) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.KEY_USER_LNAME] = lName
+        }
+    }
+
+    val videoResolution: Flow<Int>
+        get() = context.dataStore.data.map { preference ->
+            preference[PreferencesKeys.KEY_VIDEO_RESOLUTION] ?: 720
+        }
+
+    suspend fun videoResolution(resolution: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.KEY_VIDEO_RESOLUTION] = resolution
         }
     }
 

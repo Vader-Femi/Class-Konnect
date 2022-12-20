@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,9 +23,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -64,33 +69,44 @@ class WelcomeBackFragment : Fragment() {
                         val context = LocalContext.current
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
+                            verticalArrangement = Arrangement.Top,
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()
                                 .padding(0.dp, 0.dp, 0.dp, 30.dp)
                         ) {
-                            LaunchedEffect(key1 = Unit) {
-                                    var greeting = "Good Day"
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        val calendar = Calendar.getInstance()
-                                        val current = LocalDateTime.of(
-                                            calendar.get(Calendar.YEAR),
-                                            calendar.get(Calendar.MONTH),
-                                            calendar.get(Calendar.DAY_OF_MONTH),
-                                            calendar.get(Calendar.HOUR_OF_DAY),
-                                            calendar.get(Calendar.MINUTE),
-                                            calendar.get(Calendar.SECOND))
-                                        greeting = when (current.hour) {
-                                            in 6..11 -> "Good Morning"
-                                            in 12..16 -> "Good Afternoon"
-                                            in 17..22 -> "Good Evening"
-                                            else -> "You should be sleeping"
+                            LaunchedEffect(key1 = true) {
+                                var greeting = "Good Day"
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    val calendar = Calendar.getInstance()
+                                    val current = LocalDateTime.of(
+                                        calendar.get(Calendar.YEAR),
+                                        calendar.get(Calendar.MONTH),
+                                        calendar.get(Calendar.DAY_OF_MONTH),
+                                        calendar.get(Calendar.HOUR_OF_DAY),
+                                        calendar.get(Calendar.MINUTE),
+                                        calendar.get(Calendar.SECOND))
+                                    greeting = when (current.hour) {
+                                        in 6..11 -> "Good Morning"
+                                        in 12..16 -> "Good Afternoon"
+                                        in 17..22 -> "Good Evening"
+                                        else -> "You should be sleeping"
+                                    }
+                                }
+                                greetingText = "$greeting ${viewModel.userFName()}"
+
+                                viewModel.classStatus.collect { event ->
+                                    isInClass = when (event) {
+                                        is BaseViewModel.ClassStatus.Started -> {
+                                            true
+                                        }
+                                        is BaseViewModel.ClassStatus.Ended -> {
+                                            false
                                         }
                                     }
-                                    greetingText = "$greeting ${viewModel.userFName()}"
+                                }
                             }
-                            LaunchedEffect(key1 = viewModel.classStatus) {
+                            LaunchedEffect(key1 = context) {
                                 viewModel.classStatus.collect { event ->
                                     isInClass = when (event) {
                                         is BaseViewModel.ClassStatus.Started -> {
@@ -104,35 +120,45 @@ class WelcomeBackFragment : Fragment() {
                             }
                             Text(
                                 modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(20.dp, 0.dp, 20.dp, 0.dp),
+                                    .align(Alignment.Start)
+                                    .padding(15.dp, 0.dp, 20.dp, 0.dp),
                                 text = greetingText,
                                 fontWeight = FontWeight.ExtraBold,
                                 fontSize = 24.sp,
                                 textAlign = TextAlign.Start
                             )
                             Spacer(modifier = Modifier.height(20.dp))
+                            InspirationTextCard(
+                                painter = painterResource(id = R.drawable.thesis_amico),
+                                contentDescription = "Inspirational Text card",
+                                title = "Education is our passport to the future, for tomorrow belongs " +
+                                        "to the people who prepare for it today",
+                                reference = "\n- Malcolm X",
+                                onClick = {
+
+                                }
+                            )
                             if (isInClass) {
                                 OnGoingClassCard(
-                                    painter = painterResource(id = R.drawable.status_update_amico),
-                                    contentDescription = "Return To Class card",
-                                    title = "Click To Return To OnGoing Class Screen",
+                                    title = "Click the meeting notification to rejoin the class screen",
                                     onClick = {
-                                        JitsiMeetActivity.launch(context,
-                                            JitsiMeet.getCurrentConference())
+                                        if (!(activity as HomeActivity).checkNotificationPermission()){
+                                            Toast.makeText(context,
+                                                "Please enable notifications in settings",
+                                                Toast.LENGTH_LONG).show()
+                                        }
+
                                     }
                                 )
                             }
-                            Spacer(modifier = Modifier.height(20.dp))
                             ImageCard(
                                 painter = painterResource(id = R.drawable.status_update_amico),
-                                contentDescription = "Update profile card",
-                                title = "Update Profile",
+                                contentDescription = "My profile card",
+                                title = "My Profile",
                                 onClick = {
                                     findNavController().navigate(R.id.action_welcomeBack_to_updateProfile)
                                 }
                             )
-                            Spacer(modifier = Modifier.height(20.dp))
                             ImageCard(
                                 painter = painterResource(id = R.drawable.online_learning_rafiki),
                                 contentDescription = "Start or join a class card",
@@ -141,11 +167,10 @@ class WelcomeBackFragment : Fragment() {
                                     findNavController().navigate(R.id.action_welcomeBack_to_classDetails)
                                 }
                             )
-                            Spacer(modifier = Modifier.height(20.dp))
                             ImageCard(
                                 painter = painterResource(id = R.drawable.personal_data_amico),
-                                contentDescription = "Account settings card",
-                                title = "Account settings",
+                                contentDescription = "Settings card",
+                                title = "Settings",
                                 onClick = {
                                     findNavController().navigate(R.id.action_welcomeBack_to_my_account)
                                 }
@@ -182,7 +207,7 @@ class WelcomeBackFragment : Fragment() {
                     painter = painter,
                     contentDescription = contentDescription,
                     modifier = Modifier
-                        .align(Alignment.Center)
+                        .align(Alignment.TopCenter)
                         .padding(top = 20.dp, bottom = 60.dp),
                     contentScale = ContentScale.FillHeight
                 )
@@ -191,7 +216,7 @@ class WelcomeBackFragment : Fragment() {
                     .background(brush = Brush.verticalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            MaterialTheme.colorScheme.primaryContainer
+                            MaterialTheme.colorScheme.secondaryContainer
                         ),
                         startY = 0f
                     ))) {
@@ -211,25 +236,27 @@ class WelcomeBackFragment : Fragment() {
                 }
             }
         }
+        Spacer(modifier = Modifier.height(20.dp))
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun OnGoingClassCard(
+    fun InspirationTextCard(
         painter: Painter,
         contentDescription: String,
         title: String,
+        reference: String,
         modifier: Modifier = Modifier,
         onClick: () -> Unit,
     ) {
         Card(
             modifier = modifier
                 .fillMaxWidth(),
-            shape = AbsoluteCutCornerShape(0.dp),
+            shape = AbsoluteCutCornerShape(10.dp),
             onClick = onClick
         ) {
             Box(modifier = Modifier
-                .height(100.dp)
+                .height(130.dp)
                 .fillMaxWidth()
             ) {
                 Image(
@@ -242,8 +269,8 @@ class WelcomeBackFragment : Fragment() {
                     .fillMaxSize()
                     .background(brush = Brush.horizontalGradient(
                         colors = listOf(
-                            Color.Transparent,
-                            MaterialTheme.colorScheme.primaryContainer
+                            MaterialTheme.colorScheme.secondaryContainer,
+                            Color.Transparent
                         ),
                         startX = 300f
                     ))) {
@@ -258,15 +285,72 @@ class WelcomeBackFragment : Fragment() {
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = title,
+                        text =
+                        buildAnnotatedString {
+                            append(title)
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            ) {
+                                append(reference)
+                            }
+                        },
                         style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Start
                     )
                 }
             }
         }
+        Spacer(modifier = Modifier.height(20.dp))
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun OnGoingClassCard(
+        title: String,
+        modifier: Modifier = Modifier,
+        onClick: () -> Unit,
+    ) {
+        Card(
+            modifier = modifier
+                .fillMaxWidth(),
+            shape = AbsoluteCutCornerShape(0.dp),
+            onClick = onClick
+        ) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+            ) {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.secondaryContainer,
+                            Color.Transparent
+                        ),
+                        startX = 300f
+                    ))) {
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(20.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = title,
+                        style = TextStyle(color = MaterialTheme.colorScheme.onPrimaryContainer),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(20.dp))
     }
 
     override fun onDestroyView() {

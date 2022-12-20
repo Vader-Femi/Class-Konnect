@@ -15,11 +15,11 @@
     <string name="sign_in">Sign In</string>
     <string name="title_activity_home">Home</string>
     <string name="app_logo">App logo</string>
-    <string name="class_details_fragment_label">Enter Class Details</string>
+    <string name="class_details_fragment_label">Start or join a class</string>
     <string name="welcome_back_fragment_label">Welcome Back</string>
-    <string name="update_profile_fragment_label">Update Profile</string>
+    <string name="update_profile_fragment_label">My Profile</string>
     <string name="video_screen_fragment_label">Video Screen</string>
-    <string name="my_account_fragment_label">My account</string>
+    <string name="my_account_fragment_label">Settings</string>
     <string name="class_name">Class Name</string>
     <string name="start_class">Start Class</string>
     <string name="join_class">Join Class</string>

@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -30,6 +32,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.femi.e_class.*
+import com.femi.e_class.R
 import com.femi.e_class.compose.E_ClassTheme
 import com.femi.e_class.databinding.FragmentUpdateProfileBinding
 import com.femi.e_class.presentation.UpdateProfileFormEvent
@@ -65,15 +68,15 @@ class UpdateProfileFragment : Fragment() {
                         val scrollState = rememberScrollState()
                         val context = LocalContext.current
                         val state = viewModel.updateProfileValidationFormState
+                        var loading by remember { mutableStateOf(false) }
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
+                            verticalArrangement = Arrangement.Top,
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()
                                 .padding(30.dp, 0.dp, 30.dp, 30.dp),
                         ) {
-                            var loading by remember { mutableStateOf(false) }
                             LaunchedEffect(key1 = context) {
                                 viewModel.updateProfileValidationEvents.collect { event ->
                                     when (event) {
@@ -105,19 +108,13 @@ class UpdateProfileFragment : Fragment() {
                             Text(
                                 modifier = Modifier
                                     .align(Alignment.Start),
-                                text = "Update Profile",
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 24.sp,
-                                textAlign = TextAlign.Start
-                            )
-                            Spacer(modifier = Modifier.height(1.dp))
-                            Text(
-                                modifier = Modifier
-                                    .align(Alignment.Start),
                                 text = "Enter your details to update",
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 14.sp,
-                                textAlign = TextAlign.Start
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                textAlign = TextAlign.Start,
+                                style = TextStyle(
+                                    color = MaterialTheme.colorScheme.primary
+                                )
                             )
                             Spacer(modifier = Modifier.height(30.dp))
                             OutlinedTextField(
@@ -184,7 +181,9 @@ class UpdateProfileFragment : Fragment() {
                                 modifier = Modifier.fillMaxWidth(),
                                 maxLines = 2,
                                 leadingIcon = {
-                                    Icon(Icons.Filled.Settings, "Last Name Icon")
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_school),
+                                        contentDescription = "Matric Number Icon")
                                 },
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.NumberPassword,

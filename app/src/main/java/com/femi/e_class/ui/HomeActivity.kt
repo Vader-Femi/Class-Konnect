@@ -78,7 +78,7 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
-    private fun checkNotificationPermission() {
+    fun checkNotificationPermission(): Boolean {
         hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ContextCompat.checkSelfPermission(
                 this,
@@ -89,11 +89,16 @@ class HomeActivity : AppCompatActivity() {
         }
 
         if (!hasNotificationPermission) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
+            showNotificationDialog()
         }
 
+        return hasNotificationPermission
+    }
+
+    private fun showNotificationDialog(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -125,6 +130,7 @@ class HomeActivity : AppCompatActivity() {
         val email = viewModel.userEmail()
         val fName = viewModel.userFName()
         val matric = viewModel.userMatric()
+        val videoResolution = viewModel.videoResolution()
         val displayName = "$matric-$fName"
 
 
@@ -134,10 +140,6 @@ class HomeActivity : AppCompatActivity() {
         } catch (e: MalformedURLException) {
             e.printStackTrace()
             throw RuntimeException("Invalid server URL!")
-        }
-        var resolution = 1080
-        if (DevicePerformance.create(applicationContext).mediaPerformanceClass < Build.VERSION_CODES.R) {
-            resolution = 720
         }
 
         val defaultOptions: JitsiMeetConferenceOptions = JitsiMeetConferenceOptions.Builder()
@@ -152,7 +154,7 @@ class HomeActivity : AppCompatActivity() {
             .setFeatureFlag("close-captions.enabled", true)
             .setFeatureFlag("chat.enabled", true)
             .setFeatureFlag("invite.enabled", true)
-            .setFeatureFlag("resolution", resolution)
+            .setFeatureFlag("resolution", videoResolution)
             .setFeatureFlag("live-streaming.enabled", false)
             .setFeatureFlag("meeting-name.enabled", true)
             .setFeatureFlag("pip.enabled", true)
@@ -203,15 +205,6 @@ class HomeActivity : AppCompatActivity() {
                 }
                 BroadcastEvent.Type.CONFERENCE_TERMINATED -> {
                     viewModel.classEnded()
-                }
-                BroadcastEvent.Type.SCREEN_SHARE_TOGGLED -> {
-                    val sharingMessage = if (event.data["sharing"] == true)
-                        "started sharing their screen"
-                    else
-                        "stopped sharing their screen"
-                    Toast.makeText(this,
-                        "${event.data["participant"]} $sharingMessage  ",
-                        Toast.LENGTH_SHORT).show()
                 }
                 else -> Timber.i("Received event: %s", event.type)
             }

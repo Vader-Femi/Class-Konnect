@@ -189,7 +189,9 @@ class FirstSignUpFragment : Fragment() {
                                 modifier = Modifier.fillMaxWidth(),
                                 maxLines = 2,
                                 leadingIcon = {
-                                    Icon(Icons.Filled.Settings, "Last Name Icon")
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_school),
+                                        contentDescription = "Matric Number Icon")
                                 },
                                 keyboardOptions = KeyboardOptions(
                                     keyboardType = KeyboardType.NumberPassword,
@@ -385,7 +387,7 @@ class FirstSignUpFragment : Fragment() {
                                 LaunchedEffect(key1 = accountCreated) {
                                     if (accountCreated) {
                                         coroutineScope.launch {
-                                            delay(7.seconds)
+                                            delay(5.seconds)
                                             proceedToLogin()
                                         }
                                     }

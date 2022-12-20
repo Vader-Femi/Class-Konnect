@@ -7,15 +7,12 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
@@ -75,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                             verticalArrangement = Arrangement.Center,
                             modifier = Modifier
                                 .verticalScroll(scrollState)
-                                .fillMaxSize()
+                                .fillMaxWidth()
                                 .padding(8.dp, 0.dp, 8.dp, 0.dp),
                         ) {
                             val onBoardingData: MutableState<List<OnBoardingData>> = remember {
@@ -107,11 +104,10 @@ class MainActivity : AppCompatActivity() {
                                 inactiveColor = MaterialTheme.colorScheme.primaryContainer,
                                 activeColor = MaterialTheme.colorScheme.primary
                             )
-                            Spacer(modifier = Modifier.height(40.dp))
                             AnimatedVisibility(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(40.dp, 0.dp, 40.dp, 0.dp),
+                                    .padding(40.dp, 40.dp, 40.dp, 0.dp),
                                 visible = pagerState.currentPage == 2
                             ) {
                                 Button(
@@ -124,11 +120,10 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                             }
-                            Spacer(modifier = Modifier.height(20.dp))
                             AnimatedVisibility(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(40.dp, 0.dp, 40.dp, 0.dp),
+                                    .padding(40.dp, 20.dp, 40.dp, 0.dp),
                                 visible = pagerState.currentPage == 2,
                             ) {
                                 OutlinedButton(
@@ -140,11 +135,10 @@ class MainActivity : AppCompatActivity() {
                                     Text(text = "Sign Up")
                                 }
                             }
-                            Spacer(modifier = Modifier.height(40.dp))
                             AnimatedVisibility(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(40.dp, 0.dp, 40.dp, 0.dp),
+                                    .padding(40.dp, 60.dp, 40.dp, 0.dp),
                                 visible = pagerState.currentPage != 2
                             ) {
                                 Button(
@@ -187,7 +181,7 @@ class MainActivity : AppCompatActivity() {
                     count = item.count()
                 ) { page ->
                     Column(modifier = Modifier
-                        .padding(top = 60.dp)
+                        .padding(top = 0.dp)
                         .fillMaxWidth(),
                         verticalArrangement = Arrangement.SpaceBetween,
                         horizontalAlignment = Alignment.CenterHorizontally

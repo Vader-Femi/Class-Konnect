@@ -22,4 +22,8 @@ open class BaseRepository(
     suspend fun userLName(lName: String) = dataStore.userLName(lName)
 
     suspend fun userLName(): String = dataStore.userLName.first()
+
+    suspend fun videoResolution(resolution: Int) = dataStore.videoResolution(resolution)
+
+    suspend fun videoResolution(): Int = dataStore.videoResolution.first()
 }
