@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.AbsoluteCutCornerShape
+import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -59,6 +60,7 @@ class WelcomeBackFragment : Fragment() {
                 E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
                     Surface {
                         val scrollState = rememberScrollState()
+                        var userNameText by remember { mutableStateOf("") }
                         var greetingText by remember { mutableStateOf("") }
                         var isInClass by remember { mutableStateOf(false) }
                         val context = LocalContext.current
@@ -71,7 +73,9 @@ class WelcomeBackFragment : Fragment() {
                                 .padding(0.dp, 0.dp, 0.dp, 30.dp)
                         ) {
                             LaunchedEffect(key1 = true) {
-                                var greeting = "Good Day"
+                                userNameText = "Hi, ${viewModel.userFName()}"
+
+                                greetingText = "Good Day"
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     val calendar = Calendar.getInstance()
                                     val current = LocalDateTime.of(
@@ -81,14 +85,13 @@ class WelcomeBackFragment : Fragment() {
                                         calendar.get(Calendar.HOUR_OF_DAY),
                                         calendar.get(Calendar.MINUTE),
                                         calendar.get(Calendar.SECOND))
-                                    greeting = when (current.hour) {
+                                    greetingText = when (current.hour) {
                                         in 6..11 -> "Good Morning"
                                         in 12..16 -> "Good Afternoon"
                                         in 17..22 -> "Good Evening"
                                         else -> "You should be sleeping"
                                     }
                                 }
-                                greetingText = "$greeting ${viewModel.userFName()}"
 
                                 viewModel.classStatus.collect { event ->
                                     isInClass = when (event) {
@@ -116,19 +119,19 @@ class WelcomeBackFragment : Fragment() {
                             Text(
                                 modifier = Modifier
                                     .align(Alignment.Start)
-                                    .padding(15.dp, 0.dp, 20.dp, 0.dp),
-                                text = greetingText,
+                                    .padding(30.dp, 0.dp, 30.dp, 0.dp),
+                                text = userNameText,
                                 fontWeight = FontWeight.ExtraBold,
-                                fontSize = 24.sp,
+                                fontSize = 20.sp,
                                 textAlign = TextAlign.Start
                             )
-                            Spacer(modifier = Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
                             InspirationTextCard(
-                                painter = painterResource(id = R.drawable.thesis_amico),
+                                painter = painterResource(id = R.drawable.cover_image),
                                 contentDescription = "Inspirational Text card",
-                                title = "Education is our passport to the future, for tomorrow belongs " +
-                                        "to the people who prepare for it today",
-                                reference = "\n- Malcolm X",
+                                text1 = "Let’s Learn\n" +
+                                        "Now!",
+                                text2 = "Start your classes on the go.",
                                 onClick = {
 
                                 }
@@ -137,7 +140,7 @@ class WelcomeBackFragment : Fragment() {
                                 OnGoingClassCard(
                                     title = "Click the meeting notification to rejoin the class screen",
                                     onClick = {
-                                        if (!(activity as HomeActivity).checkNotificationPermission()){
+                                        if (!(activity as HomeActivity).checkNotificationPermission()) {
                                             Toast.makeText(context,
                                                 "Please enable notifications in settings",
                                                 Toast.LENGTH_LONG).show()
@@ -146,16 +149,18 @@ class WelcomeBackFragment : Fragment() {
                                     }
                                 )
                             }
-                            ImageCard(
-                                painter = painterResource(id = R.drawable.status_update_amico),
-                                contentDescription = "My profile card",
-                                title = "My Profile",
-                                onClick = {
-                                    findNavController().navigate(R.id.action_welcomeBack_to_updateProfile)
-                                }
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.Start)
+                                    .padding(30.dp, 0.dp, 30.dp, 0.dp),
+                                text = greetingText,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Start
                             )
+                            Spacer(modifier = Modifier.height(20.dp))
                             ImageCard(
-                                painter = painterResource(id = R.drawable.online_learning_rafiki),
+                                painter = painterResource(id = R.drawable.start_or_join),
                                 contentDescription = "Start or join a class card",
                                 title = "Start or join a class",
                                 onClick = {
@@ -163,7 +168,15 @@ class WelcomeBackFragment : Fragment() {
                                 }
                             )
                             ImageCard(
-                                painter = painterResource(id = R.drawable.personal_data_amico),
+                                painter = painterResource(id = R.drawable.update_profile),
+                                contentDescription = "My profile card",
+                                title = "My Profile",
+                                onClick = {
+                                    findNavController().navigate(R.id.action_welcomeBack_to_updateProfile)
+                                }
+                            )
+                            ImageCard(
+                                painter = painterResource(id = R.drawable.settings),
                                 contentDescription = "Settings card",
                                 title = "Settings",
                                 onClick = {
@@ -180,6 +193,74 @@ class WelcomeBackFragment : Fragment() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
+    fun InspirationTextCard(
+        painter: Painter,
+        contentDescription: String,
+        text1: String,
+        text2: String,
+        modifier: Modifier = Modifier,
+        onClick: () -> Unit,
+    ) {
+        Card(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 22.dp, end = 22.dp),
+            shape = AbsoluteRoundedCornerShape(24.dp),
+            onClick = onClick,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 30.dp),
+        ) {
+            Box(modifier = Modifier
+                .height(200.dp)
+                .fillMaxWidth()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(140.dp)
+                        .align(Alignment.CenterEnd)
+                ) {
+                    Image(
+                        painter = painter,
+                        contentDescription = contentDescription,
+                        contentScale = ContentScale.FillHeight
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            start = 22.dp,
+                            end = 150.dp
+                        ),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        text =
+                        buildAnnotatedString {
+                            append(text1)
+                            withStyle(
+                                style = SpanStyle(
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            ) {
+                                append("\n$text2")
+                            }
+                        },
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        textAlign = TextAlign.Start
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(30.dp))
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
     fun ImageCard(
         painter: Painter,
         contentDescription: String,
@@ -190,117 +271,43 @@ class WelcomeBackFragment : Fragment() {
         Card(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(20.dp, 0.dp, 20.dp, 0.dp),
-            shape = AbsoluteCutCornerShape(15.dp),
-            onClick = onClick
+                .padding(start = 22.dp, end = 22.dp),
+            shape = AbsoluteRoundedCornerShape(24.dp),
+            onClick = onClick,
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         ) {
             Box(modifier = Modifier
-                .height(150.dp)
+                .height(250.dp)
                 .fillMaxWidth()
             ) {
-                Image(
-                    painter = painter,
-                    contentDescription = contentDescription,
+                Card(
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 20.dp, bottom = 60.dp),
-                    contentScale = ContentScale.FillHeight
-                )
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            MaterialTheme.colorScheme.secondaryContainer
-                        ),
-                        startY = 0f
-                    ))) {
+                        .height(192.dp)
+                        .padding(15.dp, 15.dp, 15.dp, 0.dp)
+                        .align(Alignment.TopCenter),
+                    shape = AbsoluteRoundedCornerShape(24.dp),
+                ) {
+                    Image(
+                        painter = painter,
+                        contentDescription = contentDescription,
+                        contentScale = ContentScale.FillWidth
+                    )
                 }
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(5.dp),
+                        .padding(bottom = 12.dp),
                     contentAlignment = Alignment.BottomCenter
                 ) {
                     Text(
                         text = title,
-                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
-                        fontSize = 20.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun InspirationTextCard(
-        painter: Painter,
-        contentDescription: String,
-        title: String,
-        reference: String,
-        modifier: Modifier = Modifier,
-        onClick: () -> Unit,
-    ) {
-        Card(
-            modifier = modifier
-                .fillMaxWidth(),
-            shape = AbsoluteCutCornerShape(10.dp),
-            onClick = onClick
-        ) {
-            Box(modifier = Modifier
-                .height(130.dp)
-                .fillMaxWidth()
-            ) {
-                Image(
-                    painter = painter,
-                    contentDescription = contentDescription,
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    contentScale = ContentScale.FillHeight
-                )
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.secondaryContainer,
-                            Color.Transparent
-                        ),
-                        startX = 300f
-                    ))) {
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = 20.dp,
-                            end = 150.dp
-                        ),
-                    contentAlignment = Alignment.CenterStart
-                ) {
-                    Text(
-                        text =
-                        buildAnnotatedString {
-                            append(title)
-                            withStyle(
-                                style = SpanStyle(
-                                    fontSize = 18.sp,
-                                    color = MaterialTheme.colorScheme.secondary
-                                )
-                            ) {
-                                append(reference)
-                            }
-                        },
-                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.Start
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(24.dp))
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -314,21 +321,12 @@ class WelcomeBackFragment : Fragment() {
             modifier = modifier
                 .fillMaxWidth(),
             shape = AbsoluteCutCornerShape(0.dp),
-            onClick = onClick
+            onClick = onClick,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
         ) {
             Box(modifier = Modifier
                 .fillMaxWidth()
             ) {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(brush = Brush.horizontalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.secondaryContainer,
-                            Color.Transparent
-                        ),
-                        startX = 300f
-                    ))) {
-                }
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -339,13 +337,13 @@ class WelcomeBackFragment : Fragment() {
                         text = title,
                         style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center
                     )
                 }
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(12.dp))
     }
 
     override fun onDestroyView() {

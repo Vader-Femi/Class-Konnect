@@ -139,9 +139,9 @@ class SettingsFragment : Fragment() {
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Start,
-                                style = TextStyle(
-                                    color = MaterialTheme.colorScheme.secondary
-                                )
+//                                style = TextStyle(
+//                                    color = MaterialTheme.colorScheme.primary
+//                                )
                             )
                             Spacer(modifier = Modifier.height(10.dp))
                             Card(
@@ -149,9 +149,9 @@ class SettingsFragment : Fragment() {
                                     .fillMaxWidth()
                                     .padding(0.dp, 0.dp, 0.dp, 0.dp),
                                 shape = RoundedCornerShape(15.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                                )
+//                                colors = CardDefaults.cardColors(
+//                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+//                                )
                             ) {
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -165,7 +165,7 @@ class SettingsFragment : Fragment() {
                                         fontWeight = FontWeight.Medium,
                                         textAlign = TextAlign.Start,
                                         modifier = Modifier.align(Alignment.CenterVertically),
-                                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
+//                                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
                                     )
                                     Switch(
                                         checked = is720Checked,
@@ -189,9 +189,9 @@ class SettingsFragment : Fragment() {
                                     .fillMaxWidth()
                                     .padding(0.dp, 0.dp, 0.dp, 0.dp),
                                 shape = RoundedCornerShape(15.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                                )
+//                                colors = CardDefaults.cardColors(
+//                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+//                                )
                             ) {
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -205,7 +205,7 @@ class SettingsFragment : Fragment() {
                                         fontWeight = FontWeight.Medium,
                                         textAlign = TextAlign.Start,
                                         modifier = Modifier.align(Alignment.CenterVertically),
-                                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
+//                                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
                                     )
                                     Switch(
                                         checked = is1080Checked,
@@ -231,9 +231,9 @@ class SettingsFragment : Fragment() {
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Start,
-                                style = TextStyle(
-                                    color = MaterialTheme.colorScheme.primary
-                                )
+//                                style = TextStyle(
+//                                    color = MaterialTheme.colorScheme.primary
+//                                )
                             )
                             Spacer(modifier = Modifier.height(10.dp))
                             Row(

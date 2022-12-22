@@ -59,12 +59,25 @@ class MainActivity : AppCompatActivity() {
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
 
+        val onBoardingData = mutableStateOf(
+                listOf(
+                    OnBoardingData(R.drawable.telecommuting_bro,
+                        "Join a Class",
+                        "Join a class from the comfort of your home"),
+                    OnBoardingData(R.drawable.telecommuting_pana,
+                        "Random Title 2",
+                        "One random long-ish string of inspirational text 2"),
+                    OnBoardingData(R.drawable.telecommuting_rafiki,
+                        "Random Title 3",
+                        "One random long-ish string of inspirational text 3")
+                )
+            )
+
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
                     Surface {
-                        val context = LocalContext.current
                         val scrollState = rememberScrollState()
                         val coroutineScope = rememberCoroutineScope()
                         Column(
@@ -75,22 +88,6 @@ class MainActivity : AppCompatActivity() {
                                 .fillMaxWidth()
                                 .padding(8.dp, 0.dp, 8.dp, 0.dp),
                         ) {
-                            val onBoardingData: MutableState<List<OnBoardingData>> = remember {
-                                mutableStateOf(
-                                    listOf(
-                                        OnBoardingData(R.drawable.telecommuting_bro,
-                                            "Join a Class",
-                                            "Join a class from the comfort of your home"),
-                                        OnBoardingData(R.drawable.telecommuting_pana,
-                                            "Random Title 2",
-                                            "One random long-ish string of inspirational text 2"),
-                                        OnBoardingData(R.drawable.telecommuting_rafiki,
-                                            "Random Title 3",
-                                            "One random long-ish string of inspirational text 3")
-                                    )
-                                )
-                            }
-
                             val pagerState = rememberPageState()
                             OnBoardingViewPager(
                                 item = onBoardingData.value,
@@ -152,7 +149,6 @@ class MainActivity : AppCompatActivity() {
                                 ) {
                                     Text(text = "Next")
                                 }
-
                             }
                         }
                     }
