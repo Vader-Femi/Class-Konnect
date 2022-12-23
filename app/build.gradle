@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        trial {
+            storeFile file(compose_version)
+            storePassword compose_version
+            keyAlias compose_version
+            keyPassword compose_version
+        }
+    }
     namespace 'com.femi.e_class'
     compileSdk 33
 

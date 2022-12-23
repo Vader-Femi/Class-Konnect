@@ -13,7 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -64,12 +64,12 @@ class MainActivity : AppCompatActivity() {
                     OnBoardingData(R.drawable.telecommuting_bro,
                         "Join a Class",
                         "Join a class from the comfort of your home"),
-                    OnBoardingData(R.drawable.telecommuting_pana,
-                        "Random Title 2",
-                        "One random long-ish string of inspirational text 2"),
                     OnBoardingData(R.drawable.telecommuting_rafiki,
-                        "Random Title 3",
-                        "One random long-ish string of inspirational text 3")
+                        "HD Audio-Video",
+                        "Enjoy high quality audio paired with high definition video"),
+                    OnBoardingData(R.drawable.typing_rafiki,
+                        "Share Chat and screen",
+                        "Share your screen and messages while in a class")
                 )
             )
 
@@ -98,8 +98,11 @@ class MainActivity : AppCompatActivity() {
                                     .padding(0.dp, 20.dp, 0.dp, 20.dp)
                                     .align(Alignment.CenterHorizontally),
                                 pagerState = pagerState,
-                                inactiveColor = MaterialTheme.colorScheme.primaryContainer,
-                                activeColor = MaterialTheme.colorScheme.primary
+                                inactiveColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                activeColor = MaterialTheme.colorScheme.primaryContainer,
+                                indicatorHeight = 8.dp,
+                                indicatorWidth = 12.dp,
+                                spacing = 12.dp
                             )
                             AnimatedVisibility(
                                 modifier = Modifier
@@ -177,7 +180,7 @@ class MainActivity : AppCompatActivity() {
                     count = item.count()
                 ) { page ->
                     Column(modifier = Modifier
-                        .padding(top = 0.dp)
+                        .padding(top = 20.dp)
                         .fillMaxWidth(),
                         verticalArrangement = Arrangement.SpaceBetween,
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -185,6 +188,7 @@ class MainActivity : AppCompatActivity() {
                         Image(modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight(0.4f),
+                            contentScale = ContentScale.FillWidth,
                             painter = painterResource(id = item[page].image),
                             contentDescription = item[page].title
                         )

@@ -114,12 +114,11 @@ class SettingsFragment : Fragment() {
                                 }
                             }
                         }
-                        LaunchedEffect(key1 = userResolution){
-                            if (userResolution == 720){
+                        LaunchedEffect(key1 = userResolution) {
+                            if (userResolution == 720) {
                                 is720Checked = true
                                 is1080Checked = false
-                            }
-                            else {
+                            } else {
                                 is1080Checked = true
                                 is720Checked = false
                             }
@@ -130,7 +129,7 @@ class SettingsFragment : Fragment() {
                             modifier = Modifier
                                 .verticalScroll(scrollState)
                                 .fillMaxSize()
-                                .padding(20.dp, 0.dp, 20.dp, 0.dp),
+                                .padding(20.dp, 0.dp, 20.dp, 0.dp)
                         ) {
                             Text(
                                 modifier = Modifier
@@ -138,10 +137,7 @@ class SettingsFragment : Fragment() {
                                 text = "Set video resolution",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
-                                textAlign = TextAlign.Start,
-//                                style = TextStyle(
-//                                    color = MaterialTheme.colorScheme.primary
-//                                )
+                                textAlign = TextAlign.Start
                             )
                             Spacer(modifier = Modifier.height(10.dp))
                             Card(
@@ -149,9 +145,7 @@ class SettingsFragment : Fragment() {
                                     .fillMaxWidth()
                                     .padding(0.dp, 0.dp, 0.dp, 0.dp),
                                 shape = RoundedCornerShape(15.dp),
-//                                colors = CardDefaults.cardColors(
-//                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-//                                )
+                                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                             ) {
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -164,8 +158,7 @@ class SettingsFragment : Fragment() {
                                         fontSize = 18.sp,
                                         fontWeight = FontWeight.Medium,
                                         textAlign = TextAlign.Start,
-                                        modifier = Modifier.align(Alignment.CenterVertically),
-//                                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
+                                        modifier = Modifier.align(Alignment.CenterVertically)
                                     )
                                     Switch(
                                         checked = is720Checked,
@@ -189,9 +182,7 @@ class SettingsFragment : Fragment() {
                                     .fillMaxWidth()
                                     .padding(0.dp, 0.dp, 0.dp, 0.dp),
                                 shape = RoundedCornerShape(15.dp),
-//                                colors = CardDefaults.cardColors(
-//                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-//                                )
+                                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
                             ) {
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -204,8 +195,7 @@ class SettingsFragment : Fragment() {
                                         fontSize = 18.sp,
                                         fontWeight = FontWeight.Medium,
                                         textAlign = TextAlign.Start,
-                                        modifier = Modifier.align(Alignment.CenterVertically),
-//                                        style = TextStyle(color = MaterialTheme.colorScheme.onSecondaryContainer),
+                                        modifier = Modifier.align(Alignment.CenterVertically)
                                     )
                                     Switch(
                                         checked = is1080Checked,
@@ -230,10 +220,7 @@ class SettingsFragment : Fragment() {
                                 text = "Account settings",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
-                                textAlign = TextAlign.Start,
-//                                style = TextStyle(
-//                                    color = MaterialTheme.colorScheme.primary
-//                                )
+                                textAlign = TextAlign.Start
                             )
                             Spacer(modifier = Modifier.height(10.dp))
                             Row(

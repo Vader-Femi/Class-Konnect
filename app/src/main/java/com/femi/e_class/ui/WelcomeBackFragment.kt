@@ -37,6 +37,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.femi.e_class.R
 import com.femi.e_class.compose.E_ClassTheme
+import com.femi.e_class.data.OnBoardingData
 import com.femi.e_class.databinding.FragmentWelcomeBackBinding
 import com.femi.e_class.viewmodels.BaseViewModel
 import com.femi.e_class.viewmodels.HomeActivityViewModel
@@ -64,6 +65,50 @@ class WelcomeBackFragment : Fragment() {
                         var greetingText by remember { mutableStateOf("") }
                         var isInClass by remember { mutableStateOf(false) }
                         val context = LocalContext.current
+                        LaunchedEffect(key1 = true) {
+                            userNameText = "Hi, ${viewModel.userFName()}"
+
+                            greetingText = "Good Day"
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                val calendar = Calendar.getInstance()
+                                val current = LocalDateTime.of(
+                                    calendar.get(Calendar.YEAR),
+                                    calendar.get(Calendar.MONTH),
+                                    calendar.get(Calendar.DAY_OF_MONTH),
+                                    calendar.get(Calendar.HOUR_OF_DAY),
+                                    calendar.get(Calendar.MINUTE),
+                                    calendar.get(Calendar.SECOND))
+                                greetingText = when (current.hour) {
+                                    in 6..11 -> "Good Morning"
+                                    in 12..16 -> "Good Afternoon"
+                                    in 17..22 -> "Good Evening"
+                                    else -> "You should be sleeping"
+                                }
+                            }
+
+                            viewModel.classStatus.collect { event ->
+                                isInClass = when (event) {
+                                    is BaseViewModel.ClassStatus.Started -> {
+                                        true
+                                    }
+                                    is BaseViewModel.ClassStatus.Ended -> {
+                                        false
+                                    }
+                                }
+                            }
+                        }
+                        LaunchedEffect(key1 = context) {
+                            viewModel.classStatus.collect { event ->
+                                isInClass = when (event) {
+                                    is BaseViewModel.ClassStatus.Started -> {
+                                        true
+                                    }
+                                    is BaseViewModel.ClassStatus.Ended -> {
+                                        false
+                                    }
+                                }
+                            }
+                        }
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Top,
@@ -72,50 +117,6 @@ class WelcomeBackFragment : Fragment() {
                                 .fillMaxSize()
                                 .padding(0.dp, 0.dp, 0.dp, 30.dp)
                         ) {
-                            LaunchedEffect(key1 = true) {
-                                userNameText = "Hi, ${viewModel.userFName()}"
-
-                                greetingText = "Good Day"
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    val calendar = Calendar.getInstance()
-                                    val current = LocalDateTime.of(
-                                        calendar.get(Calendar.YEAR),
-                                        calendar.get(Calendar.MONTH),
-                                        calendar.get(Calendar.DAY_OF_MONTH),
-                                        calendar.get(Calendar.HOUR_OF_DAY),
-                                        calendar.get(Calendar.MINUTE),
-                                        calendar.get(Calendar.SECOND))
-                                    greetingText = when (current.hour) {
-                                        in 6..11 -> "Good Morning"
-                                        in 12..16 -> "Good Afternoon"
-                                        in 17..22 -> "Good Evening"
-                                        else -> "You should be sleeping"
-                                    }
-                                }
-
-                                viewModel.classStatus.collect { event ->
-                                    isInClass = when (event) {
-                                        is BaseViewModel.ClassStatus.Started -> {
-                                            true
-                                        }
-                                        is BaseViewModel.ClassStatus.Ended -> {
-                                            false
-                                        }
-                                    }
-                                }
-                            }
-                            LaunchedEffect(key1 = context) {
-                                viewModel.classStatus.collect { event ->
-                                    isInClass = when (event) {
-                                        is BaseViewModel.ClassStatus.Started -> {
-                                            true
-                                        }
-                                        is BaseViewModel.ClassStatus.Ended -> {
-                                            false
-                                        }
-                                    }
-                                }
-                            }
                             Text(
                                 modifier = Modifier
                                     .align(Alignment.Start)
@@ -281,27 +282,38 @@ class WelcomeBackFragment : Fragment() {
             ) {
                 Card(
                     modifier = Modifier
-                        .height(192.dp)
-                        .padding(15.dp, 15.dp, 15.dp, 0.dp)
+                        .height(250.dp)
+                        .padding(0.dp)
                         .align(Alignment.TopCenter),
                     shape = AbsoluteRoundedCornerShape(24.dp),
                 ) {
                     Image(
                         painter = painter,
                         contentDescription = contentDescription,
-                        contentScale = ContentScale.FillWidth
+                        contentScale = ContentScale.Crop
                     )
+                }
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            Color(51, 51, 51, 255)
+                        ),
+                        startY = 500f
+                    ))) {
                 }
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(bottom = 12.dp),
+                        .padding(bottom = 20.dp),
                     contentAlignment = Alignment.BottomCenter
                 ) {
                     Text(
                         text = title,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
+                        style = TextStyle(color = Color(255, 255, 255, 255))
                     )
                 }
             }
@@ -349,4 +361,11 @@ class WelcomeBackFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    class ImageCardItems(
+        imageRes: Int,
+        contentDescription: String,
+        title: String,
+        onClick: () -> Unit,
+    )
 }
