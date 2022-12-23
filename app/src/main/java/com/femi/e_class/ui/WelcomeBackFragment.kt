@@ -212,28 +212,15 @@ class WelcomeBackFragment : Fragment() {
             ),
             elevation = CardDefaults.cardElevation(defaultElevation = 30.dp),
         ) {
-            Box(modifier = Modifier
+            Row(modifier = Modifier
                 .height(200.dp)
                 .fillMaxWidth()
             ) {
                 Box(
                     modifier = Modifier
-                        .height(140.dp)
-                        .align(Alignment.CenterEnd)
-                ) {
-                    Image(
-                        painter = painter,
-                        contentDescription = contentDescription,
-                        contentScale = ContentScale.FillHeight
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = 22.dp,
-                            end = 150.dp
-                        ),
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.53f)
+                        .padding(start = 22.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
@@ -252,6 +239,18 @@ class WelcomeBackFragment : Fragment() {
                         fontSize = 24.sp,
                         fontWeight = FontWeight.ExtraBold,
                         textAlign = TextAlign.Start
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(1f),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    Image(
+                        painter = painter,
+                        contentDescription = contentDescription,
+                        contentScale = ContentScale.FillWidth
                     )
                 }
             }
