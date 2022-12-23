@@ -6,13 +6,15 @@ plugins {
 
 android {
     signingConfigs {
-        trial {
-            storeFile file(compose_version)
-            storePassword compose_version
-            keyAlias compose_version
-            keyPassword compose_version
+        release {
+            storePassword 'ChHorizon0.'
+            keyPassword 'ChHorizon0.'
+            keyAlias 'key0'
+            storeFile file('D:\\ProjectFiles\\Kotlin\\EClass\\keystore\\ClassKonnect.jks')
         }
     }
+
+
     namespace 'com.femi.e_class'
     compileSdk 33
 
@@ -21,9 +23,10 @@ android {
         minSdk 23
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName "0.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     buildTypes {

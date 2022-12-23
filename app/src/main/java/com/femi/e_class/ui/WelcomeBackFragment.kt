@@ -30,6 +30,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -161,7 +163,7 @@ class WelcomeBackFragment : Fragment() {
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                             ImageCard(
-                                painter = painterResource(id = R.drawable.start_or_join),
+                                painter = painterResource(id = R.drawable.start_or_join_small),
                                 contentDescription = "Start or join a class card",
                                 title = "Start or join a class",
                                 onClick = {
@@ -169,7 +171,7 @@ class WelcomeBackFragment : Fragment() {
                                 }
                             )
                             ImageCard(
-                                painter = painterResource(id = R.drawable.update_profile),
+                                painter = painterResource(id = R.drawable.update_profile_small),
                                 contentDescription = "My profile card",
                                 title = "My Profile",
                                 onClick = {
@@ -177,7 +179,7 @@ class WelcomeBackFragment : Fragment() {
                                 }
                             )
                             ImageCard(
-                                painter = painterResource(id = R.drawable.settings),
+                                painter = painterResource(id = R.drawable.settings_small),
                                 contentDescription = "Settings card",
                                 title = "Settings",
                                 onClick = {
@@ -300,7 +302,7 @@ class WelcomeBackFragment : Fragment() {
                             Color.Transparent,
                             Color(51, 51, 51, 255)
                         ),
-                        startY = 500f
+                        startY = 550f
                     ))) {
                 }
                 Box(
@@ -361,11 +363,4 @@ class WelcomeBackFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-    class ImageCardItems(
-        imageRes: Int,
-        contentDescription: String,
-        title: String,
-        onClick: () -> Unit,
-    )
 }
