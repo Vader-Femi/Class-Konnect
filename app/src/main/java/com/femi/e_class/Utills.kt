@@ -5,6 +5,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -41,6 +43,21 @@ fun Fragment.handleNetworkExceptions(exception: java.lang.Exception?, retry: (()
         exception?.message.toString(),
         retry
     )
+
+}
+
+
+fun Context.handleNetworkExceptions(exception: java.lang.Exception?, retry: (() -> Unit)? = null){
+
+    Toast.makeText(this,
+        exception?.message.toString(),
+        Toast.LENGTH_SHORT)
+        .show()
+
+//    view?.snackbar(
+//        exception?.message.toString(),
+//        retry
+//    )
 
 }
 

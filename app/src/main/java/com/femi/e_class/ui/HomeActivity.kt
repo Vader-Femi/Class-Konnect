@@ -6,30 +6,34 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
-import androidx.core.performance.DevicePerformance
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.compose.rememberNavController
 import com.femi.e_class.R
 import com.femi.e_class.compose.E_ClassTheme
+import com.femi.e_class.data.BottomNavItem
 import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityHomeBinding
 import com.femi.e_class.repositories.HomeActivityRepository
@@ -47,7 +51,8 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var viewModel: HomeActivityViewModel
-    private lateinit var appBarConfiguration: AppBarConfiguration
+
+    //    private lateinit var appBarConfiguration: AppBarConfiguration
     private var hasNotificationPermission = false
 
     private val broadcastReceiver = object : BroadcastReceiver() {
@@ -56,14 +61,64 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setupViewModel()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbar)
+//        setSupportActionBar(binding.toolbar)
 
+        binding.composeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
+                    Surface {
+                        val navController = rememberNavController()
+                        var appBarTitle by remember{ mutableStateOf(getString(R.string.app_name)) }
+                        Scaffold(
+                            topBar = {
+                                AppBar(title = appBarTitle)
+                            },
+                            bottomBar = {
+                                BottomNavigationBar(
+                                    items = listOf(
+                                        BottomNavItem(
+                                            name = "Profile",
+                                            route = "profile",
+                                            icon = Icons.Default.Person
+                                        ),
+                                        BottomNavItem(
+                                            name = "Home",
+                                            route = "home",
+                                            icon = Icons.Default.Home
+                                        ),
+                                        BottomNavItem(
+                                            name = "Settings",
+                                            route = "settings",
+                                            icon = Icons.Default.Settings
+                                        ),
+                                    ),
+                                    navController = navController,
+                                    onItemClick = {
+                                        navController.navigate(it.route)
+                                        appBarTitle = it.name
+                                    }
+                                )
+                            },
+                            content = { paddingValue ->
+                                Navigation(
+                                    navController = navController,
+                                    viewModel = viewModel,
+                                    paddingValue = paddingValue
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+        }
         checkNotificationPermission()
 
         val uri = intent.data
@@ -73,9 +128,11 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        val navController = findNavController(R.id.nav_host_fragment_content_home)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+//        val navController = findNavController(R.id.nav_host_fragment_content_home)
+//        appBarConfiguration = AppBarConfiguration(navController.graph)
+//        setupActionBarWithNavController(navController, appBarConfiguration)
+
+
     }
 
     fun checkNotificationPermission(): Boolean {
@@ -95,7 +152,7 @@ class HomeActivity : AppCompatActivity() {
         return hasNotificationPermission
     }
 
-    private fun showNotificationDialog(){
+    private fun showNotificationDialog() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
@@ -186,7 +243,8 @@ class HomeActivity : AppCompatActivity() {
             intentFilter.addAction(type.action)
         }
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, intentFilter)
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(broadcastReceiver, intentFilter)
     }
 
     // Example for handling different JitsiMeetSDK events
@@ -198,7 +256,8 @@ class HomeActivity : AppCompatActivity() {
                     viewModel.classStarted()
                 }
                 BroadcastEvent.Type.PARTICIPANT_JOINED -> {
-                    Toast.makeText(this, "${event.data["name"]} Joined", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "${event.data["name"]} Joined", Toast.LENGTH_SHORT)
+                        .show()
                 }
                 BroadcastEvent.Type.ENDPOINT_TEXT_MESSAGE_RECEIVED -> {
 
@@ -222,10 +281,10 @@ class HomeActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_home)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
-    }
+//    override fun onSupportNavigateUp(): Boolean {
+//        val navController = findNavController(R.id.nav_host_fragment_content_home)
+//        return navController.navigateUp(appBarConfiguration)
+//                || super.onSupportNavigateUp()
+//    }
 
 }
