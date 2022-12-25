@@ -10,14 +10,14 @@ object BottomNavBarData {
     fun getItems(): List<BottomBarItem> {
         return listOf(
             BottomBarItem(
-                name = "Profile",
-                route = "profile",
-                icon = Icons.Default.Person
-            ),
-            BottomBarItem(
                 name = "Home",
                 route = "home",
                 icon = Icons.Default.Home
+            ),
+            BottomBarItem(
+                name = "Profile",
+                route = "profile",
+                icon = Icons.Default.Person
             ),
             BottomBarItem(
                 name = "Settings",
