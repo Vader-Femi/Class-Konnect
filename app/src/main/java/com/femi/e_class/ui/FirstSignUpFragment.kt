@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,7 +34,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.femi.e_class.*
 import com.femi.e_class.R
-import com.femi.e_class.compose.E_ClassTheme
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.data.User
 import com.femi.e_class.databinding.FragmentFirstSignUpBinding
 import com.femi.e_class.presentation.RegistrationFormEvent

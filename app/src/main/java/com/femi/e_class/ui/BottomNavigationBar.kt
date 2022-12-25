@@ -7,14 +7,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.femi.e_class.data.BottomNavItem
+import com.femi.e_class.data.BottomNavBarData
 
 @Composable
 fun BottomNavigationBar(
-    items: List<BottomNavItem>,
+    items: List<BottomNavBarData.BottomBarItem>,
     navController: NavController,
     modifier: Modifier = Modifier,
-    onItemClick: (BottomNavItem) -> Unit,
+    onItemClick: (BottomNavBarData.BottomBarItem) -> Unit,
 ) {
     val backStackEntry = navController.currentBackStackEntryAsState()
     NavigationBar(
@@ -26,7 +26,21 @@ fun BottomNavigationBar(
             val selected = item.route == backStackEntry.value?.destination?.route
             NavigationBarItem(
                 selected = selected,
-                onClick = { onItemClick(item) },
+                onClick = {
+//                    To close immediately
+//                    navController.popBackStack(
+//                        route = backStackEntry.value?.destination?.route
+//                            ?: return@NavigationBarItem,
+//                        inclusive = true
+//                    )
+
+                    navController.popBackStack(
+                        route = item.route,
+                        inclusive = true
+                    )
+
+                    onItemClick(item)
+                },
                 label = {
                     Text(
                         text = item.name,

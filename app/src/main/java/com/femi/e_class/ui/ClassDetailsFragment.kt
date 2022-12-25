@@ -24,7 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.femi.e_class.R
-import com.femi.e_class.compose.E_ClassTheme
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.databinding.FragmentClassDetailsBinding
 import com.femi.e_class.presentation.RoomFormEvent
 import com.femi.e_class.viewmodels.HomeActivityViewModel

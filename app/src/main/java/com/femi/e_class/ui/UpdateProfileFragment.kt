@@ -12,7 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,7 +32,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.femi.e_class.*
 import com.femi.e_class.R
-import com.femi.e_class.compose.E_ClassTheme
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.databinding.FragmentUpdateProfileBinding
 import com.femi.e_class.presentation.UpdateProfileFormEvent
 import com.femi.e_class.viewmodels.HomeActivityViewModel

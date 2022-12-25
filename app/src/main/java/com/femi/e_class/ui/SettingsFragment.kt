@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
@@ -31,7 +30,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.femi.e_class.R
-import com.femi.e_class.compose.E_ClassTheme
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.databinding.FragmentSettingsBinding
 import com.femi.e_class.presentation.VerifyIdentityFormEvent
 import com.femi.e_class.viewmodels.HomeActivityViewModel

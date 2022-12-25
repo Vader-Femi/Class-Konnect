@@ -30,7 +30,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.femi.e_class.*
 import com.femi.e_class.R
-import com.femi.e_class.compose.E_ClassTheme
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityLoginBinding
 import com.femi.e_class.presentation.LogInFormEvent

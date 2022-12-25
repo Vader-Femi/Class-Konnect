@@ -12,10 +12,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -23,8 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
@@ -32,10 +30,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.compose.rememberNavController
 import com.femi.e_class.R
-import com.femi.e_class.compose.E_ClassTheme
-import com.femi.e_class.data.BottomNavItem
+import com.femi.e_class.data.BottomNavBarData
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityHomeBinding
+import com.femi.e_class.navigation.Navigation
 import com.femi.e_class.repositories.HomeActivityRepository
 import com.femi.e_class.viewmodels.HomeActivityViewModel
 import com.femi.e_class.viewmodels.ViewModelFactory
@@ -83,23 +82,7 @@ class HomeActivity : AppCompatActivity() {
                             },
                             bottomBar = {
                                 BottomNavigationBar(
-                                    items = listOf(
-                                        BottomNavItem(
-                                            name = "Profile",
-                                            route = "profile",
-                                            icon = Icons.Default.Person
-                                        ),
-                                        BottomNavItem(
-                                            name = "Home",
-                                            route = "home",
-                                            icon = Icons.Default.Home
-                                        ),
-                                        BottomNavItem(
-                                            name = "Settings",
-                                            route = "settings",
-                                            icon = Icons.Default.Settings
-                                        ),
-                                    ),
+                                    items = BottomNavBarData.getItems(),
                                     navController = navController,
                                     onItemClick = {
                                         navController.navigate(it.route)
@@ -108,11 +91,12 @@ class HomeActivity : AppCompatActivity() {
                                 )
                             },
                             content = { paddingValue ->
-                                Navigation(
-                                    navController = navController,
-                                    viewModel = viewModel,
-                                    paddingValue = paddingValue
-                                )
+                                Box(modifier = Modifier.padding(paddingValue)) {
+                                    Navigation(
+                                        navController = navController,
+                                        viewModel = viewModel
+                                    )
+                                }
                             }
                         )
                     }

@@ -1,4 +1,4 @@
-package com.femi.e_class.compose
+package com.femi.e_class.theme
 import androidx.compose.ui.graphics.Color
 
 val md_theme_light_primary = Color(0xFFAC2A5F)

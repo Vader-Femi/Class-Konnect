@@ -1,4 +1,4 @@
-package com.femi.e_class.compose
+package com.femi.e_class.theme
 
 import android.app.Activity
 import android.os.Build

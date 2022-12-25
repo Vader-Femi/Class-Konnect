@@ -24,8 +24,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.femi.e_class.R
-import com.femi.e_class.compose.E_ClassTheme
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.data.OnBoardingData
 import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityMainBinding
@@ -59,20 +58,6 @@ class MainActivity : AppCompatActivity() {
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        val onBoardingData = mutableStateOf(
-                listOf(
-                    OnBoardingData(R.drawable.telecommuting_bro,
-                        "Join a Class",
-                        "Join a class from the comfort of your home"),
-                    OnBoardingData(R.drawable.telecommuting_rafiki,
-                        "HD Audio-Video",
-                        "Enjoy high quality audio paired with high definition video"),
-                    OnBoardingData(R.drawable.typing_rafiki,
-                        "Share Chat and screen",
-                        "Share your screen and messages while in a class")
-                )
-            )
-
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
@@ -90,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                         ) {
                             val pagerState = rememberPageState()
                             OnBoardingViewPager(
-                                item = onBoardingData.value,
+                                item = OnBoardingData.getItems(),
                                 pagerState = pagerState
                             )
                             HorizontalPagerIndicator(
@@ -167,7 +152,7 @@ class MainActivity : AppCompatActivity() {
     @OptIn(ExperimentalPagerApi::class)
     @Composable
     private fun OnBoardingViewPager(
-        item: List<OnBoardingData>,
+        item: List<OnBoardingData.OnBoardingItem>,
         pagerState: PagerState,
         modifier: Modifier = Modifier,
     ) {

@@ -70,6 +70,12 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
                 }
             }
         }
+        LaunchedEffect(key1 = true){
+            viewModel.onEvent(UpdateProfileFormEvent.FirstNameChanged(viewModel.userFName()))
+            viewModel.onEvent(UpdateProfileFormEvent.LastNameChanged(viewModel.userLName()))
+            viewModel.onEvent(UpdateProfileFormEvent.MatricChanged(viewModel.userMatric().toString()))
+            viewModel.onEvent(UpdateProfileFormEvent.EmailChanged(viewModel.userEmail()))
+        }
         Text(
             modifier = Modifier
                 .align(Alignment.Start)

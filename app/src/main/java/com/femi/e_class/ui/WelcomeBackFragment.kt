@@ -30,16 +30,13 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.femi.e_class.R
-import com.femi.e_class.compose.E_ClassTheme
-import com.femi.e_class.data.OnBoardingData
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.databinding.FragmentWelcomeBackBinding
 import com.femi.e_class.viewmodels.BaseViewModel
 import com.femi.e_class.viewmodels.HomeActivityViewModel

@@ -1,4 +1,4 @@
-package com.femi.e_class.compose
+package com.femi.e_class.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

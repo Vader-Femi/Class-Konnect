@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.fragment.findNavController
 import com.femi.e_class.R
 import com.femi.e_class.presentation.RoomFormEvent
 import com.femi.e_class.viewmodels.BaseViewModel
@@ -121,7 +120,7 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
             )
         )
         Spacer(modifier = Modifier.height(10.dp))
-        InspirationTextCard(
+        TopCard(
             painter = painterResource(id = R.drawable.cover_image),
             contentDescription = "Inspirational Text card",
             text1 = "Let’s Learn\n" +
@@ -144,18 +143,6 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
             )
         )
         Spacer(modifier = Modifier.height(20.dp))
-//        Text(
-//            modifier = Modifier
-//                .align(Alignment.Start)
-//                .padding(30.dp, 0.dp, 30.dp, 0.dp),
-//            text = "Enter the class details",
-//            fontWeight = FontWeight.Bold,
-//            fontSize = 18.sp,
-////            style = TextStyle(
-////                color = MaterialTheme.colorScheme.primary
-////            )
-//        )
-//        Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
             value = state.courseCode,
             label = { Text(text = "Course Code (No spaces)") },
@@ -201,61 +188,6 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
             )
         }
         Spacer(modifier = Modifier.height(40.dp))
-        /*
-        OutlinedTextField(
-            value = state.roomPassword,
-            label = { Text(text = "Password") },
-            onValueChange = {
-                viewModel.onEvent(RoomFormEvent.RoomPasswordChanged(it))
-            },
-            isError = state.roomPasswordError != null,
-            modifier = Modifier
-            .fillMaxWidth()
-            .padding(30.dp, 0.dp, 30.dp, 0.dp),
-            maxLines = 2,
-            visualTransformation = if (showPassword) {
-                VisualTransformation.None
-            } else {
-                PasswordVisualTransformation()
-            },
-            trailingIcon = {
-                if (showPassword) {
-                    IconButton(onClick = { showPassword = false }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_visibility),
-                            contentDescription = "Show Password"
-                        )
-                    }
-                } else {
-                    IconButton(onClick = { showPassword = true }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_visibility_off),
-                            contentDescription = "Hide Password"
-                        )
-                    }
-                }
-            },
-            leadingIcon = {
-                Icon(Icons.Filled.Lock, "Password Icon")
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                capitalization = KeyboardCapitalization.None,
-                autoCorrect = false,
-                imeAction = ImeAction.Done
-            )
-        )
-        if (state.roomPasswordError != null) {
-            Text(
-                text = state.roomPasswordError,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(30.dp, 0.dp, 30.dp, 0.dp),
-            )
-        }
-        Spacer(modifier = Modifier.height(40.dp))
-         */
         Button(
             onClick = {
                 viewModel.onEvent(RoomFormEvent.Submit)
@@ -272,7 +204,7 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InspirationTextCard(
+fun TopCard(
     painter: Painter,
     contentDescription: String,
     text1: String,
@@ -342,4 +274,5 @@ private suspend fun Context.moveToCall(viewModel: HomeActivityViewModel) {
     (activity as HomeActivity).startMeeting(
         courseCode = viewModel.roomFormState.courseCode.prependIndent("LASU")
     )
+    finish()
 }
