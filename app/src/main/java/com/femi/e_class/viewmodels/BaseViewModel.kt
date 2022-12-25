@@ -13,13 +13,13 @@ open class BaseViewModel(
 
     val useDynamicTheme = false
 
-    fun userEmail(email: String) = viewModelScope.launch {
+    private fun userEmail(email: String) = viewModelScope.launch {
         repository.userEmail(email)
     }
 
     suspend fun userEmail(): String = repository.userEmail()
 
-    fun userMatric(matric: Long) = viewModelScope.launch {
+    private fun userMatric(matric: Long) = viewModelScope.launch {
         repository.userMatric(matric)
     }
 
@@ -31,7 +31,7 @@ open class BaseViewModel(
 
     suspend fun userFName(): String = repository.userFName()
 
-    fun userLName(lName: String) = viewModelScope.launch {
+    private fun userLName(lName: String) = viewModelScope.launch {
         repository.userLName(lName)
     }
 
