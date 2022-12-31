@@ -1,14 +1,15 @@
 package com.femi.e_class.domain.use_case
 
+import android.app.Application
 import androidx.core.text.isDigitsOnly
 
-class ValidateMatric {
+class ValidateMatric(val appContext: Application) {
 
     fun execute(matric: String): ValidationResult{
         if (!matric.isDigitsOnly()){
             return ValidationResult(
                 false,
-                "Matric must be a integer numbers"
+                "Matric must be integer numbers"
             )
         }
         if (matric.length != 9){

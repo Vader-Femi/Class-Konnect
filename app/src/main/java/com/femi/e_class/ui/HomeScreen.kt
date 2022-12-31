@@ -30,9 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.femi.e_class.R
 import com.femi.e_class.presentation.RoomFormEvent
-import com.femi.e_class.viewmodels.BaseViewModel
 import com.femi.e_class.viewmodels.HomeActivityViewModel
-import java.time.LocalDateTime
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +40,6 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
     val state = viewModel.roomFormState
     var userNameText by remember { mutableStateOf("") }
     var greetingText by remember { mutableStateOf("") }
-    var isInClass by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
@@ -51,14 +48,7 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
         greetingText = "Good Day"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val calendar = Calendar.getInstance()
-            val current = LocalDateTime.of(
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                calendar.get(Calendar.SECOND))
-            greetingText = when (current.hour) {
+            greetingText = when (calendar.get(Calendar.HOUR_OF_DAY)) {
                 in 6..11 -> "Good Morning"
                 in 12..16 -> "Good Afternoon"
                 in 17..22 -> "Good Evening"
@@ -66,29 +56,9 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
             }
         }
 
-        viewModel.classStatus.collect { event ->
-            isInClass = when (event) {
-                is BaseViewModel.ClassStatus.Started -> {
-                    true
-                }
-                is BaseViewModel.ClassStatus.Ended -> {
-                    false
-                }
-            }
-        }
+
     }
-    LaunchedEffect(key1 = context) {
-        viewModel.classStatus.collect { event ->
-            isInClass = when (event) {
-                is BaseViewModel.ClassStatus.Started -> {
-                    true
-                }
-                is BaseViewModel.ClassStatus.Ended -> {
-                    false
-                }
-            }
-        }
-    }
+
     LaunchedEffect(key1 = context) {
         viewModel.roomEvents.collect { event ->
             when (event) {
@@ -110,13 +80,13 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
         Text(
             modifier = Modifier
                 .align(Alignment.Start)
-                .padding(20.dp, 0.dp, 30.dp, 0.dp),
+                .padding(10.dp, 0.dp, 10.dp, 0.dp),
             text = userNameText,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 20.sp,
             textAlign = TextAlign.Start,
             style = TextStyle(
-                color = MaterialTheme.colorScheme.primary
+//                color = MaterialTheme.colorScheme.primary
             )
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -133,20 +103,23 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
         Text(
             modifier = Modifier
                 .align(Alignment.Start)
-                .padding(20.dp, 0.dp, 30.dp, 0.dp),
+                .padding(10.dp, 0.dp, 10.dp, 0.dp),
             text = greetingText,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             textAlign = TextAlign.Start,
             style = TextStyle(
-                color = MaterialTheme.colorScheme.primary
+//                color = MaterialTheme.colorScheme.primary
             )
         )
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
             value = state.courseCode,
-            label = { Text(text = "Course Code (No spaces)") },
+            label = { Text(text = "Course Code") },
             onValueChange = { newText ->
+                if (newText.length > 6)
+                    return@OutlinedTextField
+
                 val input = newText
                     .replace(" ", "")
                     .uppercase()
@@ -155,7 +128,7 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
             isError = state.courseCodeError != null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(30.dp, 0.dp, 30.dp, 0.dp),
+                .padding(20.dp, 0.dp, 20.dp, 0.dp),
             maxLines = 2,
             leadingIcon = {
                 Row(
@@ -184,7 +157,7 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(30.dp, 0.dp, 30.dp, 0.dp),
+                    .padding(20.dp, 0.dp, 20.dp, 0.dp),
             )
         }
         Spacer(modifier = Modifier.height(40.dp))
@@ -195,7 +168,7 @@ fun HomeScreen(viewModel: HomeActivityViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
-                .padding(30.dp, 0.dp, 30.dp, 0.dp)
+                .padding(20.dp, 0.dp, 20.dp, 0.dp)
         ) {
             Text(text = "Start/Join Class")
         }
@@ -215,11 +188,11 @@ fun TopCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 22.dp, end = 22.dp),
+            .padding(start = 12.dp, end = 12.dp),
         shape = AbsoluteRoundedCornerShape(24.dp),
         onClick = onClick,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = MaterialTheme.colorScheme.secondary
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 30.dp),
     ) {
@@ -272,6 +245,7 @@ fun TopCard(
 private suspend fun Context.moveToCall(viewModel: HomeActivityViewModel) {
     val activity = this as Activity
     (activity as HomeActivity).startMeeting(
+        viewModel = viewModel,
         courseCode = viewModel.roomFormState.courseCode.prependIndent("LASU")
     )
     finish()

@@ -23,33 +23,27 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.femi.e_class.R
-import com.femi.e_class.theme.E_ClassTheme
-import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityResetPasswordBinding
 import com.femi.e_class.handleNetworkExceptions
 import com.femi.e_class.presentation.ResetPasswordFormEvent
-import com.femi.e_class.repositories.ResetPasswordRepository
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.viewmodels.ResetPasswordViewModel
-import com.femi.e_class.viewmodels.ViewModelFactory
-import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ResetPasswordActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityResetPasswordBinding
-    private lateinit var viewModel: ResetPasswordViewModel
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityResetPasswordBinding.inflate(layoutInflater)
-        setupViewModel()
-        setContentView(binding.root)
+        val binding = ActivityResetPasswordBinding.inflate(layoutInflater)
 
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+                val viewModel = hiltViewModel<ResetPasswordViewModel>()
                 E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
                     Surface {
                         val scrollState = rememberScrollState()
@@ -214,14 +208,8 @@ class ResetPasswordActivity : AppCompatActivity() {
                 }
             }
         }
+
         setContentView(binding.root)
     }
 
-    private fun setupViewModel() {
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val dataStore = UserPreferences(this)
-        val repository = ResetPasswordRepository(firebaseAuth, dataStore)
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[ResetPasswordViewModel::class.java]
-    }
 }

@@ -19,20 +19,6 @@ fun View.disable(disable: Boolean) {
     isEnabled = !disable
 }
 
-fun Context.loadingDialog(view: View, title: String, message: String): AlertDialog {
-    return MaterialAlertDialogBuilder(this)
-        .setTitle(title)
-        .setView(view)
-        .setMessage(message)
-        .setCancelable(false)
-        .create()
-}
-
-fun AlertDialog.showLoadingDialog(enable: Boolean) = when (enable) {
-    true -> show()
-    false -> dismiss()
-}
-
 fun Fragment.handleNetworkExceptions(exception: java.lang.Exception?, retry: (() -> Unit)? = null){
 //    Toast.makeText(this.context,
 //        exception?.message.toString(),

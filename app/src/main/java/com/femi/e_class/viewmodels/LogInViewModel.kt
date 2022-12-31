@@ -4,19 +4,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.femi.e_class.data.repository.LogInRepositoryImpl
 import com.femi.e_class.domain.use_case.ValidateEmail
 import com.femi.e_class.domain.use_case.ValidateLogInPassword
 import com.femi.e_class.presentation.LogInFormEvent
 import com.femi.e_class.presentation.LogInFormState
-import com.femi.e_class.repositories.LogInRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LogInViewModel(
-    private val repository: LogInRepository,
-    private val validateEmail: ValidateEmail = ValidateEmail(),
-    private val validatePassword: ValidateLogInPassword = ValidateLogInPassword(),
+@HiltViewModel
+class LogInViewModel @Inject constructor(
+    private val repository: LogInRepositoryImpl,
+    private val validateEmail: ValidateEmail,
+    private val validatePassword: ValidateLogInPassword,
 ) : BaseViewModel(repository) {
 
     var logInFormState by mutableStateOf(LogInFormState())

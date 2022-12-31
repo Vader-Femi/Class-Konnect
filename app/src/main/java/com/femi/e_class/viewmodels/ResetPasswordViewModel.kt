@@ -7,14 +7,17 @@ import androidx.lifecycle.viewModelScope
 import com.femi.e_class.domain.use_case.ValidateEmail
 import com.femi.e_class.presentation.ResetPasswordFormEvent
 import com.femi.e_class.presentation.ResetPasswordFormState
-import com.femi.e_class.repositories.ResetPasswordRepository
+import com.femi.e_class.data.repository.ResetPasswordRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ResetPasswordViewModel(
-    private val repository: ResetPasswordRepository,
-    private val validateEmail: ValidateEmail = ValidateEmail(),
+@HiltViewModel
+class ResetPasswordViewModel @Inject constructor(
+    private val repository: ResetPasswordRepositoryImpl,
+    private val validateEmail: ValidateEmail,
 ) : BaseViewModel(repository) {
 
     var resetPasswordFormState by mutableStateOf(ResetPasswordFormState())

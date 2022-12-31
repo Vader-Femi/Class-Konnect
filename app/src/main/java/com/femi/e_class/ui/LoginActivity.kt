@@ -26,40 +26,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.WindowCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.femi.e_class.*
 import com.femi.e_class.R
-import com.femi.e_class.theme.E_ClassTheme
-import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityLoginBinding
 import com.femi.e_class.presentation.LogInFormEvent
-import com.femi.e_class.repositories.LogInRepository
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.viewmodels.LogInViewModel
-import com.femi.e_class.viewmodels.ViewModelFactory
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityLoginBinding
-    private lateinit var viewModel: LogInViewModel
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        setupViewModel()
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-
-        getDefaults(
-            email = intent.getStringExtra(KEY_EMAIL),
-            password = intent.getStringExtra(KEY_PASSWORD)
-        )
+        val binding = ActivityLoginBinding.inflate(layoutInflater)
 
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+                val viewModel = hiltViewModel<LogInViewModel>()
                 E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
                     Surface {
                         val scrollState = rememberScrollState()
@@ -75,6 +62,14 @@ class LoginActivity : AppCompatActivity() {
                                 .fillMaxSize()
                                 .padding(30.dp, 60.dp, 30.dp, 30.dp),
                         ) {
+                            LaunchedEffect(key1 = true){
+                                intent.getStringExtra(KEY_EMAIL)?.let {
+                                    viewModel.onEvent(LogInFormEvent.EmailChanged(it))
+                                }
+                                intent.getStringExtra(KEY_PASSWORD)?.let {
+                                    viewModel.onEvent(LogInFormEvent.PasswordChanged(it))
+                                }
+                            }
                             LaunchedEffect(key1 = context) {
                                 viewModel.validationEvents.collect { event ->
                                     when (event) {
@@ -92,7 +87,7 @@ class LoginActivity : AppCompatActivity() {
                                     loading = (event is LogInViewModel.LogInEvent.Loading)
                                     when (event) {
                                         is LogInViewModel.LogInEvent.Success -> {
-                                            moveToDashboard()
+                                            moveToDashboard(viewModel)
                                         }
                                         is LogInViewModel.LogInEvent.Error -> {
                                             handleNetworkExceptions(event.exception,
@@ -272,11 +267,12 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+
         setContentView(binding.root)
     }
 
 
-    private fun moveToDashboard() {
+    private fun moveToDashboard(viewModel: LogInViewModel) {
         Intent(this@LoginActivity, HomeActivity::class.java).also { intent ->
             intent.flags =
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -284,23 +280,5 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-    }
-
-    private fun getDefaults(email: String?, password: String?) {
-        email?.let {
-            viewModel.onEvent(LogInFormEvent.EmailChanged(it))
-        }
-        password?.let {
-            viewModel.onEvent(LogInFormEvent.PasswordChanged(it))
-        }
-    }
-
-    private fun setupViewModel() {
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val fireStoreReference = FirebaseFirestore.getInstance().collection("Users")
-        val dataStore = UserPreferences(this)
-        val repository = LogInRepository(firebaseAuth, fireStoreReference, dataStore)
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[LogInViewModel::class.java]
     }
 }

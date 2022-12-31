@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.SignUpActivity">
 
-    <include layout="@layout/content_sign_up" />
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

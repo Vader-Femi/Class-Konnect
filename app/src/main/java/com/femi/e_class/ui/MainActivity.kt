@@ -21,121 +21,114 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.femi.e_class.theme.E_ClassTheme
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.femi.e_class.data.OnBoardingData
-import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityMainBinding
-import com.femi.e_class.repositories.MainActivityRepository
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.viewmodels.MainActivityViewModel
-import com.femi.e_class.viewmodels.ViewModelFactory
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainActivityViewModel
 
     @OptIn(ExperimentalPagerApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        installSplashScreen().apply {
-            this.setKeepOnScreenCondition {
-                viewModel.isLoading
-            }
-        }
-        setupViewModel()
-        lifecycleScope.launch {
-            returningUserCheck()
-        }
-        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        val binding = ActivityMainBinding.inflate(layoutInflater)
 
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
-                    Surface {
-                        val scrollState = rememberScrollState()
-                        val coroutineScope = rememberCoroutineScope()
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                                .verticalScroll(scrollState)
-                                .fillMaxWidth()
-                                .padding(8.dp, 0.dp, 8.dp, 0.dp),
-                        ) {
-                            val pagerState = rememberPageState()
-                            OnBoardingViewPager(
-                                item = OnBoardingData.getItems(),
-                                pagerState = pagerState
-                            )
-                            HorizontalPagerIndicator(
+                val viewModel = hiltViewModel<MainActivityViewModel>()
+                var showOnBoarding by remember { mutableStateOf(false) }
+                LaunchedEffect(key1 = true) {
+                    showOnBoarding = isUserNew(viewModel)
+                    installSplashScreen()
+                }
+                if (showOnBoarding) {
+                    E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
+                        Surface {
+                            val scrollState = rememberScrollState()
+                            val coroutineScope = rememberCoroutineScope()
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
                                 modifier = Modifier
-                                    .padding(0.dp, 20.dp, 0.dp, 20.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                pagerState = pagerState,
-                                inactiveColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                activeColor = MaterialTheme.colorScheme.primaryContainer,
-                                indicatorHeight = 8.dp,
-                                indicatorWidth = 12.dp,
-                                spacing = 12.dp
-                            )
-                            AnimatedVisibility(
-                                modifier = Modifier
+                                    .verticalScroll(scrollState)
                                     .fillMaxWidth()
-                                    .padding(40.dp, 40.dp, 40.dp, 0.dp),
-                                visible = pagerState.currentPage == 2
+                                    .padding(8.dp, 0.dp, 8.dp, 0.dp),
                             ) {
-                                Button(
-                                    onClick = {
-                                        startActivity(Intent(this@MainActivity,
-                                            LoginActivity::class.java))
-                                    }
+                                val pagerState = rememberPageState()
+                                OnBoardingViewPager(
+                                    item = OnBoardingData.getItems(),
+                                    pagerState = pagerState
+                                )
+                                HorizontalPagerIndicator(
+                                    modifier = Modifier
+                                        .padding(0.dp, 20.dp, 0.dp, 20.dp)
+                                        .align(Alignment.CenterHorizontally),
+                                    pagerState = pagerState,
+                                    inactiveColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    activeColor = MaterialTheme.colorScheme.primaryContainer,
+                                    indicatorHeight = 8.dp,
+                                    indicatorWidth = 12.dp,
+                                    spacing = 12.dp
+                                )
+                                AnimatedVisibility(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(40.dp, 40.dp, 40.dp, 0.dp),
+                                    visible = pagerState.currentPage == 2
                                 ) {
-                                    Text(text = "Log In")
-                                }
-
-                            }
-                            AnimatedVisibility(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(40.dp, 20.dp, 40.dp, 0.dp),
-                                visible = pagerState.currentPage == 2,
-                            ) {
-                                OutlinedButton(
-                                    onClick = {
-                                        startActivity(Intent(this@MainActivity,
-                                            SignUpActivity::class.java))
-                                    }
-                                ) {
-                                    Text(text = "Sign Up")
-                                }
-                            }
-                            AnimatedVisibility(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(40.dp, 60.dp, 40.dp, 0.dp),
-                                visible = pagerState.currentPage != 2
-                            ) {
-                                Button(
-                                    onClick = {
-                                        coroutineScope.launch {
-                                            pagerState.animateScrollToPage(
-                                                page = pagerState.currentPage + 1
-                                            )
+                                    Button(
+                                        onClick = {
+                                            startActivity(Intent(this@MainActivity,
+                                                LoginActivity::class.java))
                                         }
+                                    ) {
+                                        Text(text = "Log In")
                                     }
+
+                                }
+                                AnimatedVisibility(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(40.dp, 20.dp, 40.dp, 0.dp),
+                                    visible = pagerState.currentPage == 2,
                                 ) {
-                                    Text(text = "Next")
+                                    OutlinedButton(
+                                        onClick = {
+                                            startActivity(Intent(this@MainActivity,
+                                                SignUpActivity::class.java))
+                                        }
+                                    ) {
+                                        Text(text = "Sign Up")
+                                    }
+                                }
+                                AnimatedVisibility(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(40.dp, 60.dp, 40.dp, 0.dp),
+                                    visible = pagerState.currentPage != 2
+                                ) {
+                                    Button(
+                                        onClick = {
+                                            coroutineScope.launch {
+                                                pagerState.animateScrollToPage(
+                                                    page = pagerState.currentPage + 1
+                                                )
+                                            }
+                                        }
+                                    ) {
+                                        Text(text = "Next")
+                                    }
                                 }
                             }
                         }
@@ -210,14 +203,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun setupViewModel() {
-        val dataStore = UserPreferences(this)
-        val repository = MainActivityRepository(dataStore)
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainActivityViewModel::class.java]
-    }
-
-    private suspend fun returningUserCheck() {
+    private suspend fun isUserNew(viewModel: MainActivityViewModel): Boolean {
         val currentUser = FirebaseAuth.getInstance().currentUser
         val email = viewModel.userEmail()
         if (currentUser != null &&
@@ -232,7 +218,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(it)
                 finish()
             }
+            return false
         }
+
+        return true
     }
 
 }

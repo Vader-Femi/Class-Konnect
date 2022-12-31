@@ -79,13 +79,13 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
         Text(
             modifier = Modifier
                 .align(Alignment.Start)
-                .padding(20.dp, 0.dp, 20.dp, 0.dp),
+                .padding(10.dp, 0.dp, 10.dp, 0.dp),
             text = "Enter your details to update",
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             textAlign = TextAlign.Start,
             style = TextStyle(
-                color = MaterialTheme.colorScheme.primary
+//                color = MaterialTheme.colorScheme.primary
             )
         )
         Spacer(modifier = Modifier.height(30.dp))
@@ -98,7 +98,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
             isError = state.firstNameError != null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(30.dp, 0.dp, 30.dp, 0.dp),
+                .padding(20.dp, 0.dp, 20.dp, 0.dp),
             maxLines = 2,
             leadingIcon = {
                 Icon(Icons.Filled.Person, "First Name Icon")
@@ -116,7 +116,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(30.dp, 0.dp, 30.dp, 0.dp)
+                    .padding(20.dp, 0.dp, 20.dp, 0.dp)
             )
         }
         Spacer(modifier = Modifier.height(40.dp))
@@ -129,7 +129,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
             isError = state.lastNameError != null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(30.dp, 0.dp, 30.dp, 0.dp),
+                .padding(20.dp, 0.dp, 20.dp, 0.dp),
             maxLines = 2,
             leadingIcon = {
                 Icon(Icons.Filled.Person, "Last Name Icon")
@@ -147,7 +147,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(30.dp, 0.dp, 30.dp, 0.dp)
+                    .padding(20.dp, 0.dp, 20.dp, 0.dp)
             )
         }
         Spacer(modifier = Modifier.height(40.dp))
@@ -160,7 +160,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
             isError = state.matricError != null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(30.dp, 0.dp, 30.dp, 0.dp),
+                .padding(20.dp, 0.dp, 20.dp, 0.dp),
             maxLines = 2,
             leadingIcon = {
                 Icon(
@@ -180,7 +180,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(30.dp, 0.dp, 30.dp, 0.dp)
+                    .padding(20.dp, 0.dp, 20.dp, 0.dp)
             )
         }
         Spacer(modifier = Modifier.height(40.dp))
@@ -193,7 +193,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
             isError = state.emailError != null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(30.dp, 0.dp, 30.dp, 0.dp),
+                .padding(20.dp, 0.dp, 20.dp, 0.dp),
             maxLines = 2,
             leadingIcon = {
                 Icon(Icons.Filled.Email, "Email Icon")
@@ -211,7 +211,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .padding(30.dp, 0.dp, 30.dp, 0.dp)
+                    .padding(20.dp, 0.dp, 20.dp, 0.dp)
             )
         }
         Spacer(modifier = Modifier.height(40.dp))
@@ -226,7 +226,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
-                .padding(30.dp, 0.dp, 30.dp, 0.dp),
+                .padding(20.dp, 0.dp, 20.dp, 0.dp),
             enabled = !loading
         ) {
             Text(text = "Update Profile")

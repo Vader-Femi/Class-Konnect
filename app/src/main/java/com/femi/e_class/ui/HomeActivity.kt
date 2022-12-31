@@ -1,14 +1,9 @@
 package com.femi.e_class.ui
 
 import android.Manifest
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -17,61 +12,51 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.compose.rememberNavController
 import com.femi.e_class.R
 import com.femi.e_class.data.BottomNavBarData
-import com.femi.e_class.theme.E_ClassTheme
-import com.femi.e_class.data.UserPreferences
 import com.femi.e_class.databinding.ActivityHomeBinding
-import com.femi.e_class.navigation.Navigation
-import com.femi.e_class.repositories.HomeActivityRepository
+import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.viewmodels.HomeActivityViewModel
-import com.femi.e_class.viewmodels.ViewModelFactory
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.jitsi.meet.sdk.*
-import timber.log.Timber
 import java.net.MalformedURLException
 import java.net.URL
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHomeBinding
-    private lateinit var viewModel: HomeActivityViewModel
-
-    //    private lateinit var appBarConfiguration: AppBarConfiguration
     private var hasNotificationPermission = false
-
-    private val broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            onBroadcastReceived(intent)
-        }
-    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        setupViewModel()
-        binding = ActivityHomeBinding.inflate(layoutInflater)
+        val binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        setSupportActionBar(binding.toolbar)
 
         binding.composeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+                val viewModel = hiltViewModel<HomeActivityViewModel>()
+                LaunchedEffect(key1 = true){
+                    checkNotificationPermission()
+
+                    val uri = intent.data
+                    if (uri?.pathSegments?.get(0) != null) {
+                        lifecycleScope.launch {
+                            startMeeting(viewModel, uri.pathSegments[0])
+                        }
+                    }
+                }
                 E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
                     Surface {
                         val navController = rememberNavController()
@@ -103,23 +88,10 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
-        checkNotificationPermission()
-
-        val uri = intent.data
-        if (uri?.pathSegments?.get(0) != null) {
-            lifecycleScope.launch {
-                startMeeting(uri.pathSegments[0])
-            }
-        }
-
-//        val navController = findNavController(R.id.nav_host_fragment_content_home)
-//        appBarConfiguration = AppBarConfiguration(navController.graph)
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-
 
     }
 
-    fun checkNotificationPermission(): Boolean {
+    private fun checkNotificationPermission(): Boolean {
         hasNotificationPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ContextCompat.checkSelfPermission(
                 this,
@@ -153,19 +125,9 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun setupViewModel() {
-        val firebaseAuth = FirebaseAuth.getInstance()
-        val fireStoreReference = FirebaseFirestore.getInstance().collection("Users")
-        val dataStore = UserPreferences(this)
-        val repository = HomeActivityRepository(firebaseAuth, fireStoreReference, dataStore)
-        val viewModelFactory = ViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory)[HomeActivityViewModel::class.java]
-    }
-
     suspend fun startMeeting(
-        courseCode: String,
-//        password: String,
+        viewModel: HomeActivityViewModel,
+        courseCode: String
     ) {
 
         val email = viewModel.userEmail()
@@ -206,7 +168,6 @@ class HomeActivity : AppCompatActivity() {
 
 
         JitsiMeet.setDefaultConferenceOptions(defaultOptions)
-        registerForBroadcastMessages()
 
         val options: JitsiMeetConferenceOptions = JitsiMeetConferenceOptions.Builder()
             .setRoom(courseCode)
@@ -220,55 +181,4 @@ class HomeActivity : AppCompatActivity() {
             .build()
         JitsiMeetActivity.launch(this, options)
     }
-
-    private fun registerForBroadcastMessages() {
-        val intentFilter = IntentFilter()
-        for (type in BroadcastEvent.Type.values()) {
-            intentFilter.addAction(type.action)
-        }
-
-        LocalBroadcastManager.getInstance(this)
-            .registerReceiver(broadcastReceiver, intentFilter)
-    }
-
-    // Example for handling different JitsiMeetSDK events
-    private fun onBroadcastReceived(intent: Intent?) {
-        if (intent != null) {
-            val event = BroadcastEvent(intent)
-            when (event.type) {
-                BroadcastEvent.Type.CONFERENCE_JOINED -> {
-                    viewModel.classStarted()
-                }
-                BroadcastEvent.Type.PARTICIPANT_JOINED -> {
-                    Toast.makeText(this, "${event.data["name"]} Joined", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                BroadcastEvent.Type.ENDPOINT_TEXT_MESSAGE_RECEIVED -> {
-
-                }
-                BroadcastEvent.Type.CONFERENCE_TERMINATED -> {
-                    viewModel.classEnded()
-                }
-                else -> Timber.i("Received event: %s", event.type)
-            }
-        }
-    }
-
-    // Example for sending actions to JitsiMeetSDK
-    private fun hangUp() {
-        val hangupBroadcastIntent: Intent = BroadcastIntentHelper.buildHangUpIntent()
-        LocalBroadcastManager.getInstance(this).sendBroadcast(hangupBroadcastIntent)
-    }
-
-    override fun onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
-        super.onDestroy()
-    }
-
-//    override fun onSupportNavigateUp(): Boolean {
-//        val navController = findNavController(R.id.nav_host_fragment_content_home)
-//        return navController.navigateUp(appBarConfiguration)
-//                || super.onSupportNavigateUp()
-//    }
-
 }

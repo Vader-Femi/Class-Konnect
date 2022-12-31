@@ -8,19 +8,21 @@ import com.femi.e_class.data.User
 import com.femi.e_class.domain.use_case.*
 import com.femi.e_class.presentation.RegistrationFormEvent
 import com.femi.e_class.presentation.RegistrationFormState
-import com.femi.e_class.repositories.SignUpRepository
+import com.femi.e_class.data.repository.SignUpRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignUpViewModel(
-    private val repository: SignUpRepository,
-    private val validateFirstName: ValidateName = ValidateName(),
-    private val validateLastName: ValidateName = ValidateName(),
-    private val validateEmail: ValidateEmail = ValidateEmail(),
-    private val validateMatric: ValidateMatric = ValidateMatric(),
-    private val validatePassword: ValidatePassword = ValidatePassword(),
-//    private val validateRepeatedPassword: ValidateRepeatedPassword = ValidateRepeatedPassword(),
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    private val repository: SignUpRepositoryImpl,
+    private val validateFirstName: ValidateName,
+    private val validateLastName: ValidateName,
+    private val validateEmail: ValidateEmail,
+    private val validateMatric: ValidateMatric,
+    private val validateSignUpPassword: ValidateSignUpPassword
 ) : BaseViewModel(repository) {
 
     var registrationFormState by mutableStateOf(RegistrationFormState())
@@ -63,7 +65,7 @@ class SignUpViewModel(
         val lastNameResult = validateLastName.execute(registrationFormState.lastName)
         val emailResult = validateEmail.execute(registrationFormState.email)
         val matricResult = validateMatric.execute(registrationFormState.matric)
-        val passwordResult = validatePassword.execute(registrationFormState.password)
+        val passwordResult = validateSignUpPassword.execute(registrationFormState.password)
 //        val repeatedPasswordResult = validateRepeatedPassword.execute(
 //            registrationFormState.password,
 //            registrationFormState.repeatedPassword)

@@ -2,13 +2,16 @@ package com.femi.e_class.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.femi.e_class.repositories.BaseRepository
+import com.femi.e_class.data.repository.BaseRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-open class BaseViewModel(
-    private val repository: BaseRepository,
+@HiltViewModel
+open class BaseViewModel @Inject constructor(
+    private val repository: BaseRepositoryImpl,
 ) : ViewModel() {
 
     val useDynamicTheme = false
@@ -50,25 +53,5 @@ open class BaseViewModel(
             userMatric(0L)
             userEmail("")
         }
-    }
-
-    private val classStatusChannel = Channel<ClassStatus<Any?>>()
-    val classStatus = classStatusChannel.receiveAsFlow()
-
-    fun classStarted(){
-        viewModelScope.launch {
-            classStatusChannel.send(ClassStatus.Started)
-        }
-    }
-
-    fun classEnded(){
-        viewModelScope.launch {
-            classStatusChannel.send(ClassStatus.Ended)
-        }
-    }
-
-    sealed class ClassStatus<out T> {
-        object Started : ClassStatus<Nothing>()
-        object Ended : ClassStatus<Nothing>()
     }
 }

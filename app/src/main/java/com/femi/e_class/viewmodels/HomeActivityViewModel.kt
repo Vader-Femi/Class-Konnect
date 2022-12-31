@@ -6,19 +6,22 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.femi.e_class.domain.use_case.*
 import com.femi.e_class.presentation.*
-import com.femi.e_class.repositories.HomeActivityRepository
+import com.femi.e_class.data.repository.HomeActivityRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeActivityViewModel(
-    private val repository: HomeActivityRepository,
-    private val validateCourseCode: ValidateCourseCode = ValidateCourseCode(),
-    private val validateLoginPassword: ValidateLogInPassword = ValidateLogInPassword(),
-    private val validateFirstName: ValidateName = ValidateName(),
-    private val validateLastName: ValidateName = ValidateName(),
-    private val validateEmail: ValidateEmail = ValidateEmail(),
-    private val validateMatric: ValidateMatric = ValidateMatric(),
+@HiltViewModel
+class HomeActivityViewModel @Inject constructor(
+    private val repository: HomeActivityRepositoryImpl,
+    private val validateCourseCode: ValidateCourseCode,
+    private val validateLoginPassword: ValidateLogInPassword,
+    private val validateFirstName: ValidateName,
+    private val validateLastName: ValidateName,
+    private val validateEmail: ValidateEmail,
+    private val validateMatric: ValidateMatric,
 ) : BaseViewModel(repository) {
 
     var roomFormState by mutableStateOf(RoomFormState())
@@ -98,16 +101,13 @@ class HomeActivityViewModel(
 
     private fun submitRoomFormData() {
         val courseCodeResults = validateCourseCode.execute(roomFormState.courseCode)
-//        val roomPasswordResults = validateRoomPassword.execute(roomFormState.roomPassword)
 
         val hasError = listOf(
             courseCodeResults,
-//            roomPasswordResults
         ).any { !it.successful }
 
         roomFormState = roomFormState.copy(
             courseCodeError = courseCodeResults.errorMessage,
-//            roomPasswordError = roomPasswordResults.errorMessage
         )
 
         if (hasError)

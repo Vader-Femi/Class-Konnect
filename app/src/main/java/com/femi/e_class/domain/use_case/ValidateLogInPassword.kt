@@ -1,6 +1,8 @@
 package com.femi.e_class.domain.use_case
 
-class ValidateLogInPassword {
+import android.app.Application
+
+class ValidateLogInPassword(val appContext: Application) {
 
     fun execute(password: String): ValidationResult {
 

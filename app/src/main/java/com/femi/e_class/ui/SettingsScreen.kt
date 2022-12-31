@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(viewModel: HomeActivityViewModel) {
-    var userResolution by remember { mutableStateOf(720) }
+    var videoResolution by remember { mutableStateOf(720) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val scrollState = rememberScrollState()
@@ -44,7 +44,7 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
     var is1080Checked by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
-        userResolution = viewModel.videoResolution()
+        videoResolution = viewModel.videoResolution()
     }
 
     LaunchedEffect(key1 = viewModel.deleteAccountEvents) {
@@ -70,7 +70,6 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
 
     LaunchedEffect(key1 = viewModel.verifyIdentityEvents) {
         coroutineScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.verifyIdentityEvents.collect { event ->
                     verifyingIdentity =
                         (event is HomeActivityViewModel.VerifyIdentityEvent.Loading)
@@ -88,16 +87,15 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
                         }
                     }
                 }
-//            }
         }
     }
-    LaunchedEffect(key1 = userResolution) {
-        if (userResolution == 720) {
-            is720Checked = true
-            is1080Checked = false
-        } else {
+    LaunchedEffect(key1 = videoResolution) {
+        if (videoResolution == 1080) {
             is1080Checked = true
             is720Checked = false
+        } else {
+            is720Checked = true
+            is1080Checked = false
         }
     }
     Column(
@@ -111,20 +109,20 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
         Text(
             modifier = Modifier
                 .align(Alignment.Start)
-                .padding(20.dp, 0.dp, 20.dp, 0.dp),
+                .padding(10.dp, 0.dp, 10.dp, 0.dp),
             text = "Set video resolution",
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             textAlign = TextAlign.Start,
             style = TextStyle(
-                color = MaterialTheme.colorScheme.primary
+//                color = MaterialTheme.colorScheme.primary
             )
         )
         Spacer(modifier = Modifier.height(10.dp))
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp, 0.dp, 20.dp, 0.dp),
+                .padding(10.dp, 0.dp, 10.dp, 0.dp),
             shape = RoundedCornerShape(15.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         ) {
@@ -137,7 +135,7 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
                 Text(
                     text = "Lower Video Quality (720P)",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = if (is720Checked) FontWeight.SemiBold else FontWeight.Medium,
                     textAlign = TextAlign.Start,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
@@ -161,7 +159,7 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp, 0.dp, 20.dp, 0.dp),
+                .padding(10.dp, 0.dp, 10.dp, 0.dp),
             shape = RoundedCornerShape(15.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         ) {
@@ -174,7 +172,7 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
                 Text(
                     text = "High Video Quality (1080P)",
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontWeight = if (is1080Checked) FontWeight.SemiBold else FontWeight.Medium,
                     textAlign = TextAlign.Start,
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
@@ -198,13 +196,13 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
         Text(
             modifier = Modifier
                 .align(Alignment.Start)
-                .padding(20.dp, 0.dp, 20.dp, 0.dp),
+                .padding(10.dp, 0.dp, 10.dp, 0.dp),
             text = "Account settings",
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
             textAlign = TextAlign.Start,
             style = TextStyle(
-                color = MaterialTheme.colorScheme.primary
+//                color = MaterialTheme.colorScheme.primary
             )
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -212,7 +210,7 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp, 0.dp, 20.dp, 0.dp)
+                .padding(15.dp, 0.dp, 15.dp, 0.dp)
         ) {
             Button(
                 modifier = Modifier
@@ -237,7 +235,6 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
             AlertDialog(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-//                                        .padding(0.dp, 30.dp, 0.dp, 0.dp)
                     .align(Alignment.CenterHorizontally),
                 title = {
                     Text(text = "Hold up")
@@ -278,7 +275,6 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
             AlertDialog(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-//                                        .padding(0.dp, 30.dp, 0.dp, 0.dp)
                     .align(Alignment.CenterHorizontally),
                 title = {
                     Text(text = "Hold up")
@@ -325,7 +321,7 @@ fun SettingsScreen(viewModel: HomeActivityViewModel) {
             AlertDialog(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
-                    .padding(0.dp, 0.dp, 0.dp, 20.dp)
+                    .padding(bottom = 20.dp)
                     .align(Alignment.CenterHorizontally),
                 title = {
                     Text(text = "Verify your Identify")

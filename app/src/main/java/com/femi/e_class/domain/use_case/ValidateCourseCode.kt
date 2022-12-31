@@ -1,42 +1,47 @@
 package com.femi.e_class.domain.use_case
 
-class ValidateCourseCode {
+import android.app.Application
 
-    fun execute(courseCode: String): ValidationResult{
+class ValidateCourseCode(val appContext: Application) {
 
-        var intCounter = 0
+    fun execute(courseCode: String): ValidationResult {
+
         var letterCounter = 0
-        for (c in courseCode) {
-            if (c.isLetter()) {
-                letterCounter++
-            }
-            if (c.isDigit()){
-                intCounter++
-            }
-        }
+        var intCounter = 0
 
-        if (courseCode.isBlank()){
+        if (courseCode.isBlank()) {
             return ValidationResult(
                 false,
                 "Course code can't be black"
             )
         }
-        if (courseCode.length != 6){
+        if (courseCode.length != 6) {
             return ValidationResult(
                 false,
                 "Course code must be 6 characters long"
             )
         }
-        if (intCounter != 3){
+
+        for (i in 0..2){
+            if (courseCode[i].isLetter())
+                letterCounter++
+        }
+        if (letterCounter != 3) {
             return ValidationResult(
                 false,
-                "Course code must contain 3 numbers"
+                "Course code must start with 3 letters"
             )
         }
-        if (letterCounter != 3){
+
+        for (i in 3..5){
+            if (courseCode[i].isDigit())
+                intCounter++
+        }
+
+        if (intCounter != 3) {
             return ValidationResult(
                 false,
-                "Course code must contain 3 letters"
+                "Course code must end with 3 numbers"
             )
         }
         return ValidationResult(
