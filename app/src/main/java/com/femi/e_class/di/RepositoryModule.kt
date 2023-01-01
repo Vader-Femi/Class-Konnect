@@ -30,6 +30,12 @@ abstract class RepositoryModule {
         baseRepositoryImpl: MainActivityRepositoryImpl
     ): MainActivityRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindOnBoardingRepository(
+        onBordingRepositoryImpl: OnBordingRepositoryImpl
+    ): OnBordingRepository
+
 
     @Binds
     @Singleton

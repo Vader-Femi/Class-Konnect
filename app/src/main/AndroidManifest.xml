@@ -23,7 +23,7 @@
         android:theme="@style/Base.Theme.EClass"
         tools:targetApi="33">
         <activity
-            android:name=".ui.ResetPasswordActivity"
+            android:name=".ui.OnBoadingScreen"
             android:exported="false"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
@@ -31,7 +31,15 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".ui.ResetPasswordScreen"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.LogInScreen"
             android:exported="false"
             android:label="@string/title_activity_login"
             android:theme="@style/Base.Theme.EClass"
@@ -41,7 +49,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.SignUpActivity"
+            android:name=".ui.SignUpScreen"
             android:exported="false"
             android:label="@string/sign_up"
             android:theme="@style/Base.Theme.EClass"

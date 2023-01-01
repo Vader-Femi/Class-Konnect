@@ -9,7 +9,7 @@ import com.femi.e_class.navigation.nav_graphs.settingsNavGraph
 import com.femi.e_class.viewmodels.HomeActivityViewModel
 
 @Composable
-fun Navigation(
+fun HomeActivityNavigation(
     navController: NavHostController,
     viewModel: HomeActivityViewModel
 ) {

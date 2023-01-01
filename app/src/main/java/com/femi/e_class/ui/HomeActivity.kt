@@ -4,9 +4,10 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,15 +15,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.femi.e_class.R
 import com.femi.e_class.data.BottomNavBarData
-import com.femi.e_class.databinding.ActivityHomeBinding
+import com.femi.e_class.navigation.HomeActivityNavigation
 import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.viewmodels.HomeActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,19 +31,14 @@ import java.net.MalformedURLException
 import java.net.URL
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : ComponentActivity() {
 
     private var hasNotificationPermission = false
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        val binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        binding.composeView.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 val viewModel = hiltViewModel<HomeActivityViewModel>()
                 LaunchedEffect(key1 = true){
@@ -77,7 +71,7 @@ class HomeActivity : AppCompatActivity() {
                             },
                             content = { paddingValue ->
                                 Box(modifier = Modifier.padding(paddingValue)) {
-                                    Navigation(
+                                    HomeActivityNavigation(
                                         navController = navController,
                                         viewModel = viewModel
                                     )
@@ -87,7 +81,6 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
 
     }
 

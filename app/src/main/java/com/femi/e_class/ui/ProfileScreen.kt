@@ -31,6 +31,7 @@ import com.femi.e_class.viewmodels.HomeActivityViewModel
 @Composable
 fun ProfileScreen(viewModel: HomeActivityViewModel) {
     val scrollState = rememberScrollState()
+    val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val state = viewModel.updateProfileValidationFormState
     var loading by remember { mutableStateOf(false) }
@@ -61,7 +62,7 @@ fun ProfileScreen(viewModel: HomeActivityViewModel) {
                             Toast.LENGTH_LONG).show()
                     }
                     is HomeActivityViewModel.UpdateProfileEvent.Error -> {
-                        context.handleNetworkExceptions(event.exception,
+                        snackbarHostState.handleNetworkExceptions(event.exception,
                             retry = {
                                 viewModel.onEvent(UpdateProfileFormEvent.Submit)
                             })

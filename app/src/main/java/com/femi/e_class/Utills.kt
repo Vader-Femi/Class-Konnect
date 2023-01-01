@@ -5,75 +5,29 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
+import com.femi.e_class.presentation.LogInFormEvent
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
-fun View.visible(isVisible: Boolean) {
-    visibility = if (isVisible) View.VISIBLE else View.GONE
-}
+suspend inline fun SnackbarHostState.handleNetworkExceptions(
+    exception: java.lang.Exception? = null,
+    message: String? = null,
+    retry: (() -> Unit),
+) {
 
-fun View.disable(disable: Boolean) {
-    isEnabled = !disable
-}
-
-fun Fragment.handleNetworkExceptions(exception: java.lang.Exception?, retry: (() -> Unit)? = null){
-//    Toast.makeText(this.context,
-//        exception?.message.toString(),
-//        Toast.LENGTH_SHORT)
-//        .show()
-
-    view?.snackbar(
-        exception?.message.toString(),
-        retry
+    val snackbarResult = showSnackbar(
+        message = exception?.message ?: message.toString(),
+        actionLabel = "Retry"
     )
 
-}
-
-
-fun Context.handleNetworkExceptions(exception: java.lang.Exception?, retry: (() -> Unit)? = null){
-
-    Toast.makeText(this,
-        exception?.message.toString(),
-        Toast.LENGTH_SHORT)
-        .show()
-
-//    view?.snackbar(
-//        exception?.message.toString(),
-//        retry
-//    )
-
-}
-
-fun View.handleNetworkExceptions(exception: java.lang.Exception? = null, retry: (() -> Unit)? = null, message: String? = null){
-
-    hideKeyboard()
-//    Toast.makeText(this.context,
-//        exception?.message.toString(),
-//        Toast.LENGTH_SHORT)
-//        .show()
-
-    when {
-        !message.isNullOrEmpty() -> {
-            snackbar(
-                message.toString(),
-                retry
-            )
-        }
-        exception != null -> {
-            snackbar(
-                exception.message.toString(),
-                retry
-            )
-        }
-        else -> {
-            snackbar(
-               "We experienced an error, Please try again",
-                retry
-            )
-        }
+    when (snackbarResult) {
+        SnackbarResult.Dismissed -> {}
+        SnackbarResult.ActionPerformed -> {retry()}
     }
 
 }
@@ -83,15 +37,4 @@ fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
-}
-
-fun View.snackbar(message: String, action: (() -> Unit)? = null) {
-    val snackbar = Snackbar.make(this, message, Snackbar.LENGTH_LONG)
-    action?.let {
-        snackbar.setAction("Retry") {
-            it()
-        }
-    }
-    if (!snackbar.isShownOrQueued)
-        snackbar.show()
 }
