@@ -1,7 +1,7 @@
 package com.femi.e_class.viewmodels
 
 import androidx.lifecycle.viewModelScope
-import com.femi.e_class.data.repository.MainActivityRepositoryImpl
+import com.femi.e_class.data.repository.main_activity.MainActivityRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -5,23 +5,24 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.femi.e_class.navigation.Screen
 
 object BottomNavBarData {
     fun getItems(): List<BottomBarItem> {
         return listOf(
             BottomBarItem(
                 name = "Home",
-                route = "home",
+                route = Screen.HomeScreen.route,
                 icon = Icons.Default.Home
             ),
             BottomBarItem(
                 name = "Profile",
-                route = "profile",
+                route = Screen.ProfileScreen.route,
                 icon = Icons.Default.Person
             ),
             BottomBarItem(
                 name = "Settings",
-                route = "settings",
+                route = Screen.SettingsScreen.route,
                 icon = Icons.Default.Settings
             ))
     }

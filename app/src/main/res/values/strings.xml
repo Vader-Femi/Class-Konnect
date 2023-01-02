@@ -13,7 +13,7 @@
     <string name="register_error_message">Some random error occurred. You should probably try again</string>
     <string name="title_activity_login">Login</string>
     <string name="sign_in">Sign In</string>
-    <string name="title_activity_home">Home</string>
+    <string name="title_activity_user">Home</string>
     <string name="app_logo">App logo</string>
     <string name="class_details_fragment_label">Start or join a class</string>
     <string name="welcome_back_fragment_label">Welcome Back</string>

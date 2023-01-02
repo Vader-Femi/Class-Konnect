@@ -2,10 +2,8 @@ package com.femi.e_class.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.femi.e_class.data.repository.BaseRepositoryImpl
+import com.femi.e_class.data.repository.base.BaseRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
