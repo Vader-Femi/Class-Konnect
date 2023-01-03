@@ -20,12 +20,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_icon_round"
         android:supportsRtl="true"
-        android:theme="@style/Base.Theme.EClass"
+        android:theme="@style/Theme.EClass"
         tools:targetApi="33" >
         <activity
             android:name=".ui.authentiction.AuthenticationActivity"
             android:exported="false"
-            android:theme="@style/Base.Theme.EClass"
+            android:theme="@style/Theme.EClass"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <meta-data
                 android:name="android.app.lib_name"
@@ -34,7 +34,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Base.Theme.EClass"
+            android:theme="@style/Theme.SplashScreenTheme"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,7 +50,7 @@
             android:name=".ui.user.UserActivity"
             android:exported="true"
             android:label="@string/title_activity_user"
-            android:theme="@style/Base.Theme.EClass"
+            android:theme="@style/Theme.EClass"
             android:windowSoftInputMode="adjustResize|stateHidden" >
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -59,13 +59,6 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-
-<!--                <data-->
-<!--                    android:host="meet.jit.si"-->
-<!--                    android:scheme="https" />-->
-<!--                <data-->
-<!--                    android:host="meet.jit.si"-->
-<!--                    android:scheme="http" />-->
 
                 <data android:scheme="http" />
                 <data android:scheme="https" />

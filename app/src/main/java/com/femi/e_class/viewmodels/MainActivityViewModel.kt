@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+//@HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    repository: MainActivityRepositoryImpl
+    repository: MainActivityRepositoryImpl,
 ) : BaseViewModel(repository) {
 
 
@@ -20,9 +20,8 @@ class MainActivityViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            delay(2000L)
+            delay(1500)
             _isLoading.value = false
         }
     }
-
 }

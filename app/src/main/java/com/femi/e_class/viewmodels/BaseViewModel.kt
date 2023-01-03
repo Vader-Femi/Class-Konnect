@@ -54,7 +54,7 @@ open class BaseViewModel @Inject constructor(
         }
     }
 
-    suspend fun isUserNew(): Boolean {
+    open suspend fun isUserNew(): Boolean {
         val currentUser = repository.getAuthReference().currentUser
         val email = repository.userEmail()
 

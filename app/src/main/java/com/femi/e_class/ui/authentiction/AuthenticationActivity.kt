@@ -35,7 +35,7 @@ class AuthenticationActivity : ComponentActivity() {
                             Box(modifier = Modifier.padding(paddingValue)) {
                                 AuthenticationNavigation(
                                     viewModel = viewModel,
-                                    navController =navController
+                                    navController = navController
                                 )
                             }
                         }

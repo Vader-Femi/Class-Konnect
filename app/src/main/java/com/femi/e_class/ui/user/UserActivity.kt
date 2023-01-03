@@ -59,7 +59,6 @@ class UserActivity : ComponentActivity() {
                             AppBar(title = appBarTitle)
                         },
                         bottomBar = {
-
                             BottomNavigationBar(
                                 items = BottomNavBarData.getItems(),
                                 navController = navController,
