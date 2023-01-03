@@ -1,10 +1,14 @@
 package com.femi.e_class.data.repository.base
 
 import com.femi.e_class.data.UserPreferences
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 open class BaseRepositoryImpl @Inject constructor(
+    private val firebaseAuth: FirebaseAuth,
+    private val collectionReference: CollectionReference,
     private val dataStore: UserPreferences
 ): BaseRepository {
 
@@ -27,4 +31,8 @@ open class BaseRepositoryImpl @Inject constructor(
     override suspend fun videoResolution(resolution: Int) = dataStore.videoResolution(resolution)
 
     override suspend fun videoResolution(): Int = dataStore.videoResolution.first()
+
+    override fun getAuthReference() = firebaseAuth
+
+    override fun getCollectionReference() = collectionReference
 }

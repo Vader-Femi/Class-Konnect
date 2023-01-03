@@ -1,9 +1,12 @@
 package com.femi.e_class.ui.user
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +27,7 @@ import com.femi.e_class.data.BottomNavBarData
 import com.femi.e_class.navigation.Screen
 import com.femi.e_class.navigation.UserActivityNavigation
 import com.femi.e_class.theme.E_ClassTheme
+import com.femi.e_class.ui.authentiction.AuthenticationActivity
 import com.femi.e_class.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -40,52 +44,46 @@ class UserActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-            setContent {
-                val viewModel = hiltViewModel<UserViewModel>()
-                LaunchedEffect(key1 = true){
-                    checkNotificationPermission()
+        setContent {
+            val viewModel = hiltViewModel<UserViewModel>()
+            LaunchedEffect(key1 = true) {
+                checkNotificationPermission()
+                verifyAppLink(intent.data, viewModel)
+            }
+            E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
+                Surface {
+                    val navController = rememberNavController()
+                    var appBarTitle by remember { mutableStateOf(getString(R.string.app_name)) }
+                    Scaffold(
+                        topBar = {
+                            AppBar(title = appBarTitle)
+                        },
+                        bottomBar = {
 
-                    val uri = intent.data
-                    if (uri?.pathSegments?.get(0) != null) {
-                        lifecycleScope.launch {
-                            startMeeting(viewModel, uri.pathSegments[0])
-                        }
-                    }
-                }
-                E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
-                    Surface {
-                        val navController = rememberNavController()
-                        var appBarTitle by remember{ mutableStateOf(getString(R.string.app_name)) }
-                        Scaffold(
-                            topBar = {
-                                AppBar(title = appBarTitle)
-                            },
-                            bottomBar = {
-
-                                BottomNavigationBar(
-                                    items = BottomNavBarData.getItems(),
-                                    navController = navController,
-                                    onItemClick = {
-                                        navController.navigate(it.route){
-                                            popUpTo(Screen.HomeScreen.route)
-                                            launchSingleTop = true
-                                        }
-                                        appBarTitle = it.name
+                            BottomNavigationBar(
+                                items = BottomNavBarData.getItems(),
+                                navController = navController,
+                                onItemClick = {
+                                    navController.navigate(it.route) {
+                                        popUpTo(Screen.HomeScreen.route)
+                                        launchSingleTop = true
                                     }
-                                )
-                            },
-                            content = { paddingValue ->
-                                Box(modifier = Modifier.padding(paddingValue)) {
-                                    UserActivityNavigation(
-                                        navController = navController,
-                                        viewModel = viewModel
-                                    )
+                                    appBarTitle = it.name
                                 }
+                            )
+                        },
+                        content = { paddingValue ->
+                            Box(modifier = Modifier.padding(paddingValue)) {
+                                UserActivityNavigation(
+                                    navController = navController,
+                                    viewModel = viewModel
+                                )
                             }
-                        )
-                    }
+                        }
+                    )
                 }
             }
+        }
 
     }
 
@@ -123,9 +121,25 @@ class UserActivity : ComponentActivity() {
         }
     }
 
+    private suspend fun verifyAppLink(uri: Uri?, viewModel: UserViewModel) {
+        if (uri?.pathSegments?.get(0) != null) {
+            if (viewModel.isUserNew()) {
+                Toast.makeText(this, "Please Log in before joining a class", Toast.LENGTH_SHORT)
+                    .show()
+                Intent(this@UserActivity, AuthenticationActivity::class.java).also {
+                    it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(it)
+                    finish()
+                }
+            } else {
+                startMeeting(viewModel, uri.pathSegments[0])
+            }
+        }
+    }
+
     suspend fun startMeeting(
         viewModel: UserViewModel,
-        courseCode: String
+        courseCode: String,
     ) {
 
         val email = viewModel.userEmail()

@@ -7,11 +7,7 @@ import com.google.firebase.firestore.CollectionReference
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val collectionReference: CollectionReference,
+    firebaseAuth: FirebaseAuth,
+    collectionReference: CollectionReference,
     dataStore: UserPreferences
-): AuthenticationRepository, BaseRepositoryImpl(dataStore) {
-
-    override fun getAuthReference() = firebaseAuth
-    override fun getCollectionReference() = collectionReference
-}
+): AuthenticationRepository, BaseRepositoryImpl(firebaseAuth, collectionReference, dataStore)

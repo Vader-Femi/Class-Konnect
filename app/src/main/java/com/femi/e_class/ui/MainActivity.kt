@@ -21,13 +21,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModel = hiltViewModel<MainActivityViewModel>()
             LaunchedEffect(key1 = true) {
+
                 installSplashScreen().apply {
                     this.setKeepOnScreenCondition {
                         viewModel.isLoading
                     }
                 }
 
-                if (isUserNew(viewModel)) {
+                if (viewModel.isUserNew()) {
                     Intent(this@MainActivity, AuthenticationActivity::class.java).also {
                         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(it)
@@ -42,22 +43,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-
-    private suspend fun isUserNew(viewModel: MainActivityViewModel): Boolean {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val email = viewModel.userEmail()
-
-        val isReturningUser = currentUser != null &&
-                email.isNotEmpty() &&
-                currentUser.email == email &&
-                viewModel.userFName().isNotEmpty() &&
-                viewModel.userLName().isNotEmpty() &&
-                viewModel.userMatric() != 0L
-
-
-        return !isReturningUser
     }
 
 }

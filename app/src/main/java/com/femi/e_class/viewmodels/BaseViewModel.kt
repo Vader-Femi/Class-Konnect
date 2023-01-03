@@ -3,6 +3,7 @@ package com.femi.e_class.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.femi.e_class.data.repository.base.BaseRepositoryImpl
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +27,7 @@ open class BaseViewModel @Inject constructor(
 
     suspend fun userMatric(): Long = repository.userMatric()
 
-    fun userFName(fName: String) = viewModelScope.launch {
+    private fun userFName(fName: String) = viewModelScope.launch {
         repository.userFName(fName)
     }
 
@@ -51,5 +52,20 @@ open class BaseViewModel @Inject constructor(
             userMatric(0L)
             userEmail("")
         }
+    }
+
+    suspend fun isUserNew(): Boolean {
+        val currentUser = repository.getAuthReference().currentUser
+        val email = repository.userEmail()
+
+        val isReturningUser = currentUser != null &&
+                email.isNotEmpty() &&
+                currentUser.email == email &&
+                repository.userFName().isNotEmpty() &&
+                repository.userLName().isNotEmpty() &&
+                repository.userMatric() != 0L
+
+
+        return !isReturningUser
     }
 }
