@@ -50,9 +50,6 @@ class UserViewModel @Inject constructor(
             is RoomFormEvent.CourseCodeChanged -> {
                 roomFormState = roomFormState.copy(courseCode = event.courseCode)
             }
-            is RoomFormEvent.RoomPasswordChanged -> {
-                roomFormState = roomFormState.copy(roomPassword = event.roomPassword)
-            }
             is RoomFormEvent.Submit -> {
                 submitRoomFormData()
             }

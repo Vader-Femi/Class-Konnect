@@ -43,7 +43,6 @@ fun HomeScreen(viewModel: UserViewModel) {
 
     LaunchedEffect(key1 = true) {
         userNameText = "Hi, ${viewModel.userFName()}"
-
         greetingText = "Good Day"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val calendar = Calendar.getInstance()

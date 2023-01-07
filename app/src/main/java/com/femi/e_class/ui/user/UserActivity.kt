@@ -39,13 +39,15 @@ import java.net.URL
 class UserActivity : ComponentActivity() {
 
     private var hasNotificationPermission = false
+    private lateinit var viewModel: UserViewModel
+    
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val viewModel = hiltViewModel<UserViewModel>()
+            viewModel = hiltViewModel()
             LaunchedEffect(key1 = true) {
                 checkNotificationPermission()
                 verifyAppLink(intent.data, viewModel)

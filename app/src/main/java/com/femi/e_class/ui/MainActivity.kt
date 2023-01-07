@@ -22,9 +22,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        installSplashScreen().setKeepOnScreenCondition { true }
-
         lifecycleScope.launch {
+
+            installSplashScreen().setKeepOnScreenCondition { true }
+
             if (viewModel.isUserNew()) {
                 Intent(this@MainActivity, AuthenticationActivity::class.java).also {
                     it.flags =
