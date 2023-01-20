@@ -1,4 +1,4 @@
-package com.femi.e_class
+package com.femi.e_class.data
 
 import android.content.Context
 import android.view.View

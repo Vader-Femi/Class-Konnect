@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.femi.e_class.R
-import com.femi.e_class.handleNetworkExceptions
+import com.femi.e_class.data.handleNetworkExceptions
 import com.femi.e_class.navigation.Screen
 import com.femi.e_class.presentation.ResetPasswordFormEvent
 import com.femi.e_class.viewmodels.AuthenticationViewModel
@@ -88,7 +88,7 @@ fun ResetPasswordScreen(
         Text(
             modifier = Modifier
                 .align(Alignment.Start),
-            text = "Enter your password to receive reset lint",
+            text = "Enter your password to receive reset link",
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
             textAlign = TextAlign.Start

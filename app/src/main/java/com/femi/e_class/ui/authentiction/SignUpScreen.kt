@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.femi.e_class.R
 import com.femi.e_class.data.User
-import com.femi.e_class.handleNetworkExceptions
+import com.femi.e_class.data.handleNetworkExceptions
 import com.femi.e_class.navigation.Screen
 import com.femi.e_class.presentation.SignUpFormEvent
 import com.femi.e_class.viewmodels.AuthenticationViewModel

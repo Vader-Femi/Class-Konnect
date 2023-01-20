@@ -27,22 +27,32 @@ class MainActivity : ComponentActivity() {
             installSplashScreen().setKeepOnScreenCondition { true }
 
             if (viewModel.isUserNew()) {
-                Intent(this@MainActivity, AuthenticationActivity::class.java).also {
-                    it.flags =
-                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(it)
-                    finish()
-                }
+                goToAuthenticationActivity()
             } else {
-                Intent(this@MainActivity, UserActivity::class.java).also {
-                    it.flags =
-                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(it)
-                    finish()
-                }
+                goToUserActivity()
             }
+
         }
 
     }
+
+    private fun goToAuthenticationActivity() {
+        Intent(this@MainActivity, AuthenticationActivity::class.java).also {
+            it.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(it)
+            finish()
+        }
+    }
+
+    private fun goToUserActivity() {
+        Intent(this@MainActivity, UserActivity::class.java).also {
+            it.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(it)
+            finish()
+        }
+    }
+
 
 }

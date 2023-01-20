@@ -1,4 +1,4 @@
-package com.femi.e_class
+package com.femi.e_class.data
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

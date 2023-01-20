@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.femi.e_class.R
-import com.femi.e_class.handleNetworkExceptions
+import com.femi.e_class.data.handleNetworkExceptions
 import com.femi.e_class.presentation.VerifyIdentityFormEvent
 import com.femi.e_class.ui.MainActivity
 import com.femi.e_class.viewmodels.UserViewModel

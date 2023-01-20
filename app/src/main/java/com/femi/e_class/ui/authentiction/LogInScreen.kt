@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import com.femi.e_class.*
 import com.femi.e_class.R
+import com.femi.e_class.data.handleNetworkExceptions
 import com.femi.e_class.navigation.Screen
 import com.femi.e_class.presentation.LogInFormEvent
 import com.femi.e_class.ui.user.UserActivity

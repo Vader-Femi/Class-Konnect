@@ -20,7 +20,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.femi.e_class.R
 import com.femi.e_class.data.BottomNavBarData
@@ -30,7 +29,6 @@ import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.ui.authentiction.AuthenticationActivity
 import com.femi.e_class.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import org.jitsi.meet.sdk.*
 import java.net.MalformedURLException
 import java.net.URL
@@ -40,7 +38,6 @@ class UserActivity : ComponentActivity() {
 
     private var hasNotificationPermission = false
     private lateinit var viewModel: UserViewModel
-    
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +55,7 @@ class UserActivity : ComponentActivity() {
                     var appBarTitle by remember { mutableStateOf(getString(R.string.app_name)) }
                     Scaffold(
                         topBar = {
-                            AppBar(title = appBarTitle)
+                            UserAppBar(title = appBarTitle)
                         },
                         bottomBar = {
                             BottomNavigationBar(
@@ -158,12 +155,12 @@ class UserActivity : ComponentActivity() {
             throw RuntimeException("Invalid server URL!")
         }
 
-        val defaultOptions: JitsiMeetConferenceOptions = JitsiMeetConferenceOptions.Builder()
+        val defaultOptions = JitsiMeetConferenceOptions.Builder()
             .setServerURL(serverURL)
             .setAudioMuted(true)
             .setVideoMuted(true)
             .setFeatureFlag("meeting-password.enabled", false)
-            .setFeatureFlag("call-integration.enabled", false)
+            .setFeatureFlag("call-integration.enabled", true)
             .setFeatureFlag("calendar.enabled", false)
             .setFeatureFlag("recording.enabled", true)
             .setFeatureFlag("add-people.enabled", true)
@@ -174,15 +171,17 @@ class UserActivity : ComponentActivity() {
             .setFeatureFlag("live-streaming.enabled", false)
             .setFeatureFlag("meeting-name.enabled", true)
             .setFeatureFlag("pip.enabled", true)
-            .setFeatureFlag("video-share.enabled", false)
+            .setFeatureFlag("video-share.enabled", true) //
             .setFeatureFlag("security-options.enabled", true)
             .setFeatureFlag("android.screensharing.enabled", true)
+            .setFeatureFlag("android.recording.enabled", true)
+            .setFeatureFlag("recording.enabled", true)
+            .setFeatureFlag("welcomepage.enabled", false)
             .build()
-
-
         JitsiMeet.setDefaultConferenceOptions(defaultOptions)
 
-        val options: JitsiMeetConferenceOptions = JitsiMeetConferenceOptions.Builder()
+
+        val options = JitsiMeetConferenceOptions.Builder()
             .setRoom(courseCode)
             .setSubject(courseCode)
             .setUserInfo(JitsiMeetUserInfo(
