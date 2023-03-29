@@ -9,13 +9,13 @@ class ValidateMatric(val appContext: Application) {
         if (!matric.isDigitsOnly()){
             return ValidationResult(
                 false,
-                "Matric must be integer numbers"
+                "Matric/Id must be integer numbers"
             )
         }
-        if (matric.length != 9){
+        if (matric.length <= 2){
             return ValidationResult(
                 false,
-                "Matric must be 9 digits"
+                "Matric/Id must be more than 2 digits long"
             )
         }
         return ValidationResult(

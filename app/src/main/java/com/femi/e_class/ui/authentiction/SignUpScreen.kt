@@ -32,7 +32,6 @@ import com.femi.e_class.navigation.Screen
 import com.femi.e_class.presentation.SignUpFormEvent
 import com.femi.e_class.viewmodels.AuthenticationViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
     navController: NavHostController,
@@ -164,9 +163,9 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(40.dp))
         OutlinedTextField(
             value = state.matric,
-            label = { Text(text = "Matric") },
+            label = { Text(text = "Matric/Lecturer Id") },
             onValueChange = { newText ->
-                if (newText.length > 9)
+                if (newText.length > 20)
                     return@OutlinedTextField
 
                 viewModel.onEvent(SignUpFormEvent.MatricChanged(
@@ -178,7 +177,7 @@ fun SignUpScreen(
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_school),
-                    contentDescription = "Matric Number Icon")
+                    contentDescription = "Matric/Lecturer Id Icon")
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword,

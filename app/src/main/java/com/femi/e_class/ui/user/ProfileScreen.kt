@@ -27,7 +27,6 @@ import com.femi.e_class.data.handleNetworkExceptions
 import com.femi.e_class.presentation.UpdateProfileFormEvent
 import com.femi.e_class.viewmodels.UserViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(viewModel: UserViewModel) {
     val scrollState = rememberScrollState()
@@ -153,9 +152,12 @@ fun ProfileScreen(viewModel: UserViewModel) {
         Spacer(modifier = Modifier.height(40.dp))
         OutlinedTextField(
             value = state.matric,
-            label = { Text(text = "Matric") },
-            onValueChange = {
-                viewModel.onEvent(UpdateProfileFormEvent.MatricChanged(it))
+            label = { Text(text = "Matric/Lecturer Id") },
+            onValueChange = {newText ->
+                if (newText.length > 20)
+                    return@OutlinedTextField
+
+                viewModel.onEvent(UpdateProfileFormEvent.MatricChanged(newText))
             },
             isError = state.matricError != null,
             modifier = Modifier
@@ -165,7 +167,7 @@ fun ProfileScreen(viewModel: UserViewModel) {
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_school),
-                    contentDescription = "Matric Number Icon")
+                    contentDescription = "Matric/Lecturer Id Icon")
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword,
