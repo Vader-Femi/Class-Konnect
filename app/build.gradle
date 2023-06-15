@@ -65,9 +65,6 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    lintOptions {
-        abortOnError false
-    }
     buildFeatures {
         compose true
     }
@@ -75,6 +72,9 @@ android {
         kotlinCompilerExtensionVersion '1.4.3'
     }
     buildToolsVersion '33.0.0'
+    lint {
+        abortOnError false
+    }
 }
 
 dependencies {

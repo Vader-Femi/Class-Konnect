@@ -1,6 +1,7 @@
 package com.femi.e_class.theme
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
@@ -98,7 +99,8 @@ fun E_ClassTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+//            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = androidx.compose.ui.graphics.Color.Transparent.toArgb()
             window.navigationBarColor = colorScheme.surfaceColorAtElevation(12.dp).toArgb()
 
             WindowCompat.getInsetsController(window, view)
