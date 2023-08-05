@@ -12,6 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -25,8 +26,8 @@ import com.femi.e_class.R
 import com.femi.e_class.data.BottomNavBarData
 import com.femi.e_class.navigation.Screen
 import com.femi.e_class.navigation.UserActivityNavigation
-import com.femi.e_class.theme.E_ClassTheme
 import com.femi.e_class.presentation.authentication.AuthenticationActivity
+import com.femi.e_class.theme.E_ClassTheme
 import dagger.hilt.android.AndroidEntryPoint
 import org.jitsi.meet.sdk.*
 import java.net.MalformedURLException
@@ -52,11 +53,17 @@ class UserActivity : ComponentActivity() {
             E_ClassTheme(dynamicColor = viewModel.useDynamicTheme) {
                 Surface {
                     val navController = rememberNavController()
-                    var appBarTitle by remember { mutableStateOf(getString(R.string.app_name)) }
+                    val appName by remember { mutableStateOf(getString(R.string.app_name)) }
+                    var appBarTitle by remember { mutableStateOf(appName) }
                     Scaffold(
                         topBar = {
-                            UserAppBar(title = appBarTitle)
+                            UserAppBar(
+                                appName = appName,
+                                title = appBarTitle
+                            )
                         },
+                        modifier = Modifier
+                            .fillMaxSize(),
                         bottomBar = {
                             BottomNavigationBar(
                                 items = BottomNavBarData.getItems(),

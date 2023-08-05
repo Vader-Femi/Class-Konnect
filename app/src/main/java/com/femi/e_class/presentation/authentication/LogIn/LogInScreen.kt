@@ -52,7 +52,7 @@ fun LogInScreen(
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxSize()
-            .padding(30.dp, 60.dp, 30.dp, 30.dp),
+            .padding(20.dp, 0.dp, 30.dp, 20.dp),
     ) {
         LaunchedEffect(key1 = true) {
             if (email != null && password != null) {
@@ -94,24 +94,6 @@ fun LogInScreen(
                 }
             }
         }
-        Text(
-            modifier = Modifier
-                .align(Alignment.Start),
-            text = "Sign In",
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 24.sp,
-            textAlign = TextAlign.Start
-        )
-        Spacer(modifier = Modifier.height(1.dp))
-        Text(
-            modifier = Modifier
-                .align(Alignment.Start),
-            text = "Enter your details to get started",
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Start
-        )
-        Spacer(modifier = Modifier.height(30.dp))
         OutlinedTextField(
             value = state.email,
             label = { Text(text = "Email") },

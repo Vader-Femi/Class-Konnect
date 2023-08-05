@@ -43,7 +43,7 @@ fun ResetPasswordScreen(
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxSize()
-            .padding(30.dp, 60.dp, 30.dp, 30.dp),
+            .padding(20.dp, 0.dp, 30.dp, 20.dp),
     ) {
         LaunchedEffect(key1 = context) {
             viewModel.resetPasswordFormEvents.collect { event ->
@@ -75,24 +75,6 @@ fun ResetPasswordScreen(
                 }
             }
         }
-        Text(
-            modifier = Modifier
-                .align(Alignment.Start),
-            text = "Reset Password",
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 24.sp,
-            textAlign = TextAlign.Start
-        )
-        Spacer(modifier = Modifier.height(1.dp))
-        Text(
-            modifier = Modifier
-                .align(Alignment.Start),
-            text = "Enter your password to receive reset link",
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Start
-        )
-        Spacer(modifier = Modifier.height(30.dp))
         OutlinedTextField(
             value = state.email,
             label = { Text(text = "Email") },

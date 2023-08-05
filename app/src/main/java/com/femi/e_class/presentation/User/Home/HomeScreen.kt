@@ -73,7 +73,7 @@ fun HomeScreen(viewModel: UserViewModel) {
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxSize()
-            .padding(0.dp, 10.dp, 0.dp, 30.dp)
+            .padding(0.dp, 0.dp, 0.dp, 30.dp)
     ) {
         Text(
             modifier = Modifier

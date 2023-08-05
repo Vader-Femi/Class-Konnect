@@ -44,11 +44,11 @@ fun SignUpScreen(
     var loading by remember { mutableStateOf(false) }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxSize()
-            .padding(30.dp, 60.dp, 30.dp, 30.dp),
+            .padding(20.dp, 0.dp, 20.dp, 30.dp),
     ) {
         LaunchedEffect(key1 = context) {
             viewModel.signUpFormEvents.collect { event ->
@@ -86,24 +86,6 @@ fun SignUpScreen(
                 }
             }
         }
-        Text(
-            modifier = Modifier
-                .align(Alignment.Start),
-            text = "Create your account",
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 24.sp,
-            textAlign = TextAlign.Start
-        )
-        Spacer(modifier = Modifier.height(1.dp))
-        Text(
-            modifier = Modifier
-                .align(Alignment.Start),
-            text = "Enter your details to get started",
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Start
-        )
-        Spacer(modifier = Modifier.height(30.dp))
         OutlinedTextField(
             value = state.firstName,
             label = { Text(text = "First Name") },

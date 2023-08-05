@@ -38,7 +38,7 @@ fun ProfileScreen(viewModel: UserViewModel) {
         modifier = Modifier
             .verticalScroll(scrollState)
             .fillMaxSize()
-            .padding(0.dp, 10.dp, 0.dp, 30.dp),
+            .padding(0.dp, 0.dp, 0.dp, 30.dp),
     ) {
         LaunchedEffect(key1 = context) {
             viewModel.updateProfileValidationEvents.collect { event ->
