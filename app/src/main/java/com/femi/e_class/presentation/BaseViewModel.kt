@@ -12,7 +12,7 @@ open class BaseViewModel @Inject constructor(
     private val repository: BaseRepositoryImpl,
 ) : ViewModel() {
 
-    val useDynamicTheme = false
+    val useDynamicTheme = true
 
     private fun userEmail(email: String) = viewModelScope.launch {
         repository.userEmail(email)

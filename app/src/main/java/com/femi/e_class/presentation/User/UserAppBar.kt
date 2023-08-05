@@ -19,19 +19,19 @@ fun UserAppBar(title: String = "App Name") {
                 text = title,
             )
         },
-        modifier = Modifier
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp),
-                        MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
-                        Color.Transparent,
-                        Color.Transparent
-                    )
-                )
-            ),
+//        modifier = Modifier
+//            .background(
+//                brush = Brush.verticalGradient(
+//                    colors = listOf(
+//                        MaterialTheme.colorScheme.surfaceColorAtElevation(8.dp),
+//                        MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
+//                        Color.Transparent,
+//                        Color.Transparent
+//                    )
+//                )
+//            ),
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent,
+//            containerColor = Color.Transparent,
         )
     )
 }

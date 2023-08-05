@@ -20,7 +20,7 @@ fun BottomNavigationBar(
     NavigationBar(
         modifier = modifier,
         tonalElevation = 6.dp,
-        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(12.dp)
+//        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(12.dp)
     ) {
         items.forEach { item ->
             val selected = item.route == backStackEntry.value?.destination?.route
@@ -42,11 +42,7 @@ fun BottomNavigationBar(
                     )
                 },
                 alwaysShowLabel = true,
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.primary,
-                    selectedIconColor = MaterialTheme.colorScheme.onPrimary,
-                    selectedTextColor = MaterialTheme.colorScheme.onSurface,
-                )
+                colors = NavigationBarItemDefaults.colors()
             )
 
         }

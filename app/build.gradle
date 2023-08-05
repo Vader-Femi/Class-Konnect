@@ -71,10 +71,10 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion '1.4.3'
     }
-    buildToolsVersion '33.0.0'
-    lint {
-        abortOnError false
-    }
+//    buildToolsVersion '33.0.0'
+//    lint {
+//        abortOnError false
+//    }
 }
 
 dependencies {
