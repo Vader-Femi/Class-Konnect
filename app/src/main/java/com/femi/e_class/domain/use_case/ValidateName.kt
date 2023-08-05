@@ -1,8 +1,6 @@
 package com.femi.e_class.domain.use_case
 
-import android.app.Application
-
-class ValidateName(val appContext: Application) {
+class ValidateName() {
 
     fun execute(name: String): ValidationResult{
         if (name.isBlank()){

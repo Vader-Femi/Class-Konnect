@@ -1,8 +1,6 @@
 package com.femi.e_class.domain.use_case
 
-import android.app.Application
-
-class ValidateCourseCode(val appContext: Application) {
+class ValidateCourseCode() {
 
     fun execute(courseCode: String): ValidationResult {
 
@@ -19,6 +17,13 @@ class ValidateCourseCode(val appContext: Application) {
             return ValidationResult(
                 false,
                 "Course code must be 6 characters long"
+            )
+        }
+
+        if (!courseCode.any{it.isLetter()} && !courseCode.any{it.isDigit()}) {
+            return ValidationResult(
+                false,
+                "Course code must only contain 3 letters and 3 numbers"
             )
         }
 
