@@ -1,3 +1,9 @@
+<img src="class-konnect.png" alt="Class-Konnect Image" width="700" />
+
+<a href="https://appetize.io/app/xrbg72g6pdiaaemtcibupyyx3i?device=pixel7&osVersion=13.0&scale=75" target="_blank" rel="nofollow noopener noreferrer" 
+  aria-label="Live Demo"> <u>Live Demo 🚀</u> </a>
+
+
 # EClass renamed to ClassKonnect
 
 ---
