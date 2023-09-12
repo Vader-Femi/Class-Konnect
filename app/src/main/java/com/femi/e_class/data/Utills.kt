@@ -4,11 +4,11 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import java.lang.Exception
 
 fun Context.handleNetworkExceptions(
-    exception: java.lang.Exception? = null,
-    message: String? = null,
-    retry: (() -> Unit),
+    exception: Exception? = null,
+    message: String? = null
 ) {
 
     Toast.makeText(

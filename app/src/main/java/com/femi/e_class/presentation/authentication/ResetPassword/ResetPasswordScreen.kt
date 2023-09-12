@@ -66,10 +66,8 @@ fun ResetPasswordScreen(
                     }
                     is AuthenticationViewModel.ResetPasswordEvent.Error -> {
                         context.handleNetworkExceptions(
-                            exception = event.exception,
-                            retry = {
-                                viewModel.onEvent(ResetPasswordFormEvent.Submit)
-                            })
+                            exception = event.exception
+                        )
                     }
                     is AuthenticationViewModel.ResetPasswordEvent.Loading -> {}
                 }

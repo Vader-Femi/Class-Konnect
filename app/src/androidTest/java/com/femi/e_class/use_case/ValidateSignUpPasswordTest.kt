@@ -1,12 +1,26 @@
-package com.femi.e_class.domain.use_case
+package com.femi.e_class.use_case
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
+import com.femi.e_class.domain.use_case.ValidateSignUpPassword
+import com.femi.e_class.domain.use_case.ValidationResult
 import com.google.common.truth.Truth.assertThat
+import org.junit.Before
 import org.junit.Test
 
 class ValidateSignUpPasswordTest {
+
+    private lateinit var validateSignUpPassword: ValidateSignUpPassword
+
+    @Before
+    fun setup() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        validateSignUpPassword = ValidateSignUpPassword(context)
+    }
+    
     @Test
-    fun `password less that 8 fails`(){
-        val result = ValidateSignUpPassword().execute("eight")
+    fun passwordLessThat8Fails(){
+        val result = validateSignUpPassword.execute("eight")
         assertThat(result).isEqualTo(
             ValidationResult(
                 false,
@@ -16,8 +30,8 @@ class ValidateSignUpPasswordTest {
     }
 
     @Test
-    fun `password doesn't contain letters fails`(){
-        val result = ValidateSignUpPassword().execute("1234567890")
+    fun passwordDoesntContainLettersFails(){
+        val result = validateSignUpPassword.execute("1234567890")
         assertThat(result).isEqualTo(
             ValidationResult(
                 false,
@@ -27,8 +41,8 @@ class ValidateSignUpPasswordTest {
     }
 
     @Test
-    fun `password doesn't contain digits fails`(){
-        val result = ValidateSignUpPassword().execute("password")
+    fun passwordDoesntContainDigitsFails(){
+        val result = validateSignUpPassword.execute("password")
         assertThat(result).isEqualTo(
             ValidationResult(
                 false,
@@ -38,8 +52,8 @@ class ValidateSignUpPasswordTest {
     }
 
     @Test
-    fun `password doesn't contain special characters fails`(){
-        val result = ValidateSignUpPassword().execute("password2")
+    fun passwordDoesntContainSpecialCharactersFails(){
+        val result = validateSignUpPassword.execute("password2")
         assertThat(result).isEqualTo(
             ValidationResult(
                 false,
@@ -49,8 +63,8 @@ class ValidateSignUpPasswordTest {
     }
 
     @Test
-    fun `password contains space fails`(){
-        val result = ValidateSignUpPassword().execute("password2 .")
+    fun passwordContainsSpaceFails(){
+        val result = validateSignUpPassword.execute("password2 .")
         assertThat(result).isEqualTo(
             ValidationResult(
                 false,
@@ -60,8 +74,8 @@ class ValidateSignUpPasswordTest {
     }
 
     @Test
-    fun `acceptable password succeed`(){
-        val result = ValidateSignUpPassword().execute("password2.")
+    fun acceptablePasswordSucceed(){
+        val result = validateSignUpPassword.execute("password2.")
         assertThat(result).isEqualTo(
             ValidationResult (
                 true

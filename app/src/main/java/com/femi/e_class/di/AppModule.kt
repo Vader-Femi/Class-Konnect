@@ -36,36 +36,36 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideValidateEmail(): ValidateEmail{
-        return ValidateEmail()
+    fun provideValidateEmail(application: Application): ValidateEmail{
+        return ValidateEmail(application)
     }
 
     @Provides
     @Singleton
-    fun provideValidateLogInPassword(): ValidateLogInPassword {
-        return ValidateLogInPassword()
+    fun provideValidateLogInPassword(application: Application): ValidateLogInPassword {
+        return ValidateLogInPassword(application)
     }
     @Provides
     @Singleton
-    fun provideValidateName(): ValidateName{
-        return ValidateName()
-    }
-
-    @Provides
-    @Singleton
-    fun provideValidateMatric(): ValidateMatricOrId{
-        return ValidateMatricOrId()
+    fun provideValidateName(application: Application): ValidateName{
+        return ValidateName(application)
     }
 
     @Provides
     @Singleton
-    fun provideValidateSignUpPassword(): ValidateSignUpPassword {
-        return ValidateSignUpPassword()
+    fun provideValidateMatric(application: Application): ValidateMatricOrId{
+        return ValidateMatricOrId(application)
+    }
+
+    @Provides
+    @Singleton
+    fun provideValidateSignUpPassword(application: Application): ValidateSignUpPassword {
+        return ValidateSignUpPassword(application)
     }
     @Provides
     @Singleton
-    fun provideValidateCourseCode(): ValidateCourseCode{
-        return ValidateCourseCode()
+    fun provideValidateCourseCode(application: Application): ValidateCourseCode{
+        return ValidateCourseCode(application)
     }
 
 }

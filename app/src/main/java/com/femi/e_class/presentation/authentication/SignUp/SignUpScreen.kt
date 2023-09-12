@@ -77,10 +77,8 @@ fun SignUpScreen(
                     }
                     is AuthenticationViewModel.SignUpEvent.Error -> {
                         context.handleNetworkExceptions(
-                            exception = event.exception,
-                            retry = {
-                                viewModel.onEvent(SignUpFormEvent.Submit)
-                            })
+                            exception = event.exception
+                        )
                     }
                     is AuthenticationViewModel.SignUpEvent.Loading -> {}
                 }

@@ -37,4 +37,34 @@
     <string name="on_boarding_screens">On boarding Screens</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
 
+    <!-- Validate Course Code-->
+    <string name="course_code_blank_error">Course code can\'t be black</string>
+    <string name="course_code_too_long_error">Course code must be 6 characters long</string>
+    <string name="course_code_not_just_letters_and_numbers_error">Course code must only contain 3 letters and 3 numbers</string>
+    <string name="course_code_not_3_letters_error">Course code must start with 3 letters</string>
+    <string name="course_code_not_3_numbers_error">Course code must end with 3 numbers</string>
+
+    <!-- Validate Email-->
+    <string name="email_blank_error">Email can\'t be black</string>
+    <string name="email_contains_uppercase_error">Email must not contain upper-case letters</string>
+    <string name="email_format_invalid_error">That\'s not a valid email</string>
+
+    <!-- Validate Log in Password-->
+    <string name="password_blank_error">Password cannot be empty</string>
+
+    <!-- Validate MAtric/Id-->
+    <string name="matric_or_id_black_error">Matric/Id cannot be blank</string>
+    <string name="matric_or_id_not_int_error">Matric/Id must be integer numbers</string>
+    <string name="matric_id_too_short_error">Matric/Id must be more than 2 digits long</string>
+
+    <!-- Validate Name-->
+    <string name="name_blank_error">Name can\'t be black</string>
+    <string name="password_not_contain_letter_error">Must contain at least one letter (A-Z or a-z)</string>
+    <string name="password_less_that_8_error">Password cannot be less than 8 characters</string>
+    <string name="password_not_contain_number_error">Must contain at least one digit (0-9)</string>
+    <string name="password_not_contain_special_char_error">Must contain at least 1 special character</string>
+    <string name="password_contain_space_error">Must no contain spaces</string>
+
+    <!-- Validate Sign up Password-->
+
 </resources>

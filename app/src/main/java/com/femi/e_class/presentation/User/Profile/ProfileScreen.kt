@@ -59,10 +59,7 @@ fun ProfileScreen(viewModel: UserViewModel) {
                             Toast.LENGTH_LONG).show()
                     }
                     is UserViewModel.UpdateProfileEvent.Error -> {
-                        context.handleNetworkExceptions(event.exception,
-                            retry = {
-                                viewModel.onEvent(UpdateProfileFormEvent.Submit)
-                            })
+                        context.handleNetworkExceptions(event.exception)
                     }
                     is UserViewModel.UpdateProfileEvent.Loading -> {}
                 }

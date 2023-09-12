@@ -56,8 +56,8 @@ fun SettingsScreen(viewModel: UserViewModel) {
                 }
                 is UserViewModel.DeleteAccountEvent.Error -> {
                     context.handleNetworkExceptions(
-                        exception = event.exception,
-                        retry = { viewModel.deleteAccount() })
+                        exception = event.exception
+                    )
                 }
                 else -> {
 
@@ -77,8 +77,8 @@ fun SettingsScreen(viewModel: UserViewModel) {
                         }
                         is UserViewModel.VerifyIdentityEvent.Error -> {
                             context.handleNetworkExceptions(
-                                exception = event.exception,
-                                retry = { viewModel.onEvent(VerifyIdentityFormEvent.Submit) })
+                                exception = event.exception
+                            )
                         }
                         is UserViewModel.VerifyIdentityEvent.Loading -> {
                         }

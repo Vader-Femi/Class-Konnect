@@ -1,12 +1,15 @@
 package com.femi.e_class.domain.use_case
 
-class ValidateName() {
+import android.content.Context
+import com.femi.e_class.R
+
+class ValidateName(val context: Context) {
 
     fun execute(name: String): ValidationResult{
         if (name.isBlank()){
             return ValidationResult(
                 false,
-                "Name can't be black"
+                context.getString(R.string.name_blank_error)
             )
         }
         return ValidationResult(

@@ -1,6 +1,9 @@
 package com.femi.e_class.domain.use_case
 
-class ValidateCourseCode() {
+import android.content.Context
+import com.femi.e_class.R
+
+class ValidateCourseCode(val context: Context) {
 
     fun execute(courseCode: String): ValidationResult {
 
@@ -10,20 +13,20 @@ class ValidateCourseCode() {
         if (courseCode.isBlank()) {
             return ValidationResult(
                 false,
-                "Course code can't be black"
+                context.getString(R.string.course_code_blank_error)
             )
         }
         if (courseCode.length != 6) {
             return ValidationResult(
                 false,
-                "Course code must be 6 characters long"
+                context.getString(R.string.course_code_too_long_error)
             )
         }
 
         if (!courseCode.any{it.isLetter()} && !courseCode.any{it.isDigit()}) {
             return ValidationResult(
                 false,
-                "Course code must only contain 3 letters and 3 numbers"
+                context.getString(R.string.course_code_not_just_letters_and_numbers_error)
             )
         }
 
@@ -34,7 +37,7 @@ class ValidateCourseCode() {
         if (letterCounter != 3) {
             return ValidationResult(
                 false,
-                "Course code must start with 3 letters"
+                context.getString(R.string.course_code_not_3_letters_error)
             )
         }
 
@@ -46,7 +49,7 @@ class ValidateCourseCode() {
         if (intCounter != 3) {
             return ValidationResult(
                 false,
-                "Course code must end with 3 numbers"
+                context.getString(R.string.course_code_not_3_numbers_error)
             )
         }
         return ValidationResult(

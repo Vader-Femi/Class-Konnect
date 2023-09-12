@@ -1,6 +1,9 @@
 package com.femi.e_class.domain.use_case
 
-class ValidateSignUpPassword() {
+import android.content.Context
+import com.femi.e_class.R
+
+class ValidateSignUpPassword(val context: Context) {
 
     /**
      * Input will be invalid if:
@@ -15,31 +18,31 @@ class ValidateSignUpPassword() {
         if (password.length < 8) {
             return ValidationResult(
                 false,
-                "Password cannot be less than 8 characters"
+                context.getString(R.string.password_less_that_8_error)
             )
         }
         if (!password.any{it.isLetter()}) {
             return ValidationResult(
                 false,
-                "Must contain at least one letter (A-Z or a-z)"
+                context.getString(R.string.password_not_contain_letter_error)
             )
         }
         if (!password.any{it.isDigit()}) {
             return ValidationResult(
                 false,
-                "Must contain at least one digit (0-9)"
+                context.getString(R.string.password_not_contain_number_error)
             )
         }
         if (!password.any{!it.isDigit() && !it.isLetter()} ) {
             return ValidationResult(
                 false,
-                "Must contain at least 1 special character"
+                context.getString(R.string.password_not_contain_special_char_error)
             )
         }
         if (password.contains(" ")) {
             return ValidationResult(
                 false,
-                "Must no contain spaces"
+                context.getString(R.string.password_contain_space_error)
             )
         }
         return ValidationResult(

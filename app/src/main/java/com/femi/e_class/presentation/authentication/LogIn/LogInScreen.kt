@@ -21,7 +21,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,14 +81,14 @@ fun LogInScreen(
                     }
                     is AuthenticationViewModel.LogInEvent.Error -> {
                         context.handleNetworkExceptions(
-                            exception = event.exception,
-                            retry = { viewModel.onEvent(LogInFormEvent.Submit) })
+                            exception = event.exception
+                        )
                     }
                     is AuthenticationViewModel.LogInEvent.Loading -> {}
                     is AuthenticationViewModel.LogInEvent.NoUser -> {
                         context.handleNetworkExceptions(
-                            message = event.message,
-                            retry = { viewModel.onEvent(LogInFormEvent.Submit) })
+                            message = event.message
+                        )
                     }
                 }
             }
