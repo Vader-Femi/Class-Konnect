@@ -8,14 +8,14 @@ plugins {
 }
 
 android {
-    signingConfigs {
-        release {
-            storePassword 'ChHorizon0.'
-            keyPassword 'ChHorizon0.'
-            keyAlias 'key0'
-            storeFile file('D:\\ProjectFiles\\Kotlin\\EClass\\keystore\\ClassKonnect.jks')
-        }
-    }
+//    signingConfigs {
+//        release {
+//            storePassword 'ChHorizon0.'
+//            keyPassword 'ChHorizon0.'
+//            keyAlias 'key0'
+//            storeFile file('D:\\ProjectFiles\\Kotlin\\EClass\\keystore\\ClassKonnect.jks')
+//        }
+//    }
 
 
     namespace 'com.femi.e_class'
@@ -29,7 +29,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-//        signingConfig signingConfigs.release
 
         ndk {
             //abiFilter "armeabi-v7a" //, "x86", "arm64-v8a" //, "x86_64"
@@ -47,14 +46,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable false
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
         }
 
         debug {
             debuggable true
 //            shrinkResources = true
 //            minifyEnabled true
-            signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.debug
         }
 
     }
