@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.femi.e_class.presentation.User.Home.HomeScreen
-import com.femi.e_class.presentation.User.Profile.ProfileScreen
-import com.femi.e_class.presentation.User.Settings.SettingsScreen
-import com.femi.e_class.presentation.User.UserViewModel
+import com.femi.e_class.ui.user.home.HomeScreen
+import com.femi.e_class.ui.user.profile.ProfileScreen
+import com.femi.e_class.ui.user.settings.SettingsScreen
+import com.femi.e_class.viewmodels.UserViewModel
 
 @Composable
 fun UserActivityNavigation(

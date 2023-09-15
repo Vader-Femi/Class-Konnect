@@ -23,7 +23,7 @@
         android:theme="@style/Theme.EClass"
         tools:targetApi="33" >
         <activity
-            android:name=".presentation.authentication.AuthenticationActivity"
+            android:name=".ui.authentication.AuthenticationActivity"
             android:exported="false"
             android:theme="@style/Theme.EClass"
             android:windowSoftInputMode="adjustResize|stateHidden">
@@ -32,7 +32,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.SplashScreenTheme"
             android:windowSoftInputMode="adjustResize|stateHidden">
@@ -47,7 +47,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".presentation.User.UserActivity"
+            android:name=".ui.user.UserActivity"
             android:exported="true"
             android:label="@string/title_activity_user"
             android:theme="@style/Theme.EClass"

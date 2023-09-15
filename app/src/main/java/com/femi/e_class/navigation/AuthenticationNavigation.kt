@@ -6,11 +6,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.femi.e_class.presentation.authentication.AuthenticationViewModel
-import com.femi.e_class.presentation.authentication.LogIn.LogInScreen
-import com.femi.e_class.presentation.authentication.Onboarding.OnBoadingScreen
-import com.femi.e_class.presentation.authentication.ResetPassword.ResetPasswordScreen
-import com.femi.e_class.presentation.authentication.SignUp.SignUpScreen
+import com.femi.e_class.viewmodels.AuthenticationViewModel
+import com.femi.e_class.ui.authentication.login.LogInScreen
+import com.femi.e_class.ui.authentication.onboarding.OnBoadingScreen
+import com.femi.e_class.ui.authentication.resetpassword.ResetPasswordScreen
+import com.femi.e_class.ui.authentication.signup.SignUpScreen
 
 @Composable
 fun AuthenticationNavigation(
