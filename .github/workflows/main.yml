@@ -70,7 +70,10 @@ jobs:
   create-release:
     needs: build
     runs-on: ubuntu-latest
-    steps:      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - name: Create Tag
         run: |
           echo "TAG_NAME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
