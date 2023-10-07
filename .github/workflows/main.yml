@@ -82,8 +82,10 @@ jobs:
 
       - name: Commit and push tag
         run: |
+          git config user.email "oluwafemi.za@gmail.com"
+          git config user.name "Femi"
           git tag $TAG_NAME -m "$TAG_MESSAGE"
-          git push --tags
+          git push origin $TAG_NAME
         env:
           TAG_NAME: ${{ env.TAG_NAME }}
           TAG_MESSAGE: ${{ env.TAG_MESSAGE }}
