@@ -87,7 +87,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@v1.1.0
+        uses: softprops/action-gh-release@v1
         with:
           files: app/build/outputs/apk/release/*.apk
           tag_name: ${{ env.TAG_NAME }}
