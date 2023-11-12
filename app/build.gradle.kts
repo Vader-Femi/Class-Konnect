@@ -72,22 +72,18 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
     }
-//    buildToolsVersion ("33.0.0"
-//    lint {
-//        abortOnError false
-//    }
 }
 
 dependencies {
 
-    val composeVersion = "1.5.3"
+    val composeVersion = "1.5.4"
 
-    implementation ("com.google.firebase:firebase-firestore-ktx:24.8.1")
-    implementation ("com.google.firebase:firebase-firestore:24.8.1")
-    implementation ("com.google.firebase:firebase-auth:22.1.2")
+    implementation ("com.google.firebase:firebase-firestore-ktx:24.9.1")
+    implementation ("com.google.firebase:firebase-firestore:24.9.1")
+    implementation ("com.google.firebase:firebase-auth:22.2.0")
     implementation(platform("com.google.firebase:firebase-bom:31.1.1"))
-    implementation ("com.google.firebase:firebase-analytics-ktx:21.3.0")
-    implementation ("com.google.firebase:firebase-crashlytics-ktx:18.4.3")
+    implementation ("com.google.firebase:firebase-analytics-ktx:21.5.0")
+    implementation ("com.google.firebase:firebase-crashlytics-ktx:18.5.1")
 
     testImplementation ("junit:junit:4.13.2")
     testImplementation ("com.google.truth:truth:1.0.1")
@@ -99,10 +95,10 @@ dependencies {
 
     //Compose
     implementation ("androidx.compose.ui:ui:$composeVersion")
-    implementation ("androidx.compose.material3:material3:1.2.0-alpha09")
+    implementation ("androidx.compose.material3:material3:1.1.2")
     implementation ("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation ("androidx.navigation:navigation-compose:2.7.4")
+    implementation ("androidx.navigation:navigation-compose:2.7.5")
     implementation ("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
     debugImplementation ("androidx.compose.ui:ui-tooling:$composeVersion")
     debugImplementation ("androidx.compose.ui:ui-test-manifest:$composeVersion")
@@ -127,9 +123,9 @@ dependencies {
     //Dagger - Hilt
     implementation ("com.google.dagger:hilt-android:2.48")
     ksp ("com.google.dagger:hilt-android-compiler:2.48")
-    ksp ("androidx.hilt:hilt-compiler:1.0.0")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation ("androidx.hilt:hilt-navigation:1.0.0")
+    ksp ("androidx.hilt:hilt-compiler:1.1.0")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation ("androidx.hilt:hilt-navigation:1.1.0")
 
 
 }
