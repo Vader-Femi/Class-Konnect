@@ -147,7 +147,7 @@ jobs:
         with:
           files: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
           tag_name: ${{ env.app_name }} - ${{ env.TAG_NAME }}
-          title: Release ${{ env.app_name }} - ${{ env.TAG_NAME }}
+          title: Release ${{ env.TAG_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
