@@ -130,7 +130,7 @@ jobs:
 
       - name: Create Tag
         run: |
-          echo "TAG_NAME=${{ env.date_today }}" >> $GITHUB_ENV
+          echo "TAG_NAME=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
           echo "TAG_MESSAGE=Release $TAG_NAME" >> $GITHUB_ENV
         shell: bash
 
