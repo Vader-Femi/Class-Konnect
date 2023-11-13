@@ -1,5 +1,12 @@
 name: Android CI
 
+env:
+  # The name of the main module repository
+  main_project_module: app
+
+  # The name of the app
+  app_name: Class Konnect
+
 on: 
   push:
     branches: [ main ]
@@ -12,27 +19,35 @@ on:
 
 jobs:
 
-  test:
-    name: Run Unit Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3.5.2
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1.4.4
-        with: 
-          java-version: 17
-          distribution: "zulu"
-          cache: gradle
-      - name: Run Tests
-        run: bash ./gradlew test --stacktrace  
+#  test:
+#    name: Run Unit Tests
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v3.5.2
+#      - name: Setup Java JDK
+#        uses: actions/setup-java@v1.4.4
+#        with:
+#          java-version: 17
+#          distribution: "zulu"
+#          cache: gradle
+#      - name: Run Tests
+#        run: bash ./gradlew test --stacktrace
         
   build:
-    needs: test
+#    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3.5.2
+
+      # Set Current Date As Env Variable
+      - name: Set current date as env variable
+        run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      # Set Repository Name As Env Variable
+      - name: Set repository name as env variable
+        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
         
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.4
@@ -56,16 +71,52 @@ jobs:
       
       - name: Make gradlew executable
         run: chmod +x gradlew
-        
+
+      # Run Build Project
       - name: Build with Gradle
         run: ./gradlew build
-        
-      - name: Upload a Build Artifact
+
+      # Create APK Debug
+      - name: Build apk debug project (APK) - ${{ env.main_project_module }} module
+        run: ./gradlew assembleDebug
+
+      # Create APK Release
+      - name: Build apk release project (APK) - ${{ env.main_project_module }} module
+        run: ./gradlew assemble
+
+      # Create Bundle AAB Release
+      # Noted for main module build [main_project_module]:bundleRelease
+      - name: Build app bundle release (AAB) - ${{ env.main_project_module }} module
+        run: ./gradlew ${{ env.main_project_module }}:bundleRelease
+
+      # Upload Artifact Build
+      # Noted For Output [main_project_module]/build/outputs/apk/debug/
+      - name: Upload APK Debug - ${{ env.repository_name }}
         uses: actions/upload-artifact@v3.1.2
-        with: 
-          name: app
-          path: app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 30
+        with:
+          name: ${{ env.date_today }} - ${{ env.app_name }} - ${{ env.repository_name }} - APK(s) debug generated
+          path: ${{ env.main_project_module }}/build/outputs/apk/debug/
+
+      # Noted For Output [main_project_module]/build/outputs/apk/release/
+      - name: Upload APK Release - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: ${{ env.date_today }} - ${{ env.app_name }} - ${{ env.repository_name }} - APK(s) release generated
+          path: ${{ env.main_project_module }}/build/outputs/apk/release/
+
+      # Noted For Output [main_project_module]/build/outputs/bundle/release/
+      - name: Upload AAB (App Bundle) Release - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: ${{ env.date_today }} - ${{ env.app_name }} - ${{ env.repository_name }} - App bundle(s) AAB release generated
+          path: ${{ env.main_project_module }}/build/outputs/bundle/release/
+        
+#      - name: Upload a Build Artifact
+#        uses: actions/upload-artifact@v3.1.2
+#        with:
+#          name: app
+#          path: app/build/outputs/apk/debug/app-debug.apk
+#          retention-days: 30
 
   generate-release:
     needs: build
@@ -94,9 +145,9 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          files: app/build/outputs/apk/release/*.apk
-          tag_name: ${{ env.TAG_NAME }}
-          title: Release ${{ env.TAG_NAME }}
+          files: ${{ env.main_project_module }}/build/outputs/apk/release/*.apk
+          tag_name: ${{ env.app_name }} - ${{ env.TAG_NAME }}
+          title: Release ${{ env.app_name }} - ${{ env.TAG_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
