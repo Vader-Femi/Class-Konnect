@@ -10,8 +10,8 @@ plugins {
 android {
 //    signingConfigs {
 //        release {
-//            storePassword ("ChHorizon0."
-//            keyPassword ("ChHorizon0."
+//            storePassword "ChHorizon0."
+//            keyPassword "ChHorizon0."
 //            keyAlias "key0"
 //            storeFile file("D:\\ProjectFiles\\Kotlin\\EClass\\keystore\\ClassKonnect.jks")
 //        }
