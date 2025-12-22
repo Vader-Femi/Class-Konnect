@@ -1,30 +1,75 @@
-<img src="class-konnect.png" alt="Class-Konnect Image" width="700" />
+<p align="center">
+  <img src="class-konnect.png" alt="ClassKonnect App Preview" width="700" />
+</p>
 
-<a href="https://appetize.io/app/xrbg72g6pdiaaemtcibupyyx3i?device=pixel7&osVersion=13.0&scale=75" target="_blank" rel="nofollow noopener noreferrer" 
-  aria-label="Live Demo"> <u>Live Demo 🚀</u> </a>
-
-
-# EClass renamed to ClassKonnect
-
----
-
-## A Short Story
-
-I built it because of the issues we faced using Zoom for online classes during the Covid-19 pandemic. Because we mostly used the free version, we were disconnected every 40 minutes and had to log back in. 
-I initially built the app with android Fragments as the views, but I was excited by the buzz surrounding the stable release of Jetpack Compose especially at Devfest 2022. I decided to rewrite the app with compose and ended up learning a lot from that. It even drove me to dive into the world of Wear OS development as wear also received Compose support. Two months later, inspite of my final year exams, I released <a href="https://github.com/Vader-Femi/Devfesttttt" target="_blank" rel="nofollow noopener noreferrer" aria-label="Devfesttttt Link"><u>my first Wear OS application (Devfesttttt)</u></a> but that's a story for another day.
+<p align="center">
+  <a href="https://appetize.io/app/xrbg72g6pdiaaemtcibupyyx3i?device=pixel7&osVersion=13.0&scale=75"
+     target="_blank"
+     rel="nofollow noopener noreferrer"
+     aria-label="Live Demo">
+    <strong><u>Live Demo 🚀</u></strong>
+  </a>
+</p>
 
 ---
 
-## Kinda my final year project
+# 🎓 EClass → ClassKonnect
 
-An Android video call app made using Jitsi Meet SDK to improve E-Learning in educational institutions. It can connects up to 75 participants/students learning synchronously from a live video conferencing lecture. It was built using open-source Jitsi Meet SDK, Firebase SDK, Dagger-Hilt for dependency Injection, and yes Jetpack Compose. It is a free alternative to schools with a maximum capacity of 75 participants per class.
-
-Did I mention it was written in Compose? This is a my first Compose project so you can understand the excitement.
+**ClassKonnect** (formerly **EClass**) is an Android video-conferencing application designed to improve **e-learning** in educational institutions.
 
 ---
 
-## License
+## 📖 A Short Story
 
-[Apache License](LICENSE)
+ClassKonnect was born out of a real problem we faced during the **COVID-19 pandemic**.
 
+We relied heavily on **Zoom’s free plan** for online classes, which meant getting disconnected every **40 minutes** and having to log back in repeatedly. It disrupted learning and broke focus.
 
+I initially built the app using **Android Fragments**, but the buzz around the **stable release of Jetpack Compose**—especially during **DevFest 2022**—was too exciting to ignore. I decided to rewrite the entire app using **Compose**, and that decision completely changed my development journey.
+
+Along the way, I:
+
+* Learned modern UI patterns
+* Became comfortable with declarative UI
+* Got inspired to explore **Wear OS**, which had just gained Compose support
+
+Just two months later—despite my **final year exams**—I released <a href="https://github.com/Vader-Femi/Devfesttttt" target="_blank" rel="nofollow noopener noreferrer"> <u>my first Wear OS application (Devfesttttt)</u> </a>.
+But that’s a story for another day 😉
+
+---
+
+## 🎯 (Kind of) My Final Year Project
+
+**ClassKonnect** is an Android **video-calling app** built with the **Jitsi Meet SDK** to support **synchronous learning**.
+
+### Key Highlights
+
+* Supports up to **75 participants** per class
+* Built for **live video lectures**
+* Free and open alternative for schools
+* Designed with scalability and performance in mind
+
+### Tech Used
+
+* **Jitsi Meet SDK**
+* **Firebase SDK**
+* **Dagger-Hilt** (Dependency Injection)
+* **Jetpack Compose** (Yes—Compose!)
+
+> Did I mention it was written in Compose?
+> This was my **first Compose project**, so you can imagine the excitement 😄
+
+---
+
+## 📄 License
+
+This project is licensed under the **Apache License**.
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+If you want, I can:
+
+* Add a **Features** and **Tech Stack** section
+* Rewrite this for a **portfolio/recruiter audience**
+* Shorten it into a **case-study format**
